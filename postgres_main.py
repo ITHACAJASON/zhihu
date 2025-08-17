@@ -72,8 +72,14 @@ def crawl(keyword: str, start_date: Optional[str], end_date: Optional[str], head
         
         # 检查登录状态
         if not crawler.check_login_status():
-            logger.warning("未登录，请手动登录")
-            crawler.manual_login_prompt()
+            logger.error("未检测到登录状态，必须先登录才能进行数据采集")
+            if not headless:
+                if not crawler.manual_login_prompt():
+                    logger.error("登录失败，无法继续采集")
+                    return
+            else:
+                logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
+                return
         
         # 开始爬取
         stats = crawler.crawl_by_keyword(keyword, start_date, end_date)
@@ -118,8 +124,14 @@ def batch_crawl(keywords: str, start_date: Optional[str], end_date: Optional[str
         
         # 检查登录状态
         if not crawler.check_login_status():
-            logger.warning("未登录，请手动登录")
-            crawler.manual_login_prompt()
+            logger.error("未检测到登录状态，必须先登录才能进行数据采集")
+            if not headless:
+                if not crawler.manual_login_prompt():
+                    logger.error("登录失败，无法继续采集")
+                    return
+            else:
+                logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
+                return
         
         total_stats = {
             'total_tasks': len(keyword_list),
@@ -230,8 +242,14 @@ def resume(task_id: Optional[str], headless: bool):
                     
                     # 检查登录状态
                     if not crawler.check_login_status():
-                        logger.warning("未登录，请手动登录")
-                        crawler.manual_login_prompt()
+                        logger.error("未检测到登录状态，必须先登录才能进行数据采集")
+                        if not headless:
+                            if not crawler.manual_login_prompt():
+                                logger.error("登录失败，无法继续采集")
+                                return
+                        else:
+                            logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
+                            return
                     
                     stats = crawler.resume_task(selected_task.task_id)
                     

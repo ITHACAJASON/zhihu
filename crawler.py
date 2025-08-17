@@ -908,16 +908,19 @@ class ZhihuCrawler:
         # 检查登录状态
         if self.config.ENABLE_COOKIE_LOGIN:
             if not self.check_login_status():
-                logger.warning("未检测到登录状态，建议先登录以获取更好的搜索结果")
+                logger.error("未检测到登录状态，必须先登录才能进行数据采集")
                 if not self.headless:
                     user_choice = input("是否现在登录？(y/n): ").lower().strip()
                     if user_choice == 'y':
                         if not self.manual_login_prompt():
-                            logger.warning("登录失败，继续使用未登录状态")
+                            logger.error("登录失败，无法继续采集")
+                            return {'success': False, 'message': '登录失败，采集终止'}
                     else:
-                        logger.info("跳过登录，继续爬取")
+                        logger.error("用户选择不登录，采集终止")
+                        return {'success': False, 'message': '未登录，采集终止'}
                 else:
-                    logger.info("无头模式下跳过登录提示")
+                    logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
+                    return {'success': False, 'message': '无头模式下未登录，采集终止'}
         
         # 保存搜索记录
         search_record_id = self.db.save_search_record(keyword, start_date, end_date)
@@ -1001,16 +1004,19 @@ class ZhihuCrawler:
         # 检查登录状态
         if self.config.ENABLE_COOKIE_LOGIN:
             if not self.check_login_status():
-                logger.warning("未检测到登录状态，建议先登录以获取更好的搜索结果")
+                logger.error("未检测到登录状态，必须先登录才能进行数据采集")
                 if not self.headless:
                     user_choice = input("是否现在登录？(y/n): ").lower().strip()
                     if user_choice == 'y':
                         if not self.manual_login_prompt():
-                            logger.warning("登录失败，继续使用未登录状态")
+                            logger.error("登录失败，无法继续采集")
+                            return {'success': False, 'message': '登录失败，采集终止'}
                     else:
-                        logger.info("跳过登录，继续爬取")
+                        logger.error("用户选择不登录，采集终止")
+                        return {'success': False, 'message': '未登录，采集终止'}
                 else:
-                    logger.info("无头模式下跳过登录提示")
+                    logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
+                    return {'success': False, 'message': '无头模式下未登录，采集终止'}
         
         # 创建新任务
         task_id = self.db.create_task('batch_keywords', keywords, start_date, end_date)

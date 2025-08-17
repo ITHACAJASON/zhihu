@@ -176,7 +176,7 @@ class PostgresZhihuCrawler:
             logger.error(f"检查登录状态失败: {e}")
             return False
     
-    def manual_login_prompt(self):
+    def manual_login_prompt(self) -> bool:
         """提示用户手动登录"""
         logger.info("请在浏览器中手动登录知乎...")
         logger.info("登录完成后，请在终端按回车键继续...")
@@ -190,8 +190,10 @@ class PostgresZhihuCrawler:
         # 再次检查登录状态
         if self.check_login_status():
             logger.info("登录成功")
+            return True
         else:
-            logger.warning("登录状态检查失败，但继续执行")
+            logger.error("登录失败，请重新尝试")
+            return False
     
     def random_delay(self, min_delay: float = None, max_delay: float = None):
         """随机延时"""
