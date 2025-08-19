@@ -9,7 +9,7 @@
 - 采集评论：用户名、时间、评论内容、点赞量
 - 懒加载处理：自动滚动加载所有结果
 - 反爬策略：随机延时、User-Agent 轮换、防检测设置
-- 数据持久化：SQLite，支持增量更新
+- 数据持久化：PostgreSQL，支持任务恢复和实时数据存储
 - 命令行接口：一条命令即可启动
 
 ## 安装
@@ -22,17 +22,28 @@ pip3 install -r requirements.txt
 
 ```bash
 # 基本用法（必须指定 --keyword）
-python3 main.py --keyword "机器学习"
+python3 postgres_main.py crawl --keyword "机器学习"
 
 # 指定时间范围
-python3 main.py --keyword "人工智能" --start "2020-01-01" --end "2023-12-31"
+python3 postgres_main.py crawl --keyword "人工智能" --start-date "2020-01-01" --end-date "2023-12-31"
 
 # 无头模式/非无头模式
-python3 main.py --keyword "大模型" --headless
-python3 main.py --keyword "大模型" --no-headless
+python3 postgres_main.py crawl --keyword "大模型" --headless
+python3 postgres_main.py crawl --keyword "大模型" --no-headless
 
-# 自定义数据库路径与日志级别
-python3 main.py --keyword "Python" --db "./my.db" --log-level DEBUG
+# 批量爬取多个关键字
+python3 postgres_main.py batch-crawl --keywords "人工智能,机器学习,大模型"
+
+# 恢复中断的任务
+python3 postgres_main.py resume
+# 或指定任务ID恢复
+python3 postgres_main.py resume --task-id "任务ID"
+
+# 列出所有未完成任务
+python3 postgres_main.py list-tasks
+
+# 初始化数据库
+python3 postgres_main.py init-db
 ```
 
 ## 目录结构
@@ -42,50 +53,52 @@ zhihu/
 ├── README.md
 ├── requirements.txt
 ├── config.py
-├── models.py
-├── crawler.py
-└── main.py
+├── postgres_models.py
+├── postgres_crawler.py
+├── postgres_main.py
+├── migrate_to_postgres.py
+├── check_selectors.py
+├── cache/
+├── cookies/
+├── logs/
+└── output/
 ```
 
 ## 常见问题
 - 若首次运行自动下载 ChromeDriver 较慢，请耐心等待
 - 若页面加载失败，可在 config.py 调整 PAGE_LOAD_TIMEOUT、ELEMENT_WAIT_TIMEOUT
 - 若遇到访问限制，适当增大随机延时范围
+- 使用前请确保已配置PostgreSQL数据库，并在config.py中设置正确的连接信息
+- 首次使用请运行 `python3 postgres_main.py init-db` 初始化数据库
+- 如需从旧版SQLite数据迁移，请使用 `python3 postgres_main.py migrate` 命令
 
 ## 免责声明
 本项目仅供学习与研究使用，请遵守目标网站的服务条款与 robots 协议。
 
 
-### 一键执行命令
-# 使用缓存（默认行为）
+### 常用命令示例
+
+# 批量爬取多个关键字
 ```bash
-python3 main.py batch --use-cache
+python3 postgres_main.py batch-crawl --keywords "海归 回国,留学生 回国,海外 回国, 博士 回国"
 ```
-# 或者直接省略参数（默认启用缓存）
+
+# 指定时间范围爬取
 ```bash
-python3 main.py batch
+python3 postgres_main.py batch-crawl --keywords "海归 回国,留学生 回国" --start-date 2024-01-01 --end-date 2024-01-02
 ```
-# 指定时间范围使用缓存
+
+# 非无头模式（显示浏览器界面）
 ```bash
-python3 main.py batch --start 2024-01-01 --end 2024-01-02 --use-cache
+python3 postgres_main.py batch-crawl --keywords "海归 回国,留学生 回国" --no-headless
 ```
-# 使用缓存
+
+# 恢复所有未完成任务
 ```bash
-python3 main.py multi --keywords "海归 回国,留学生 回国,海外 回国" --use-cache
+python3 postgres_main.py resume
 ```
-# 或者省略参数（默认启用缓存）
+
+# 查看所有未完成任务
 ```bash
-python3 main.py multi --keywords "海归 回国,留学生 回国"
-```
-# 不使用缓存，重新进行搜索
-```bash
-python3 main.py batch --no-cache
-```
-# 指定时间范围不使用缓存
-```bash
-python3 main.py batch --start 2024-01-01 --end 2024-01-02 --no-cache
-```
-# 不使用缓存
-```bash
-python3 main.py multi --keywords "海归 回国,留学生 回国,海外 回国" --no-cache
+python3 postgres_main.py list-tasks
 ```

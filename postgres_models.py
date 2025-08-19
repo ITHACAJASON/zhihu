@@ -593,6 +593,10 @@ class PostgreSQLManager:
             conn.commit()
             return cursor.rowcount > 0
     
+    def mark_search_result_processed(self, question_id: str, task_id: str):
+        """标记搜索结果为已处理"""
+        return self.mark_processed('search_results', 'question_id', question_id, task_id)
+    
     def get_task_progress(self, task_id: str) -> Dict[str, Any]:
         """获取任务进度信息"""
         with self.get_connection() as conn:
@@ -639,3 +643,57 @@ class PostgreSQLManager:
                 'answers': {'total': answer_count, 'processed': answer_processed},
                 'comments': {'total': comment_count, 'processed': 0}  # 评论不需要处理状态
             }
+    
+    def get_tasks_by_keyword(self, keyword: str) -> List[TaskInfo]:
+        """根据关键词获取任务"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT task_id, keywords, start_date, end_date, status, current_stage,
+                       total_questions, processed_questions, total_answers, processed_answers,
+                       total_comments, processed_comments, created_at, updated_at
+                FROM task_info 
+                WHERE keywords = %s
+                ORDER BY created_at DESC
+            ''', (keyword,))
+            
+            tasks = []
+            for row in cursor.fetchall():
+                task = TaskInfo(
+                    task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
+                    status=row[4], current_stage=row[5], total_questions=row[6],
+                    processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                    total_comments=row[10], processed_comments=row[11],
+                    created_at=str(row[12]), updated_at=str(row[13])
+                )
+                tasks.append(task)
+            
+            return tasks
+    
+    def get_task_info(self, task_id: str) -> Optional[TaskInfo]:
+        """获取任务信息"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT task_id, keywords, start_date, end_date, status, current_stage,
+                       total_questions, processed_questions, total_answers, processed_answers,
+                       total_comments, processed_comments, created_at, updated_at
+                FROM task_info 
+                WHERE task_id = %s
+            ''', (task_id,))
+            
+            row = cursor.fetchone()
+            if not row:
+                return None
+                
+            return TaskInfo(
+                task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
+                status=row[4], current_stage=row[5], total_questions=row[6],
+                processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                total_comments=row[10], processed_comments=row[11],
+                created_at=str(row[12]), updated_at=str(row[13])
+            )
+    
+    def close(self):
+        """关闭数据库连接（PostgreSQL使用连接池，无需显式关闭）"""
+        pass

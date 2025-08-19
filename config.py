@@ -84,29 +84,32 @@ class ZhihuConfig:
         "question_title": ".QuestionHeader-title",
         "question_detail": ".QuestionRichText .RichContent-inner",
         "question_stats": ".QuestionHeaderActions",
+        "question_author": ".QuestionHeader-detail .UserLink-link",
         "question_follow_count": ".NumberBoard-itemValue",
         "question_view_count": ".NumberBoard-itemValue",
+        "question_answer_count": ".List-headerText span",
+        "question_tags": ".QuestionHeader-topics .Popover div",
         
         # 答案相关
-        "answers_list": ".List-item",
+        "answers_list": ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div",
         "answer_content": ".RichContent-inner",
         "answer_author": ".AuthorInfo-name a",
         "answer_time": ".ContentItem-time",
-        "answer_vote_count": ".VoteButton--up .VoteButton-label",
+        "answer_vote_count": ".VoteButton--up .VoteButton-label, .ContentItem-actions span > span > button",
         "answer_url": ".ContentItem-title a",
         
         # 评论相关
-        "comments_button": ".ContentItem-actions button",
-        "comments_list": ".CommentItem",
-        "comment_content": ".CommentItem-content",
-        "comment_author": ".CommentItem-meta .UserLink-link",
-        "comment_time": ".CommentItem-meta .CommentItem-time",
-        "comment_vote": ".CommentItem-meta .CommentItem-vote",
+        "comments_button": "button[aria-label*='评论']",  # 评论按钮
+        "comments_list": ".CommentItem, .NestComment, .CommentItemV2",  # 评论列表
+        "comment_content": ".CommentItem-content, .NestComment-content, .CommentItemV2-content, .RichText",  # 评论内容
+        "comment_author": ".CommentItem-meta .UserLink-link, .NestComment-meta a, .CommentItemV2-meta a",  # 评论作者
+        "comment_time": ".CommentItem-meta .CommentItem-time, .NestComment-meta span, .CommentItemV2-meta span",  # 评论时间
+        "comment_vote": ".CommentItem-meta .CommentItem-vote, .NestComment-likeCount, .CommentItemV2-like, button[class*='like']",  # 评论点赞数
         
         # 加载更多
-        "load_more_answers": ".QuestionAnswers-answerAdd button",
-        "load_more_comments": ".Comments-loadMore button",
-        "scroll_loading": ".ContentItem-arrowIcon"
+        "load_more_answers": ".QuestionAnswers-answerAdd button, .AnswerListV2-answerAdd button, button:contains('显示更多'), button:contains('更多回答'), button.QuestionMainAction",
+        "load_more_comments": ".Comments-loadMore button, button:contains('查看全部评论'), button:contains('更多评论'), body > div:nth-child(66) > div > div > div.css-1aq8hf9 > div",
+        "scroll_loading": ".ContentItem-arrowIcon, .QuestionAnswers-answerAdd, .AnswerListV2-answerAdd"
     }
     
     @classmethod

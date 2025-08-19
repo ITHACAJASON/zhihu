@@ -39,13 +39,7 @@ def setup_logger():
 def get_postgres_config() -> Dict:
     """获取PostgreSQL配置"""
     config = ZhihuConfig()
-    return {
-        'host': config.POSTGRES_HOST,
-        'port': config.POSTGRES_PORT,
-        'database': config.POSTGRES_DATABASE,
-        'user': config.POSTGRES_USER,
-        'password': config.POSTGRES_PASSWORD
-    }
+    return config.POSTGRES_CONFIG
 
 
 @click.group()
@@ -78,8 +72,10 @@ def crawl(keyword: str, start_date: Optional[str], end_date: Optional[str], head
                     logger.error("登录失败，无法继续采集")
                     return
             else:
-                logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
-                return
+                # 无头模式下切换到非无头模式进行登录
+                if not crawler.switch_to_non_headless_for_login():
+                    logger.error("登录失败，无法继续采集")
+                    return
         
         # 开始爬取
         stats = crawler.crawl_by_keyword(keyword, start_date, end_date)
@@ -110,8 +106,13 @@ def crawl(keyword: str, start_date: Optional[str], end_date: Optional[str], head
 @click.option('--start-date', '-s', help='开始日期 (YYYY-MM-DD)')
 @click.option('--end-date', '-e', help='结束日期 (YYYY-MM-DD)')
 @click.option('--headless/--no-headless', default=True, help='是否使用无头模式')
-def batch_crawl(keywords: str, start_date: Optional[str], end_date: Optional[str], headless: bool):
-    """批量爬取多个关键字的知乎数据"""
+@click.option('--batch-mode/--no-batch-mode', default=True, help='是否使用批量模式（先搜索所有关键字，再处理详情）')
+def batch_crawl(keywords: str, start_date: Optional[str], end_date: Optional[str], headless: bool, batch_mode: bool):
+    """批量爬取多个关键字的知乎数据
+    
+    批量模式下，会先搜索所有关键字并保存搜索结果，然后再统一处理问题详情和答案，可以有效去重。
+    非批量模式下，会逐个处理关键字，每个关键字搜索完成后立即处理问题详情和答案。
+    """
     keyword_list = [k.strip() for k in keywords.split(',') if k.strip()]
     logger.info(f"开始批量爬取，关键字数量: {len(keyword_list)}")
     
@@ -130,8 +131,10 @@ def batch_crawl(keywords: str, start_date: Optional[str], end_date: Optional[str
                     logger.error("登录失败，无法继续采集")
                     return
             else:
-                logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
-                return
+                # 无头模式下切换到非无头模式进行登录
+                if not crawler.switch_to_non_headless_for_login():
+                    logger.error("登录失败，无法继续采集")
+                    return
         
         total_stats = {
             'total_tasks': len(keyword_list),
@@ -142,24 +145,49 @@ def batch_crawl(keywords: str, start_date: Optional[str], end_date: Optional[str
             'failed_questions': 0
         }
         
-        # 逐个处理关键字
-        for i, keyword in enumerate(keyword_list, 1):
-            try:
-                logger.info(f"处理关键字 {i}/{len(keyword_list)}: {keyword}")
+        if batch_mode:
+            # 批量模式：先搜索所有关键字，再处理详情
+            logger.info("使用批量模式：先搜索所有关键字，再统一处理问题详情和答案")
+            
+            # 第一阶段：批量搜索所有关键字
+            task_ids = crawler.batch_search_questions(keyword_list, start_date, end_date)
+            logger.info(f"搜索阶段完成，共创建 {len(task_ids)} 个任务")
+            
+            # 第二阶段：批量处理搜索结果（爬取问题详情和答案）
+            if task_ids:
+                logger.info("开始处理搜索结果（爬取问题详情和答案）...")
+                stats = crawler.batch_process_search_results(task_ids)
                 
-                stats = crawler.crawl_by_keyword(keyword, start_date, end_date)
-                
-                total_stats['completed_tasks'] += 1
-                total_stats['total_questions'] += stats['total_questions']
-                total_stats['total_answers'] += stats['total_answers']
-                total_stats['total_comments'] += stats['total_comments']
-                total_stats['failed_questions'] += stats['failed_questions']
-                
-                logger.info(f"关键字 '{keyword}' 处理完成")
-                
-            except Exception as e:
-                logger.error(f"处理关键字 '{keyword}' 失败: {e}")
-                continue
+                # 更新总体统计信息
+                total_stats['completed_tasks'] = stats['processed_tasks']
+                total_stats['total_questions'] = stats['total_questions']
+                total_stats['total_answers'] = stats['total_answers']
+                total_stats['total_comments'] = stats['total_comments']
+                total_stats['failed_questions'] = stats['failed_questions']
+            else:
+                logger.warning("没有成功创建任务，跳过处理阶段")
+        else:
+            # 非批量模式：逐个处理关键字（搜索完立即处理详情）
+            logger.info("使用非批量模式：逐个处理关键字，搜索完立即处理问题详情和答案")
+            
+            # 逐个处理关键字
+            for i, keyword in enumerate(keyword_list, 1):
+                try:
+                    logger.info(f"处理关键字 {i}/{len(keyword_list)}: {keyword}")
+                    
+                    stats = crawler.crawl_by_keyword(keyword, start_date, end_date, process_immediately=True)
+                    
+                    total_stats['completed_tasks'] += 1
+                    total_stats['total_questions'] += stats['total_questions']
+                    total_stats['total_answers'] += stats['total_answers']
+                    total_stats['total_comments'] += stats['total_comments']
+                    total_stats['failed_questions'] += stats['failed_questions']
+                    
+                    logger.info(f"关键字 '{keyword}' 处理完成")
+                    
+                except Exception as e:
+                    logger.error(f"处理关键字 '{keyword}' 失败: {e}")
+                    continue
         
         # 输出总体统计信息
         logger.info("=" * 50)
@@ -213,7 +241,7 @@ def resume(task_id: Optional[str], headless: bool):
                 logger.error(f"任务恢复失败: {task_id}")
         else:
             # 列出所有未完成任务并让用户选择
-            incomplete_tasks = crawler.list_incomplete_tasks()
+            incomplete_tasks = crawler.list_unfinished_tasks()
             
             if not incomplete_tasks:
                 logger.info("没有未完成的任务")
@@ -248,8 +276,10 @@ def resume(task_id: Optional[str], headless: bool):
                                 logger.error("登录失败，无法继续采集")
                                 return
                         else:
-                            logger.error("无头模式下无法进行登录，请先在非无头模式下登录")
-                            return
+                            # 无头模式下切换到非无头模式进行登录
+                            if not crawler.switch_to_non_headless_for_login():
+                                logger.error("登录失败，无法继续采集")
+                                return
                     
                     stats = crawler.resume_task(selected_task.task_id)
                     
@@ -290,7 +320,7 @@ def list_tasks():
         db = PostgreSQLManager(postgres_config)
         
         # 获取所有未完成任务
-        incomplete_tasks = db.get_incomplete_tasks()
+        incomplete_tasks = db.get_unfinished_tasks()
         
         if incomplete_tasks:
             logger.info("未完成的任务:")
