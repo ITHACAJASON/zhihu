@@ -18,14 +18,13 @@ class TaskInfo:
     keywords: str
     start_date: str
     end_date: str
-    status: str = 'running'  # running, paused, completed, failed
-    current_stage: str = 'search'  # search, questions, answers, comments
+    # 两阶段状态管理
+    search_stage_status: str = 'not_started'  # not_started, in_progress, completed
+    qa_stage_status: str = 'not_started'     # not_started, in_progress, completed
     total_questions: int = 0
     processed_questions: int = 0
     total_answers: int = 0
     processed_answers: int = 0
-    total_comments: int = 0
-    processed_comments: int = 0
     created_at: str = ""
     updated_at: str = ""
     
@@ -95,6 +94,7 @@ class Answer:
     author_url: str = ""
     create_time: str = ""
     update_time: str = ""
+    publish_time: str = ""  # 新增：回答发布时间
     vote_count: int = 0
     comment_count: int = 0
     url: str = ""
@@ -107,23 +107,7 @@ class Answer:
             self.crawl_time = datetime.now().isoformat()
 
 
-@dataclass
-class Comment:
-    """评论数据模型"""
-    comment_id: str
-    answer_id: str
-    task_id: str
-    content: str
-    author: str = ""
-    author_url: str = ""
-    create_time: str = ""
-    vote_count: int = 0
-    reply_to: str = ""
-    crawl_time: str = ""
-    
-    def __post_init__(self):
-        if not self.crawl_time:
-            self.crawl_time = datetime.now().isoformat()
+
 
 
 class PostgreSQLManager:
@@ -162,14 +146,12 @@ class PostgreSQLManager:
                     keywords TEXT NOT NULL,
                     start_date DATE,
                     end_date DATE,
-                    status VARCHAR(20) DEFAULT 'running',
-                    current_stage VARCHAR(20) DEFAULT 'search',
+                    search_stage_status VARCHAR(20) DEFAULT 'not_started',
+                    qa_stage_status VARCHAR(20) DEFAULT 'not_started',
                     total_questions INTEGER DEFAULT 0,
                     processed_questions INTEGER DEFAULT 0,
                     total_answers INTEGER DEFAULT 0,
                     processed_answers INTEGER DEFAULT 0,
-                    total_comments INTEGER DEFAULT 0,
-                    processed_comments INTEGER DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
@@ -228,6 +210,7 @@ class PostgreSQLManager:
                     author_url TEXT,
                     create_time TIMESTAMP,
                     update_time TIMESTAMP,
+                    publish_time TIMESTAMP,
                     vote_count INTEGER DEFAULT 0,
                     comment_count INTEGER DEFAULT 0,
                     url TEXT,
@@ -241,25 +224,7 @@ class PostgreSQLManager:
                 )
             ''')
             
-            # 创建评论表
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS comments (
-                    comment_id VARCHAR(100) NOT NULL,
-                    answer_id VARCHAR(100) NOT NULL,
-                    task_id VARCHAR(36) NOT NULL,
-                    content TEXT NOT NULL,
-                    author VARCHAR(100),
-                    author_url TEXT,
-                    create_time TIMESTAMP,
-                    vote_count INTEGER DEFAULT 0,
-                    reply_to VARCHAR(100),
-                    crawl_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY (comment_id, task_id),
-                    FOREIGN KEY (answer_id, task_id) REFERENCES answers (answer_id, task_id) ON DELETE CASCADE
-                )
-            ''')
+
             
             # 创建索引
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_search_results_task_id ON search_results(task_id)')
@@ -268,8 +233,6 @@ class PostgreSQLManager:
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_questions_processed ON questions(processed)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_answers_question_task ON answers(question_id, task_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_answers_processed ON answers(processed)')
-            cursor.execute('CREATE INDEX IF NOT EXISTS idx_comments_answer_task ON comments(answer_id, task_id)')
-            cursor.execute('CREATE INDEX IF NOT EXISTS idx_task_info_status ON task_info(status)')
             
             conn.commit()
             self.logger.info("PostgreSQL数据库表初始化完成")
@@ -287,10 +250,10 @@ class PostgreSQLManager:
             cursor = conn.cursor()
             cursor.execute('''
                 INSERT INTO task_info 
-                (task_id, keywords, start_date, end_date, status, current_stage)
+                (task_id, keywords, start_date, end_date, search_stage_status, qa_stage_status)
                 VALUES (%s, %s, %s, %s, %s, %s)
             ''', (task.task_id, task.keywords, task.start_date, task.end_date, 
-                  task.status, task.current_stage))
+                  task.search_stage_status, task.qa_stage_status))
             conn.commit()
             
         self.logger.info(f"创建新任务: {task.task_id}")
@@ -301,11 +264,11 @@ class PostgreSQLManager:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT task_id, keywords, start_date, end_date, status, current_stage,
+                SELECT task_id, keywords, start_date, end_date, search_stage_status, qa_stage_status,
                        total_questions, processed_questions, total_answers, processed_answers,
-                       total_comments, processed_comments, created_at, updated_at
+                       created_at, updated_at
                 FROM task_info 
-                WHERE status IN ('running', 'paused')
+                WHERE NOT (search_stage_status = 'completed' AND qa_stage_status = 'completed')
                 ORDER BY created_at
             ''')
             
@@ -313,31 +276,31 @@ class PostgreSQLManager:
             for row in cursor.fetchall():
                 task = TaskInfo(
                     task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
-                    status=row[4], current_stage=row[5], total_questions=row[6],
-                    processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
-                    total_comments=row[10], processed_comments=row[11],
-                    created_at=str(row[12]), updated_at=str(row[13])
+                    search_stage_status=row[4], qa_stage_status=row[5],
+                    total_questions=row[6], processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                    created_at=str(row[10]), updated_at=str(row[11])
                 )
                 tasks.append(task)
             
             return tasks
     
-    def update_task_status(self, task_id: str, status: str = None, stage: str = None, **kwargs):
+    def update_task_status(self, task_id: str, search_stage_status: str = None, 
+                          qa_stage_status: str = None, **kwargs):
         """更新任务状态"""
         updates = []
         values = []
-        
-        if status:
-            updates.append("status = %s")
-            values.append(status)
-        
-        if stage:
-            updates.append("current_stage = %s")
-            values.append(stage)
+            
+        if search_stage_status:
+            updates.append("search_stage_status = %s")
+            values.append(search_stage_status)
+            
+        if qa_stage_status:
+            updates.append("qa_stage_status = %s")
+            values.append(qa_stage_status)
         
         for key, value in kwargs.items():
             if key in ['total_questions', 'processed_questions', 'total_answers', 
-                      'processed_answers', 'total_comments', 'processed_comments']:
+                      'processed_answers']:
                 updates.append(f"{key} = %s")
                 values.append(value)
         
@@ -400,7 +363,7 @@ class PostgreSQLManager:
                      create_time, follow_count, view_count, answer_count, url, tags,
                      processed, crawl_time)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (question_id, task_id) DO UPDATE SET
+                    ON CONFLICT (question_id) DO UPDATE SET
                     title = EXCLUDED.title,
                     content = EXCLUDED.content,
                     author = EXCLUDED.author,
@@ -435,15 +398,16 @@ class PostgreSQLManager:
                 cursor.execute('''
                     INSERT INTO answers 
                     (answer_id, question_id, task_id, content, author, author_url,
-                     create_time, update_time, vote_count, comment_count, url,
+                     create_time, update_time, publish_time, vote_count, comment_count, url,
                      is_author, processed, crawl_time)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (answer_id, task_id) DO UPDATE SET
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (answer_id) DO UPDATE SET
                     content = EXCLUDED.content,
                     author = EXCLUDED.author,
                     author_url = EXCLUDED.author_url,
                     create_time = EXCLUDED.create_time,
                     update_time = EXCLUDED.update_time,
+                    publish_time = EXCLUDED.publish_time,
                     vote_count = EXCLUDED.vote_count,
                     comment_count = EXCLUDED.comment_count,
                     url = EXCLUDED.url,
@@ -453,7 +417,7 @@ class PostgreSQLManager:
                     updated_at = CURRENT_TIMESTAMP
                 ''', (answer.answer_id, answer.question_id, answer.task_id,
                       answer.content, answer.author, answer.author_url,
-                      answer.create_time, answer.update_time, answer.vote_count,
+                      answer.create_time, answer.update_time, answer.publish_time, answer.vote_count,
                       answer.comment_count, answer.url, answer.is_author,
                       answer.processed, answer.crawl_time))
                 
@@ -463,41 +427,7 @@ class PostgreSQLManager:
             self.logger.error(f"保存答案数据失败: {e}")
             return False
     
-    def save_comments(self, comments: List[Comment]) -> bool:
-        """批量保存评论数据"""
-        if not comments:
-            return True
-            
-        try:
-            with self.get_connection() as conn:
-                cursor = conn.cursor()
-                
-                for comment in comments:
-                    cursor.execute('''
-                        INSERT INTO comments 
-                        (comment_id, answer_id, task_id, content, author, author_url,
-                         create_time, vote_count, reply_to, crawl_time)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (comment_id, task_id) DO UPDATE SET
-                        content = EXCLUDED.content,
-                        author = EXCLUDED.author,
-                        author_url = EXCLUDED.author_url,
-                        create_time = EXCLUDED.create_time,
-                        vote_count = EXCLUDED.vote_count,
-                        reply_to = EXCLUDED.reply_to,
-                        crawl_time = EXCLUDED.crawl_time,
-                        updated_at = CURRENT_TIMESTAMP
-                    ''', (comment.comment_id, comment.answer_id, comment.task_id,
-                          comment.content, comment.author, comment.author_url,
-                          comment.create_time, comment.vote_count, comment.reply_to,
-                          comment.crawl_time))
-                
-                conn.commit()
-                self.logger.info(f"保存了 {len(comments)} 条评论")
-                return True
-        except Exception as e:
-            self.logger.error(f"保存评论数据失败: {e}")
-            return False
+
     
     def get_unprocessed_search_results(self, task_id: str) -> List[SearchResult]:
         """获取未处理的搜索结果"""
@@ -582,20 +512,36 @@ class PostgreSQLManager:
             
             return answers
     
-    def mark_processed(self, table: str, id_field: str, id_value: str, task_id: str):
+    def mark_processed(self, table: str, id_field: str, id_value: str, task_id: str = None):
         """标记数据为已处理"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(f'''
-                UPDATE {table} SET processed = TRUE
-                WHERE {id_field} = %s AND task_id = %s
-            ''', (id_value, task_id))
+            if table in ['questions', 'answers']:
+                # 对于questions和answers表，只使用ID字段
+                cursor.execute(f'''
+                    UPDATE {table} SET processed = TRUE
+                    WHERE {id_field} = %s
+                ''', (id_value,))
+            else:
+                # 对于其他表（如search_results），仍然使用task_id
+                cursor.execute(f'''
+                    UPDATE {table} SET processed = TRUE
+                    WHERE {id_field} = %s AND task_id = %s
+                ''', (id_value, task_id))
             conn.commit()
             return cursor.rowcount > 0
     
     def mark_search_result_processed(self, question_id: str, task_id: str):
         """标记搜索结果为已处理"""
         return self.mark_processed('search_results', 'question_id', question_id, task_id)
+    
+    def mark_question_processed(self, question_id: str, task_id: str):
+        """标记问题为已处理"""
+        return self.mark_processed('questions', 'question_id', question_id, task_id)
+    
+    def mark_answer_processed(self, answer_id: str, task_id: str):
+        """标记答案为已处理"""
+        return self.mark_processed('answers', 'answer_id', answer_id, task_id)
     
     def get_task_progress(self, task_id: str) -> Dict[str, Any]:
         """获取任务进度信息"""
@@ -604,8 +550,8 @@ class PostgreSQLManager:
             
             # 获取任务基本信息
             cursor.execute('''
-                SELECT status, current_stage, total_questions, processed_questions,
-                       total_answers, processed_answers, total_comments, processed_comments
+                SELECT search_stage_status, qa_stage_status,
+                       total_questions, processed_questions, total_answers, processed_answers
                 FROM task_info WHERE task_id = %s
             ''', (task_id,))
             
@@ -632,16 +578,12 @@ class PostgreSQLManager:
             cursor.execute('SELECT COUNT(*) FROM answers WHERE task_id = %s AND processed = TRUE', (task_id,))
             answer_processed = cursor.fetchone()[0]
             
-            cursor.execute('SELECT COUNT(*) FROM comments WHERE task_id = %s', (task_id,))
-            comment_count = cursor.fetchone()[0]
-            
             return {
-                'status': task_info[0],
-                'current_stage': task_info[1],
+                'search_stage_status': task_info[0],
+                'qa_stage_status': task_info[1],
                 'search_results': {'total': search_count, 'processed': search_processed},
                 'questions': {'total': question_count, 'processed': question_processed},
-                'answers': {'total': answer_count, 'processed': answer_processed},
-                'comments': {'total': comment_count, 'processed': 0}  # 评论不需要处理状态
+                'answers': {'total': answer_count, 'processed': answer_processed}
             }
     
     def get_tasks_by_keyword(self, keyword: str) -> List[TaskInfo]:
@@ -649,9 +591,9 @@ class PostgreSQLManager:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT task_id, keywords, start_date, end_date, status, current_stage,
+                SELECT task_id, keywords, start_date, end_date, search_stage_status, qa_stage_status,
                        total_questions, processed_questions, total_answers, processed_answers,
-                       total_comments, processed_comments, created_at, updated_at
+                       created_at, updated_at
                 FROM task_info 
                 WHERE keywords = %s
                 ORDER BY created_at DESC
@@ -661,10 +603,9 @@ class PostgreSQLManager:
             for row in cursor.fetchall():
                 task = TaskInfo(
                     task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
-                    status=row[4], current_stage=row[5], total_questions=row[6],
-                    processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
-                    total_comments=row[10], processed_comments=row[11],
-                    created_at=str(row[12]), updated_at=str(row[13])
+                    search_stage_status=row[4], qa_stage_status=row[5],
+                    total_questions=row[6], processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                    created_at=str(row[10]), updated_at=str(row[11])
                 )
                 tasks.append(task)
             
@@ -675,9 +616,9 @@ class PostgreSQLManager:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT task_id, keywords, start_date, end_date, status, current_stage,
+                SELECT task_id, keywords, start_date, end_date, search_stage_status, qa_stage_status,
                        total_questions, processed_questions, total_answers, processed_answers,
-                       total_comments, processed_comments, created_at, updated_at
+                       created_at, updated_at
                 FROM task_info 
                 WHERE task_id = %s
             ''', (task_id,))
@@ -688,11 +629,111 @@ class PostgreSQLManager:
                 
             return TaskInfo(
                 task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
-                status=row[4], current_stage=row[5], total_questions=row[6],
-                processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
-                total_comments=row[10], processed_comments=row[11],
-                created_at=str(row[12]), updated_at=str(row[13])
+                search_stage_status=row[4], qa_stage_status=row[5],
+                total_questions=row[6], processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                created_at=str(row[10]), updated_at=str(row[11])
             )
+    
+    def get_interrupted_tasks(self) -> List[TaskInfo]:
+        """获取中断的任务（根据两阶段状态判断）"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT task_id, keywords, start_date, end_date, search_stage_status, qa_stage_status,
+                       total_questions, processed_questions, total_answers, processed_answers,
+                       created_at, updated_at
+                FROM task_info 
+                WHERE NOT (search_stage_status = 'completed' AND qa_stage_status = 'completed')
+                ORDER BY created_at
+            ''')
+            
+            tasks = []
+            for row in cursor.fetchall():
+                task = TaskInfo(
+                    task_id=row[0], keywords=row[1], start_date=str(row[2]), end_date=str(row[3]),
+                    search_stage_status=row[4], qa_stage_status=row[5],
+                    total_questions=row[6], processed_questions=row[7], total_answers=row[8], processed_answers=row[9],
+                    created_at=str(row[10]), updated_at=str(row[11])
+                )
+                tasks.append(task)
+            
+            return tasks
+    
+    def determine_task_resume_strategy(self, task_id: str) -> Dict[str, Any]:
+        """确定任务恢复策略"""
+        task_info = self.get_task_info(task_id)
+        if not task_info:
+            return {'strategy': 'not_found', 'message': '任务不存在'}
+        
+        search_status = task_info.search_stage_status
+        qa_status = task_info.qa_stage_status
+        
+        if search_status == 'completed' and qa_status == 'completed':
+            return {
+                'strategy': 'completed',
+                'message': '任务已完成',
+                'task_info': task_info
+            }
+        elif search_status == 'in_progress' and qa_status == 'not_started':
+            return {
+                'strategy': 'resume_search',
+                'message': '阶段一进行中，继续搜索任务',
+                'task_info': task_info,
+                'action': 'continue_search_and_save_results'
+            }
+        elif search_status == 'completed' and qa_status == 'in_progress':
+            # 找到最后处理的问题，从该问题继续
+            last_question = self.get_last_processed_question(task_id)
+            return {
+                'strategy': 'resume_qa',
+                'message': '阶段一已完成，阶段二进行中，继续问答详情采集',
+                'task_info': task_info,
+                'action': 'continue_qa_collection',
+                'last_question': last_question
+            }
+        elif search_status == 'not_started':
+            return {
+                'strategy': 'start_fresh',
+                'message': '任务未开始，从头开始',
+                'task_info': task_info,
+                'action': 'start_search_task'
+            }
+        else:
+            return {
+                'strategy': 'unknown',
+                'message': f'未知状态组合: search={search_status}, qa={qa_status}',
+                'task_info': task_info
+            }
+    
+    def get_last_processed_question(self, task_id: str) -> Optional[Dict[str, Any]]:
+        """获取最后一个被处理的问题"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT question_id, title, created_at
+                FROM questions 
+                WHERE task_id = %s 
+                ORDER BY created_at DESC 
+                LIMIT 1
+            ''', (task_id,))
+            
+            row = cursor.fetchone()
+            if row:
+                return {
+                    'question_id': row[0],
+                    'title': row[1],
+                    'created_at': str(row[2])
+                }
+            return None
+    
+    def update_stage_status(self, task_id: str, stage: str, status: str):
+        """更新特定阶段的状态"""
+        if stage == 'search':
+            self.update_task_status(task_id, search_stage_status=status)
+        elif stage == 'qa':
+            self.update_task_status(task_id, qa_stage_status=status)
+        else:
+            raise ValueError(f"未知阶段: {stage}")
     
     def close(self):
         """关闭数据库连接（PostgreSQL使用连接池，无需显式关闭）"""

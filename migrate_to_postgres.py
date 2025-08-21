@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, List, Optional
 import logging
-from postgres_models import PostgreSQLManager, TaskInfo, SearchResult, Question, Answer, Comment
+from postgres_models import PostgreSQLManager, TaskInfo, SearchResult, Question, Answer
 from config import ZhihuConfig
 
 
@@ -44,8 +44,7 @@ class DatabaseMigrator:
             # 迁移答案数据
             self._migrate_answers(task_mapping)
             
-            # 迁移评论数据
-            self._migrate_comments(task_mapping)
+
             
             self.logger.info("数据库迁移完成")
             return True
@@ -90,12 +89,12 @@ class DatabaseMigrator:
                 # 迁移search_records表中的任务
                 cursor.execute('''
                     SELECT id, keyword, start_date, end_date, total_questions, 
-                           total_answers, total_comments, search_time, status
+                           total_answers, total_comments, search_time
                     FROM search_records
                 ''')
                 
                 for row in cursor.fetchall():
-                    old_id, keyword, start_date, end_date, total_q, total_a, total_c, search_time, status = row
+                    old_id, keyword, start_date, end_date, total_q, total_a, total_c, search_time = row
                     
                     # 创建新任务
                     new_task_id = self.postgres_manager.create_task(
@@ -105,13 +104,10 @@ class DatabaseMigrator:
                     )
                     
                     # 更新任务状态
-                    pg_status = 'completed' if status == 'completed' else 'running'
                     self.postgres_manager.update_task_status(
                         task_id=new_task_id,
-                        status=pg_status,
                         total_questions=total_q or 0,
-                        total_answers=total_a or 0,
-                        total_comments=total_c or 0
+                        total_answers=total_a or 0
                     )
                     
                     task_mapping[str(old_id)] = new_task_id
@@ -255,64 +251,7 @@ class DatabaseMigrator:
         except Exception as e:
             self.logger.error(f"迁移答案数据失败: {e}")
     
-    def _migrate_comments(self, task_mapping: Dict[str, str]):
-        """迁移评论数据"""
-        self.logger.info("迁移评论数据...")
-        
-        try:
-            with sqlite3.connect(self.sqlite_path) as conn:
-                cursor = conn.cursor()
-                
-                # 检查comments表是否存在
-                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='comments'")
-                if not cursor.fetchone():
-                    self.logger.warning("comments表不存在，跳过评论数据迁移")
-                    return
-                
-                cursor.execute('''
-                    SELECT comment_id, answer_id, content, author, author_url,
-                           create_time, vote_count, reply_to, crawl_time
-                    FROM comments
-                ''')
-                
-                comments_batch = []
-                default_task_id = task_mapping.get('default', list(task_mapping.values())[0] if task_mapping else None)
-                
-                if not default_task_id:
-                    self.logger.error("没有可用的任务ID，跳过评论数据迁移")
-                    return
-                
-                for row in cursor.fetchall():
-                    comment_id, answer_id, content, author, author_url, create_time, vote_count, reply_to, crawl_time = row
-                    
-                    comment = Comment(
-                        comment_id=comment_id,
-                        answer_id=answer_id,
-                        task_id=default_task_id,
-                        content=content or "",
-                        author=author or "",
-                        author_url=author_url or "",
-                        create_time=create_time or "",
-                        vote_count=vote_count or 0,
-                        reply_to=reply_to or "",
-                        crawl_time=crawl_time or datetime.now().isoformat()
-                    )
-                    
-                    comments_batch.append(comment)
-                    
-                    # 批量保存评论（每100条）
-                    if len(comments_batch) >= 100:
-                        self.postgres_manager.save_comments(comments_batch)
-                        comments_batch = []
-                
-                # 保存剩余的评论
-                if comments_batch:
-                    self.postgres_manager.save_comments(comments_batch)
-                
-                self.logger.info(f"成功迁移评论数据")
-                
-        except Exception as e:
-            self.logger.error(f"迁移评论数据失败: {e}")
+
     
     def create_backup(self) -> str:
         """创建SQLite数据库备份"""

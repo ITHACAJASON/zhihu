@@ -26,7 +26,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from loguru import logger
 
 from config import ZhihuConfig
-from postgres_models import PostgreSQLManager, TaskInfo, SearchResult, Question, Answer, Comment
+from postgres_models import PostgreSQLManager, TaskInfo, SearchResult, Question, Answer
 from selenium.webdriver.chrome.service import Service
 
 
@@ -43,6 +43,7 @@ class PostgresZhihuCrawler:
         
         # 初始化PostgreSQL数据库管理器
         self.db = PostgreSQLManager(postgres_config)
+        self.current_task_id = None  # 当前任务ID，用于中断处理
         
         self.cache_dir = Path("cache")
         self.cache_dir.mkdir(exist_ok=True)
@@ -89,18 +90,8 @@ class PostgresZhihuCrawler:
             options.add_argument(f'--user-agent={safari_ua}')
             logger.info(f"使用优化的User-Agent: Safari")
             
-            # 初始化驱动
-            chromedriver_path = ChromeDriverManager().install()
-            # 修复webdriver-manager路径问题
-            if 'THIRD_PARTY_NOTICES.chromedriver' in chromedriver_path:
-                import os
-                chromedriver_dir = os.path.dirname(chromedriver_path)
-                actual_chromedriver = os.path.join(chromedriver_dir, 'chromedriver')
-                if os.path.exists(actual_chromedriver):
-                    chromedriver_path = actual_chromedriver
-            
+            # 初始化驱动 - 直接使用系统chromedriver
             self.driver = webdriver.Chrome(
-                service=Service(chromedriver_path),
                 options=options
             )
             
@@ -330,13 +321,17 @@ class PostgresZhihuCrawler:
         time.sleep(delay)
     
     def scroll_to_load_more(self) -> bool:
-        """滚动页面加载更多内容，使用特定滑动策略解决懒加载问题，持续滚动直到所有答案加载完成"""
+        """滚动页面加载更多内容，使用优化的滚动策略"""
         try:
             last_height = self.driver.execute_script("return document.body.scrollHeight")
             unchanged_count = 0  # 连续高度不变的次数
             max_unchanged = 5    # 增加连续高度不变的次数阈值
             answer_count_before = 0
             expected_answer_count = 0  # 预期的答案总数
+            max_scroll_attempts = 50  # 增加最大滚动次数限制
+            no_progress_count = 0  # 连续无进展的次数
+            max_no_progress = 5  # 增加最大连续无进展次数
+            scroll_up_executed = False  # 标记是否已执行向上滚动策略
         except WebDriverException as e:
             if "invalid session id" in str(e).lower():
                 logger.error(f"滚动加载时遇到会话错误: {e}")
@@ -368,16 +363,56 @@ class PostgresZhihuCrawler:
             
             # 持续滚动直到所有答案加载完成
             scroll_count = 0
-            while True:
+            while scroll_count < max_scroll_attempts:
                 scroll_count += 1
                 # 滚动到页面底部
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 logger.info(f"执行第 {scroll_count} 次滚动加载")
                 
-                # 等待新内容加载，增加等待时间
-                time.sleep(self.config.SCROLL_PAUSE_TIME * 2)  # 增加等待时间
+                # 等待新内容加载
+                time.sleep(self.config.SCROLL_PAUSE_TIME)  # 使用标准等待时间
                 
-                # 检查是否出现"没有更多了"的提示
+                # 检查是否出现"写答案"按钮，表示所有答案已加载完成
+                try:
+                    write_answer_selectors = [
+                        "button[aria-label*='写答案']",
+                        "button:contains('写答案')",
+                        "a[href*='/answer/create']",
+                        ".QuestionAnswers-answerAdd button",
+                        ".AnswerListV2-answerAdd button",
+                        "button.QuestionMainAction"
+                    ]
+                    
+                    for selector in write_answer_selectors:
+                        try:
+                            if selector.startswith("button:contains"):
+                                # 使用JavaScript查找包含特定文本的按钮
+                                js_script = f"""
+                                var buttons = document.querySelectorAll('button');
+                                for (var i = 0; i < buttons.length; i++) {{
+                                    if (buttons[i].textContent.includes('写答案') && buttons[i].offsetParent !== null) {{
+                                        return true;
+                                    }}
+                                }}
+                                return false;
+                                """
+                                found = self.driver.execute_script(js_script)
+                                if found:
+                                    logger.info("检测到'写答案'按钮，所有答案已加载完成，停止滚动")
+                                    return True
+                            else:
+                                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                                for element in elements:
+                                    if element.is_displayed() and ('写答案' in element.text or '写答案' in element.get_attribute('aria-label') or ''):
+                                        logger.info(f"检测到'写答案'按钮: {element.text}，所有答案已加载完成，停止滚动")
+                                        return True
+                        except Exception as e:
+                            logger.debug(f"检测'写答案'按钮选择器 {selector} 失败: {e}")
+                            continue
+                except Exception as e:
+                    logger.debug(f"检测'写答案'按钮失败: {e}")
+                
+                # 检查是否出现"没有更多了"的提示（作为备用检测）
                 try:
                     no_more_texts = ["没有更多了", "没有更多内容", "已经到底了", "暂时没有更多"]
                     page_text = self.driver.find_element(By.TAG_NAME, "body").text
@@ -394,68 +429,84 @@ class PostgresZhihuCrawler:
                     unchanged_count += 1
                     logger.info(f"页面高度未变化 {unchanged_count}/{max_unchanged}，继续滚动 (第{scroll_count}次)")
                     
-                    # 如果连续多次高度不变，检查是否已加载所有答案
-                    if unchanged_count >= max_unchanged:
-                        # 检查当前答案数量
-                        try:
-                            answers_selector = self.config.SELECTORS.get("answers_list", ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div")
-                            current_answers = self.driver.find_elements(By.CSS_SELECTOR, answers_selector)
-                            current_count = len(current_answers)
-                            
-                            # 如果已知预期答案总数，且已加载数量接近或超过预期，则认为加载完成
-                            if expected_answer_count > 0 and current_count >= expected_answer_count * 0.95:  # 允许5%的误差
-                                logger.info(f"已加载 {current_count} 个答案，接近或超过预期总数 {expected_answer_count}，停止滚动")
-                                break
-                            
-                            # 更新答案数量
-                            answer_count_before = current_count
-                        except Exception as e:
-                            logger.debug(f"检查当前答案数量失败: {e}")
-                            
-                            # 如果无法检查答案数量，但连续多次高度不变，也认为加载完成
-                            if unchanged_count >= max_unchanged * 2:
-                                logger.info(f"连续 {unchanged_count} 次滚动后页面高度未变化，停止滚动")
-                                break
-                    
-                    # 尝试点击"显示更多"按钮 - 使用更多选择器
+                    # 检查当前答案数量是否有变化
+                    current_answer_count = 0
                     try:
-                        # 尝试使用多种选择器查找并点击"显示更多"按钮
-                        show_more_selectors = [
-                            self.config.SELECTORS["load_more_answers"],
-                            ".QuestionAnswers-answerAdd button", 
-                            ".AnswerListV2-answerAdd button", 
-                            "button:contains('显示更多')", 
-                            "button:contains('更多回答')",
-                            "button.QuestionMainAction",
-                            ".List-headerText+button",
-                            ".List-header button"
-                        ]
+                        answers_selector = self.config.SELECTORS.get("answers_list", ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div")
+                        current_answers = self.driver.find_elements(By.CSS_SELECTOR, answers_selector)
+                        current_answer_count = len(current_answers)
                         
-                        for selector in show_more_selectors:
-                            try:
-                                show_more_buttons = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                                for btn in show_more_buttons:
-                                    if btn.is_displayed() and ("更多" in btn.text or "显示" in btn.text):
-                                        logger.info(f"找到并点击'显示更多'按钮: {btn.text}")
-                                        try:
-                                            # 尝试直接点击
-                                            btn.click()
-                                            logger.info("直接点击'显示更多'按钮成功")
-                                        except Exception as e:
-                                            logger.debug(f"直接点击'显示更多'按钮失败: {e}，尝试JavaScript点击")
-                                            self.driver.execute_script("arguments[0].click();", btn)
-                                            logger.info("通过JavaScript点击'显示更多'按钮成功")
-                                        
-                                        time.sleep(3)  # 增加等待时间
-                                        unchanged_count = 0  # 重置计数器
-                                        break
-                            except Exception as e:
-                                logger.debug(f"尝试选择器 {selector} 查找'显示更多'按钮失败: {e}")
+                        # 如果答案数量也没有变化，增加无进展计数
+                        if current_answer_count == answer_count_before:
+                            no_progress_count += 1
+                            logger.info(f"答案数量也未变化: {current_answer_count}，无进展次数: {no_progress_count}/{max_no_progress}")
+                        else:
+                            logger.info(f"答案数量有变化: {answer_count_before} -> {current_answer_count}，重置无进展计数")
+                            no_progress_count = 0
+                            answer_count_before = current_answer_count
+                            unchanged_count = 0  # 重置高度不变计数
+                        
+                        # 如果已知预期答案总数，且已加载数量接近或超过预期，则认为加载完成
+                        if expected_answer_count > 0 and current_answer_count >= expected_answer_count * 0.95:  # 允许5%的误差
+                            logger.info(f"已加载 {current_answer_count} 个答案，接近或超过预期总数 {expected_answer_count}，停止滚动")
+                            break
+                            
                     except Exception as e:
-                        logger.debug(f"尝试点击'显示更多'按钮失败: {e}")
+                        logger.debug(f"检查当前答案数量失败: {e}")
+                        no_progress_count += 1
+                    
+                    # 如果连续多次无进展（页面高度和答案数量都不变），停止滚动
+                    if no_progress_count >= max_no_progress:
+                        logger.info(f"连续 {no_progress_count} 次无进展（页面高度和答案数量都未变化），停止滚动")
+                        break
+                    
+                    # 如果连续3次高度不变且未执行过向上滚动策略，执行向上滚动
+                    if unchanged_count == 3 and not scroll_up_executed:
+                        logger.info("连续3次高度不变，执行向上滚动策略")
+                        # 向上滚动页面高度的10%
+                        self.driver.execute_script("window.scrollBy(0, -window.innerHeight * 0.1);")
+                        time.sleep(1)
+                        scroll_up_executed = True
+                        # 重置计数器，继续向下滚动
+                        unchanged_count = 0
+                        continue
+                    
+                    # 如果连续多次高度不变，也停止滚动
+                    if unchanged_count >= max_unchanged:
+                        logger.info(f"连续 {unchanged_count} 次滚动后页面高度未变化，停止滚动")
+                        break
+                    
+                    # 尝试点击"显示更多"按钮
+                    if unchanged_count >= 4:  # 只在高度连续4次不变时才尝试点击
+                        try:
+                            # 使用JavaScript查找并点击按钮，这是最可靠的方法
+                            js_script = """
+                            function findAndClickLoadMoreButton() {
+                                // 通过文本内容查找按钮
+                                var allButtons = document.querySelectorAll('button');
+                                for (var i = 0; i < allButtons.length; i++) {
+                                    var btn = allButtons[i];
+                                    var text = btn.textContent.trim();
+                                    if ((text.includes('更多') || text.includes('显示更多') || text.includes('更多回答') || text === '更多') && btn.offsetParent !== null) {
+                                        btn.click();
+                                        return '找到并点击了按钮: ' + text;
+                                    }
+                                }
+                                return false;
+                            }
+                            return findAndClickLoadMoreButton();
+                            """
+                            result = self.driver.execute_script(js_script)
+                            if result:
+                                logger.info(f"通过JavaScript成功点击'显示更多'按钮: {result}")
+                                time.sleep(3)  # 等待加载
+                                unchanged_count = 0  # 重置计数器
+                                no_progress_count = 0  # 重置无进展计数
+                        except Exception as e:
+                            logger.debug(f"尝试点击'显示更多'按钮失败: {e}")
                     
                     # 尝试使用XPath查找并点击按钮
-                    if unchanged_count >= 2:
+                    if unchanged_count >= 4:
                         try:
                             xpath_expressions = [
                                 "//button[contains(text(), '显示更多')]",
@@ -491,7 +542,7 @@ class PostgresZhihuCrawler:
                             for (var i = 0; i < allButtons.length; i++) {
                                 var btn = allButtons[i];
                                 var text = btn.textContent.trim();
-                                if (text.includes('显示更多') || text.includes('更多回答') || text.includes('加载更多')) {
+                                if (text.includes('更多') || text.includes('显示更多') || text.includes('更多回答') || text.includes('加载更多') || text === '更多') {
                                     btn.click();
                                     return '通过文本内容找到并点击了加载更多按钮: ' + text;
                                 }
@@ -499,6 +550,7 @@ class PostgresZhihuCrawler:
                             
                             // 通过常见类名查找
                             var buttonClasses = [
+                                '.css-1kxql2v', 'button.css-1kxql2v', 'button[class*="css-1kxql2v"]',
                                 '.QuestionMainAction', '.QuestionAnswers-answerAdd button', 
                                 '.AnswerListV2-answerAdd button', '.List-headerText+button',
                                 '.List-header button'
@@ -541,32 +593,45 @@ class PostgresZhihuCrawler:
                     except Exception as e:
                         logger.debug(f"检查当前答案数量失败: {e}")
                     
-                    # 如果连续多次高度不变，尝试特殊滑动策略
-                    if unchanged_count >= 4:
-                        logger.info("尝试特殊滑动策略：向上滑动至页面1/3处，然后再次下滑")
+                    # 如果连续3次高度不变，尝试向上滚动5%高度后再向下滚动
+                    if unchanged_count >= 3:
+                        logger.info("连续3次滚动高度不变，尝试向上滚动5%高度后再向下滚动")
                         try:
-                            # 获取当前页面高度
+                            # 获取当前页面高度和滚动位置
                             current_height = self.driver.execute_script("return document.body.scrollHeight")
-                            # 向上滑动到页面1/3处
-                            self.driver.execute_script(f"window.scrollTo(0, {current_height / 3});")
-                            time.sleep(2)  # 等待页面响应
-                            # 再次向下滑动到底部
-                            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                            time.sleep(3)  # 等待加载
+                            current_scroll_position = self.driver.execute_script("return window.pageYOffset")
                             
-                            # 检查特殊滑动后的答案数量
+                            # 向上滚动5%页面高度
+                            scroll_up_distance = current_height * 0.05
+                            new_scroll_position = max(0, current_scroll_position - scroll_up_distance)
+                            
+                            logger.info(f"当前滚动位置: {current_scroll_position}, 向上滚动 {scroll_up_distance:.0f}px 到位置: {new_scroll_position:.0f}")
+                            self.driver.execute_script(f"window.scrollTo(0, {new_scroll_position});")
+                            time.sleep(random.uniform(1.5, 2.5))  # 等待页面响应
+                            
+                            # 再次向下滚动到底部
+                            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                            time.sleep(random.uniform(2, 4))  # 等待加载时间
+                            
+                            # 检查滚动策略后的答案数量和页面高度
                             try:
                                 new_answers = self.driver.find_elements(By.CSS_SELECTOR, answers_selector)
                                 new_count = len(new_answers)
-                                logger.info(f"特殊滑动后答案数量: {new_count}，之前数量: {current_count}")
-                                if new_count > current_count:
-                                    logger.info(f"特殊滑动策略有效，答案数量增加了 {new_count - current_count}")
+                                new_page_height = self.driver.execute_script("return document.body.scrollHeight")
+                                
+                                logger.info(f"向上滚动策略后 - 答案数量: {new_count}（之前: {current_count}），页面高度: {new_page_height}（之前: {current_height}）")
+                                
+                                if new_count > current_count or new_page_height > current_height:
+                                    logger.info(f"向上滚动策略有效 - 答案增加: {new_count - current_count}，高度增加: {new_page_height - current_height}")
                                     unchanged_count = 0  # 重置计数器
                                     current_count = new_count
+                                    last_height = new_page_height  # 更新高度基准
+                                else:
+                                    logger.info("向上滚动策略无效，继续原有逻辑")
                             except Exception as e:
-                                logger.debug(f"检查特殊滑动后答案数量失败: {e}")
+                                logger.debug(f"检查向上滚动策略效果失败: {e}")
                         except Exception as e:
-                            logger.debug(f"执行特殊滑动策略失败: {e}")
+                            logger.debug(f"执行向上滚动策略失败: {e}")
                     
                     # 检查是否已加载所有答案（通过比较预期答案数与实际加载数）
                     if expected_answer_count > 0 and current_count > 0:
@@ -575,8 +640,8 @@ class PostgresZhihuCrawler:
                             logger.info(f"已加载大部分答案：当前 {current_count}，预期 {expected_answer_count}，停止滚动")
                             break
                     
-                    # 如果连续多次高度不变，检查答案数量是否也没有变化
-                    if unchanged_count >= max_unchanged:
+                    # 如果连续5次高度不变，检查答案数量是否也没有变化
+                    if unchanged_count >= 5:
                         # 检查答案数量是否也没有变化
                         try:
                             answers_selector = self.config.SELECTORS.get("answers_list", ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div")
@@ -584,7 +649,7 @@ class PostgresZhihuCrawler:
                             final_count = len(final_answers)
                             
                             if final_count == answer_count_before:
-                                logger.info(f"页面高度连续{max_unchanged}次未变化且答案数量也未变化（{final_count}个），停止滚动")
+                                logger.info(f"页面高度连续5次未变化且答案数量也未变化（{final_count}个），停止滚动")
                                 break
                             else:
                                 logger.info(f"页面高度未变化但答案数量有变化（从{answer_count_before}到{final_count}），继续滚动")
@@ -596,8 +661,22 @@ class PostgresZhihuCrawler:
                             break
                 else:
                     unchanged_count = 0  # 重置计数器
+                    no_progress_count = 0  # 重置无进展计数
+                    scroll_up_executed = False  # 重置向上滚动标志
                     last_height = new_height
                     logger.info(f"滚动第{scroll_count}次，页面高度变化: {new_height}")
+                    
+                    # 更新答案数量基准
+                    try:
+                        answers_selector = self.config.SELECTORS.get("answers_list", ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div")
+                        current_answers = self.driver.find_elements(By.CSS_SELECTOR, answers_selector)
+                        answer_count_before = len(current_answers)
+                    except Exception as e:
+                        logger.debug(f"更新答案数量基准失败: {e}")
+            
+            # 检查是否达到最大滚动次数
+            if scroll_count >= max_scroll_attempts:
+                logger.info(f"已达到最大滚动次数 {max_scroll_attempts}，停止滚动")
             
             # 最后再尝试一次点击加载更多按钮
             try:
@@ -716,8 +795,21 @@ class PostgresZhihuCrawler:
             # 构建搜索URL
             search_url = f"{self.config.SEARCH_URL}?type=content&q={keyword}"
             logger.info(f"访问搜索URL: {search_url}")
-            self.driver.get(search_url)
-            self.random_delay()
+            
+            try:
+                self.driver.get(search_url)
+                self.random_delay()
+            except WebDriverException as e:
+                if "invalid session id" in str(e).lower():
+                    logger.error(f"搜索问题时遇到会话错误: {e}")
+                    if self.handle_session_error("搜索问题"):
+                        # 会话已重置，重新尝试访问
+                        self.driver.get(search_url)
+                        self.random_delay()
+                    else:
+                        return search_results
+                else:
+                    raise
             
             # 调试：输出页面标题和URL
             logger.info(f"页面标题: {self.driver.title}")
@@ -863,12 +955,37 @@ class PostgresZhihuCrawler:
                 question_id = self.extract_id_from_url(question_url)
                 
                 # 提取问题标题
-                try:
-                    title_element = self.driver.find_element(By.CSS_SELECTOR, self.config.SELECTORS["question_title"])
-                    title = title_element.text.strip()
-                except NoSuchElementException:
-                    title = "无标题"
-                    logger.warning("未找到问题标题")
+                title = "无标题"
+                title_selectors = [
+                    self.config.SELECTORS["question_title"],  # 新的具体选择器
+                    ".QuestionHeader-title",  # 原始选择器
+                    "h1.QuestionHeader-title",  # 带标签的选择器
+                    ".QuestionHeader-main h1",  # 层级选择器
+                    "h1",  # 通用h1标签
+                    ".ContentItem-title",  # 备用选择器
+                    "[data-za-detail-view-path-module='QuestionTitle']",  # 数据属性选择器
+                ]
+                
+                for selector in title_selectors:
+                    try:
+                        title_element = self.driver.find_element(By.CSS_SELECTOR, selector)
+                        title = title_element.text.strip()
+                        if title:  # 确保标题不为空
+                            logger.debug(f"使用选择器 '{selector}' 成功获取问题标题: {title[:50]}...")
+                            break
+                    except NoSuchElementException:
+                        continue
+                
+                if title == "无标题":
+                    logger.warning("所有选择器都未能找到问题标题")
+                    # 尝试从页面标题中提取
+                    try:
+                        page_title = self.driver.title
+                        if page_title and page_title != "知乎":
+                            title = page_title.replace(" - 知乎", "").strip()
+                            logger.info(f"从页面标题中提取问题标题: {title}")
+                    except Exception as e:
+                        logger.debug(f"从页面标题提取失败: {e}")
                 
                 # 提取问题内容
                 try:
@@ -936,7 +1053,9 @@ class PostgresZhihuCrawler:
                 
                 # 实时保存问题到数据库
                 if self.db.save_question(question):
-                    logger.info(f"问题详情已保存: {title[:50]}...")
+                    # 标记问题为已处理
+                    self.db.mark_question_processed(question_id, task_id)
+                    logger.info(f"问题详情已保存并标记为已处理: {title[:50]}...")
                     return question
                 else:
                     logger.error("保存问题详情失败")
@@ -1287,7 +1406,6 @@ class PostgresZhihuCrawler:
                     answer_elements = js_elements
             
             answers = []
-            total_comments_saved = 0
             
             for i, element in enumerate(answer_elements):
                 try:
@@ -1325,20 +1443,7 @@ class PostgresZhihuCrawler:
                         vote_count = 0
                         logger.debug(f"答案 {i+1} 未找到点赞数")
                     
-                    # 提取评论数
-                    try:
-                        # 尝试找到评论按钮，通常包含评论数
-                        comment_btn = element.find_element(By.CSS_SELECTOR, "button[aria-label*='评论'], .ContentItem-actions button:nth-child(2)")
-                        comment_text = comment_btn.text.strip()
-                        # 检查按钮文本是否为"添加评论"，如果是则认为无评论
-                        if comment_text == "添加评论" or comment_text == "评论":
-                            comment_count = 0
-                        else:
-                            # 从文本中提取数字，例如 "10 条评论" 提取 10
-                            comment_count = self._parse_count(comment_text)
-                    except NoSuchElementException:
-                        comment_count = 0
-                        logger.debug(f"答案 {i+1} 未找到评论数")
+
                     
                     # 提取答案URL
                     try:
@@ -1365,7 +1470,7 @@ class PostgresZhihuCrawler:
                         create_time=self.parse_date_to_pg_timestamp(create_time_text),
                         update_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # 添加更新时间
                         vote_count=vote_count,
-                        comment_count=comment_count,  # 添加评论数
+                        comment_count=0,  # 评论功能已移除
                         url=answer_url,
                         crawl_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     )
@@ -1373,1328 +1478,30 @@ class PostgresZhihuCrawler:
                     # 实时保存答案到数据库
                     if self.db.save_answer(answer):
                         answers.append(answer)
-                        logger.info(f"答案已保存: 作者={author}, 点赞={vote_count}, 评论={comment_count}")
+                        # 标记答案为已处理
+                        self.db.mark_answer_processed(answer_id, task_id)
+                        logger.info(f"答案已保存并标记为已处理: 作者={author}, 点赞={vote_count}")
                         
-                        # 只在评论数不为0时才采集评论
-                        if comment_count > 0:
-                            logger.info(f"开始采集评论，评论数: {comment_count}")
-                            comments = self.crawl_comments(element, answer_id, task_id)
-                            for comment in comments:
-                                # 时间过滤（如果可以解析）
-                                c_dt = self.parse_date_from_text(comment.create_time)
-                                if self.is_within_date_range(c_dt, start_date, end_date):
-                                    if self.db.save_comment(comment):
-                                        total_comments_saved += 1
-                            
-                            logger.info(f"答案评论处理完成，评论数: {len(comments)}")
-                        else:
-                            logger.info(f"答案无评论，跳过评论采集")
+                        # 评论采集功能已移除
                     
                 except Exception as e:
                     logger.warning(f"解析答案失败 (第{i+1}个): {e}")
                     continue
             
-            logger.info(f"答案爬取完成，共保存 {len(answers)} 个答案，{total_comments_saved} 条评论")
-            return answers, total_comments_saved
+            logger.info(f"答案爬取完成，共保存 {len(answers)} 个答案")
+            return answers, 0
             
         except Exception as e:
             logger.error(f"爬取答案失败: {e}")
             return [], 0
     
-    def crawl_comments(self, answer_element, answer_id: str, task_id: str) -> List[Comment]:
-        """爬取答案的评论并实时保存到数据库"""
-        try:
-            logger.info(f"开始爬取答案评论: {answer_id}")
-            
-            # 检查会话是否有效
-            try:
-                # 简单的会话检查，尝试执行一个简单的JavaScript命令
-                self.driver.execute_script("return document.readyState")
-            except WebDriverException as e:
-                if "invalid session id" in str(e).lower():
-                    logger.error(f"爬取评论时遇到会话错误: {e}")
-                    if self.handle_session_error("爬取评论"):
-                        # 会话已重置，但无法继续当前评论爬取，返回空列表
-                        logger.warning("会话已重置，但无法继续当前评论爬取，将在下次尝试")
-                    return []
-            
-            comments = []
-            max_comment_attempts = 3  # 最大评论点击尝试次数
-            
-            # 首先尝试点击评论展开按钮
-            for attempt in range(max_comment_attempts):
-                try:
-                    # 尝试多种方式定位评论按钮
-                    comment_btn = None
-                    
-                    # 方法1: 使用基于分析结果的正确选择器
-                    comment_btn_selectors = [
-                        ".Button.QuestionHeader-Comment",  # 问题页面的评论按钮
-                        ".Button.ContentItem-action",     # 答案的评论按钮
-                        "button[aria-label*='评论']",      # 通过aria-label查找
-                        "button[aria-label*='条评论']",    # 包含"条评论"的按钮
-                        self.config.SELECTORS["comments_button"],  # 配置的选择器
-                    ]
-                    
-                    for selector in comment_btn_selectors:
-                        try:
-                            comment_btn = answer_element.find_element(By.CSS_SELECTOR, selector)
-                            if comment_btn and comment_btn.is_displayed():
-                                logger.info(f"使用选择器 '{selector}' 找到评论按钮 (尝试 {attempt+1}/{max_comment_attempts})")
-                                break
-                        except NoSuchElementException:
-                            continue
-                        except Exception as e:
-                            logger.debug(f"使用选择器 '{selector}' 查找评论按钮失败: {e}")
-                            continue
-                    
-                    # 方法2: 如果上面的选择器都没找到，尝试更广泛的查找
-                    if not comment_btn:
-                        try:
-                            # 尝试查找所有按钮，然后检查文本内容
-                            all_buttons = answer_element.find_elements(By.TAG_NAME, "button")
-                            for btn in all_buttons:
-                                btn_text = btn.text.strip()
-                                aria_label = btn.get_attribute("aria-label") or ""
-                                if ("评论" in btn_text or "条评论" in btn_text or 
-                                    "评论" in aria_label or "条评论" in aria_label):
-                                    comment_btn = btn
-                                    logger.info(f"通过文本/aria-label找到评论按钮: '{btn_text}' / '{aria_label}' (尝试 {attempt+1}/{max_comment_attempts})")
-                                    break
-                        except Exception as e:
-                            logger.debug(f"通过文本/aria-label查找评论按钮失败: {e}")
-                    
-                    # 方法3: 查找包含评论文本的按钮
-                    if not comment_btn:
-                        buttons = answer_element.find_elements(By.TAG_NAME, "button")
-                        for btn in buttons:
-                            btn_text = btn.text.strip()
-                            if "评论" in btn_text:
-                                comment_btn = btn
-                                logger.info(f"通过按钮文本找到评论按钮: '{btn_text}' (尝试 {attempt+1}/{max_comment_attempts})")
-                                break
-                    
-                    # 方法4: 查找ContentItem-actions中的按钮
-                    if not comment_btn:
-                        action_buttons = answer_element.find_elements(By.CSS_SELECTOR, ".ContentItem-actions button, .RichContent-actions button")
-                        if len(action_buttons) > 1:
-                            # 通常第二个按钮是评论按钮
-                            comment_btn = action_buttons[1]
-                            logger.info(f"通过操作按钮位置找到评论按钮 (尝试 {attempt+1}/{max_comment_attempts})")
-                    
-                    # 方法5: 使用XPath查找评论按钮
-                    if not comment_btn:
-                        try:
-                            xpath_expressions = [
-                                ".//button[contains(text(), '评论')]",
-                                ".//button[contains(@class, 'Button--plain')][contains(text(), '评论')]",
-                                ".//button[contains(@class, 'ContentItem-action')][contains(text(), '评论')]",
-                                ".//button[contains(@aria-label, '评论')]"
-                            ]
-                            
-                            for xpath in xpath_expressions:
-                                elements = answer_element.find_elements(By.XPATH, xpath)
-                                if elements:
-                                    comment_btn = elements[0]
-                                    logger.info(f"通过XPath找到评论按钮: {xpath} (尝试 {attempt+1}/{max_comment_attempts})")
-                                    break
-                        except Exception as e:
-                            logger.debug(f"通过XPath查找评论按钮失败: {e}")
-                    
-                    # 方法6: 使用JavaScript查找评论按钮
-                    if not comment_btn:
-                        try:
-                            js_script = """
-                            function findCommentButton(element) {
-                                // 查找所有按钮
-                                var buttons = element.querySelectorAll('button');
-                                for (var i = 0; i < buttons.length; i++) {
-                                    var btn = buttons[i];
-                                    // 检查文本内容
-                                    if (btn.textContent.includes('评论')) {
-                                        return btn;
-                                    }
-                                    // 检查aria-label属性
-                                    if (btn.getAttribute('aria-label') && btn.getAttribute('aria-label').includes('评论')) {
-                                        return btn;
-                                    }
-                                }
-                                return null;
-                            }
-                            return findCommentButton(arguments[0]);
-                            """
-                            comment_btn = self.driver.execute_script(js_script, answer_element)
-                            if comment_btn:
-                                logger.info(f"通过JavaScript找到评论按钮 (尝试 {attempt+1}/{max_comment_attempts})")
-                        except Exception as e:
-                            logger.debug(f"通过JavaScript查找评论按钮失败: {e}")
-                    
-                    # 方法5: 使用XPath查找包含评论文本的按钮
-                    if not comment_btn:
-                        try:
-                            comment_btn = answer_element.find_element(By.XPATH, ".//button[contains(text(), '评论')]")
-                            logger.info(f"通过XPath找到评论按钮 (尝试 {attempt+1}/{max_comment_attempts})")
-                        except NoSuchElementException:
-                            pass
-                    
-                    if comment_btn and comment_btn.is_displayed():
-                        logger.info(f"发现评论按钮，点击展开评论: {answer_id} (尝试 {attempt+1}/{max_comment_attempts})")
-                        
-                        # 尝试多种点击方式
-                        try:
-                            # 方法1: 直接点击
-                            comment_btn.click()
-                            logger.debug("使用直接点击方法")
-                        except Exception as click_error:
-                            logger.debug(f"直接点击失败: {click_error}，尝试JavaScript点击")
-                            try:
-                                # 方法2: JavaScript点击
-                                self.driver.execute_script("arguments[0].click();", comment_btn)
-                                logger.debug("使用JavaScript点击方法")
-                            except Exception as js_error:
-                                logger.debug(f"JavaScript点击也失败: {js_error}，尝试Actions点击")
-                                try:
-                                    # 方法3: Actions点击
-                                    ActionChains(self.driver).move_to_element(comment_btn).click().perform()
-                                    logger.debug("使用Actions点击方法")
-                                except Exception as action_error:
-                                    logger.warning(f"所有点击方法都失败: {action_error}")
-                                    if attempt == max_comment_attempts - 1:
-                                        raise
-                                    continue
-                        
-                        # 增加等待时间，确保评论加载完成
-                        self.random_delay(3, 5)
-                        
-                        # 检查评论是否已加载
-                        comment_elements = answer_element.find_elements(By.CSS_SELECTOR, ".CommentItem, .NestComment, .CommentItemV2")
-                        if comment_elements:
-                            logger.info(f"评论已成功加载，找到 {len(comment_elements)} 个评论")
-                            
-                            # 检查是否有"加载更多评论"按钮，如果有则点击
-                            try:
-                                load_more_selectors = self.config.SELECTORS["load_more_comments"].split(", ")
-                                for load_more_selector in load_more_selectors:
-                                    try:
-                                        load_more_btn = self.driver.find_element(By.CSS_SELECTOR, load_more_selector.strip())
-                                        if load_more_btn and load_more_btn.is_displayed():
-                                            logger.info(f"发现加载更多评论按钮，点击加载全部评论")
-                                            self.driver.execute_script("arguments[0].click();", load_more_btn)
-                                            self.random_delay(3, 5)  # 等待加载完成
-                                            
-                                            # 重新获取评论元素
-                                            updated_comment_elements = answer_element.find_elements(By.CSS_SELECTOR, ".CommentItem, .NestComment, .CommentItemV2")
-                                            if len(updated_comment_elements) > len(comment_elements):
-                                                logger.info(f"成功加载更多评论，评论数从 {len(comment_elements)} 增加到 {len(updated_comment_elements)}")
-                                                comment_elements = updated_comment_elements
-                                            break
-                                    except (NoSuchElementException, WebDriverException):
-                                        continue
-                            except Exception as load_more_error:
-                                logger.debug(f"检查加载更多评论按钮失败: {load_more_error}")
-                            
-                            break
-                        else:
-                            logger.warning(f"评论按钮已点击，但未找到评论 (尝试 {attempt+1}/{max_comment_attempts})")
-                            if attempt < max_comment_attempts - 1:
-                                # 如果还有尝试次数，等待更长时间后重试
-                                self.random_delay(2, 3)
-                    else:
-                        logger.warning(f"未找到可见的评论按钮 (尝试 {attempt+1}/{max_comment_attempts})")
-                        if attempt < max_comment_attempts - 1:
-                            # 尝试滚动到答案元素，使评论按钮可见
-                            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", answer_element)
-                            self.random_delay(1, 2)
-                
-                except Exception as e:
-                    logger.warning(f"尝试点击评论按钮失败: {answer_id}, 错误: {e} (尝试 {attempt+1}/{max_comment_attempts})")
-                    if attempt < max_comment_attempts - 1:
-                        self.random_delay(2, 3)
-            
-            # 等待评论加载并查找评论元素
-            self.random_delay(2, 3)  # 给评论加载更多时间
-            
-            try:
-                # 检查会话是否有效
-                try:
-                    self.driver.execute_script("return document.readyState")
-                except WebDriverException as e:
-                    if "invalid session id" in str(e).lower():
-                        logger.error(f"查找评论元素时遇到会话错误: {e}")
-                        if self.handle_session_error("查找评论元素"):
-                            logger.warning("会话已重置，但无法继续当前评论爬取，将在下次尝试")
-                        return []
-                
-                # 首先尝试使用配置的选择器
-                comment_elements = []
-                
-                # 定义更全面的评论选择器列表，基于实际分析结果
-                possible_selectors = [
-                    # 基于temp文件分析的实际选择器
-                    ".CommentItem-content",  # 从分析中发现的评论内容容器
-                    ".CommentItem",  # 评论项容器
-                    ".Comments-container .CommentItem",  # 评论容器中的评论项
-                    ".Comments-container > div",  # 评论容器的直接子元素
-                    ".Comments-container div[class*='Comment']",  # 包含Comment的class
-                    ".Comments-container div[class*='css-']",  # 动态CSS类名
-                    # 原有选择器作为备用
-                    self.config.SELECTORS["comments_list"],
-                    ".Comments-container .NestComment", 
-                    ".Comments-container .NestComment--rootComment",
-                    ".Comments-container .NestComment--child",
-                    ".Comments-container .CommentItemV2",
-                    ".Comments-container div[role='comment']",
-                    ".Comments-container div[tabindex='-1']",
-                    ".Comments-container .Comment",
-                    ".Comments-container li",
-                    ".Comments-container > *",
-                    # 知乎新版选择器
-                    ".css-1ygdre8",  # 知乎新版评论容器
-                    ".css-8txec8",   # 知乎新版评论项
-                    ".css-1j1mo71",  # 知乎新版评论内容
-                    ".CommentContent",  # 评论内容
-                    ".RichContent-CommentContent",  # 富文本评论内容
-                    "div[data-za-detail-view-path-module='CommentItem']",  # 通过数据属性查找
-                    "div[data-za-detail-view-path-module='Comment']",
-                    ".AnswerCard .CommentItem",  # 答案卡片中的评论
-                    ".AnswerItem .CommentItem",  # 答案项中的评论
-                    ".ContentItem-actions + div",  # 操作栏后面的评论区
-                    ".RichContent-actions + div"  # 富文本操作栏后面的评论区
-                ]
-                
-                # 尝试所有可能的选择器
-                for selector in possible_selectors:
-                    try:
-                        elements = answer_element.find_elements(By.CSS_SELECTOR, selector)
-                        if elements:
-                            comment_elements = elements
-                            logger.info(f"使用选择器 '{selector}' 找到 {len(elements)} 个评论")
-                            break
-                    except Exception as selector_error:
-                        logger.debug(f"使用选择器 '{selector}' 查找评论失败: {selector_error}")
-                
-                # 如果仍然没有找到评论，尝试使用XPath
-                if not comment_elements:
-                    try:
-                        xpath_patterns = [
-                            ".//div[contains(@class, 'Comment')]",
-                            ".//div[contains(@class, 'comment')]",
-                            ".//div[@role='comment']",
-                            ".//div[contains(@class, 'CommentItem')]",
-                            ".//div[contains(@class, 'NestComment')]"
-                        ]
-                        
-                        for xpath in xpath_patterns:
-                            elements = answer_element.find_elements(By.XPATH, xpath)
-                            if elements:
-                                comment_elements = elements
-                                logger.info(f"使用XPath '{xpath}' 找到 {len(elements)} 个评论")
-                                break
-                    except Exception as xpath_error:
-                        logger.debug(f"使用XPath查找评论失败: {xpath_error}")
-                
-                # 如果评论数量为0，尝试再次点击评论按钮并等待更长时间
-                if not comment_elements:
-                    logger.warning("未找到评论元素，尝试再次点击评论按钮")
-                    try:
-                        # 尝试再次查找并点击评论按钮
-                        buttons = answer_element.find_elements(By.TAG_NAME, "button")
-                        for btn in buttons:
-                            if "评论" in btn.text.strip():
-                                logger.info("找到评论按钮，再次点击")
-                                self.driver.execute_script("arguments[0].click();", btn)
-                                self.random_delay(4, 6)  # 等待更长时间
-                                
-                                # 再次尝试查找评论
-                                for selector in possible_selectors:
-                                    try:
-                                        elements = answer_element.find_elements(By.CSS_SELECTOR, selector)
-                                        if elements:
-                                            comment_elements = elements
-                                            logger.info(f"再次尝试后使用选择器 '{selector}' 找到 {len(elements)} 个评论")
-                                            break
-                                    except Exception:
-                                        pass
-                                break
-                    except Exception as retry_error:
-                        logger.warning(f"再次尝试点击评论按钮失败: {retry_error}")
-                
-                # 尝试查找隐藏的评论元素
-                if not comment_elements:
-                    try:
-                        # 执行JavaScript来查找可能被隐藏的评论元素
-                        js_result = self.driver.execute_script("""
-                            return Array.from(document.querySelectorAll('*')).filter(el => {
-                                const text = el.textContent.toLowerCase();
-                                return (text.includes('评论') || text.includes('comment')) && 
-                                       (el.className.includes('Comment') || el.className.includes('comment'));
-                            });
-                        """)
-                        
-                        if js_result and len(js_result) > 0:
-                            logger.info(f"通过JavaScript找到 {len(js_result)} 个可能的评论元素")
-                            comment_elements = js_result
-                    except Exception as js_error:
-                        logger.debug(f"使用JavaScript查找评论失败: {js_error}")
-                
-                logger.info(f"最终找到 {len(comment_elements)} 个评论")
-                
-                for j, comment_element in enumerate(comment_elements):
-                    try:
-                        # 检查会话是否有效
-                        try:
-                            self.driver.execute_script("return document.readyState")
-                        except WebDriverException as e:
-                            if "invalid session id" in str(e).lower():
-                                logger.error(f"提取评论内容时遇到会话错误: {e}")
-                                if self.handle_session_error("提取评论内容"):
-                                    logger.warning("会话已重置，但无法继续当前评论爬取，将在下次尝试")
-                                return []
-                        
-                        # 提取评论内容
-                        content = ""
-                        max_retries = 3
-                        retry_count = 0
-                        
-                        while not content and retry_count < max_retries:
-                            try:
-                                # 尝试多种方式获取评论内容
-                                try:
-                                    content_element = comment_element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["comment_content"])
-                                except NoSuchElementException:
-                                    # 尝试其他可能的内容选择器
-                                    possible_content_selectors = [
-                                        ".CommentItem-content", 
-                                        ".NestComment-content",
-                                        ".CommentItemV2-content",
-                                        ".RichText",
-                                        "p",  # 简单的段落元素
-                                        "div[class*='content']",  # 任何包含content的类名
-                                        "div[class*='text']",  # 任何包含text的类名
-                                        "div.content",
-                                        "div.text",
-                                        "span.content",
-                                        "div.comment-content",
-                                        "div.comment-text",
-                                        "div[role='comment'] > div",
-                                        "div[role='comment'] p",
-                                        # 添加更多可能的选择器
-                                        ".css-1j1mo71",  # 知乎新版评论内容
-                                        ".CommentContent",  # 评论内容
-                                        ".RichContent-CommentContent",  # 富文本评论内容
-                                        ".CommentRichText",  # 评论富文本
-                                        ".Comment-content",  # 评论内容
-                                        ".Comment-text",  # 评论文本
-                                        ".css-8txec8 div",  # 知乎新版评论项中的div
-                                        ".css-1ygdre8 div",  # 知乎新版评论容器中的div
-                                        "div[data-za-detail-view-path-module='CommentItem'] div",  # 通过数据属性查找的评论项中的div
-                                        "div[data-za-detail-view-path-module='Comment'] div",  # 通过数据属性查找的评论中的div
-                                        "*",  # 最后尝试直接获取元素本身的文本
-                                        ".",  # 当前元素
-                                        "*[class*='comment']",  # 任何包含comment的类名
-                                        "*[class*='Comment']",  # 任何包含Comment的类名
-                                        "*[class*='content']",  # 任何包含content的类名
-                                        "*[class*='Content']",  # 任何包含Content的类名
-                                        "*[class*='text']",  # 任何包含text的类名
-                                        "*[class*='Text']",  # 任何包含Text的类名
-                                        "*[class*='rich']",  # 任何包含rich的类名
-                                        "*[class*='Rich']"  # 任何包含Rich的类名
-                                    ]
-                                    
-                                    content_element = None
-                                    for selector in possible_content_selectors:
-                                        try:
-                                            content_element = comment_element.find_element(By.CSS_SELECTOR, selector)
-                                            if content_element:
-                                                logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 找到内容元素")
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as selector_error:
-                                            logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 查找内容失败: {selector_error}")
-                                            continue
-                                
-                                # 如果没有找到内容元素，尝试使用XPath
-                                if not content_element:
-                                    xpath_patterns = [
-                                        ".//div[contains(@class, 'content')]",
-                                        ".//div[contains(@class, 'text')]",
-                                        ".//p",
-                                        ".//span[contains(@class, 'content')]",
-                                        ".//div[contains(@class, 'RichText')]",
-                                        # 添加更多XPath模式
-                                        ".//div[contains(@class, 'Comment')]",
-                                        ".//div[contains(@class, 'comment')]",
-                                        ".//div[contains(@class, 'Content')]",
-                                        ".//div[contains(@class, 'Text')]",
-                                        ".//span[contains(@class, 'text')]",
-                                        ".//span[contains(@class, 'Text')]",
-                                        ".//div[contains(@class, 'Rich')]",
-                                        ".//div[contains(@class, 'rich')]",
-                                        ".//*[contains(@class, 'content')]",
-                                        ".//*[contains(@class, 'text')]",
-                                        ".//*[contains(@class, 'comment')]",
-                                        ".//*[contains(@class, 'Comment')]",
-                                        ".//*[contains(@class, 'Rich')]",
-                                        ".//*[contains(@class, 'rich')]",
-                                        ".//div",  # 最后尝试任何div
-                                        ".//span",  # 最后尝试任何span
-                                        ".//*"  # 最后尝试任何元素
-                                    ]
-                                    
-                                    for xpath in xpath_patterns:
-                                        try:
-                                            content_element = comment_element.find_element(By.XPATH, xpath)
-                                            if content_element:
-                                                logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 找到内容元素")
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as xpath_error:
-                                            logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 查找内容失败: {xpath_error}")
-                                            continue
-                                
-                                # 如果找到了内容元素，获取文本
-                                if content_element:
-                                    content = content_element.text.strip()
-                                    if not content:  # 如果文本为空，尝试获取innerHTML
-                                        try:
-                                            content = self.driver.execute_script("return arguments[0].innerHTML;", content_element)
-                                            content = re.sub('<[^<]+?>', '', content).strip()  # 简单去除HTML标签
-                                        except Exception as js_error:
-                                            logger.debug(f"评论 {j+1} 获取innerHTML失败: {js_error}")
-                                
-                                # 如果仍然没有内容，尝试使用JavaScript获取
-                                if not content:
-                                    try:
-                                        content = self.driver.execute_script("""
-                                            var element = arguments[0];
-                                            var textContent = '';
-                                            
-                                            // 尝试找到包含文本的子元素 - 扩展选择器列表
-                                            var contentSelectors = [
-                                                'p', 'div.content', 'div.text', 'span.content', 'div.RichText',
-                                                '.CommentItem-content', '.NestComment-content', '.CommentItemV2-content',
-                                                '.CommentContent', '.RichContent-CommentContent', '.CommentRichText',
-                                                '.Comment-content', '.Comment-text', '.css-1j1mo71',
-                                                'div[class*="content"]', 'div[class*="text"]', 'div[class*="comment"]',
-                                                'div[class*="Comment"]', 'span[class*="content"]', 'span[class*="text"]',
-                                                'div[class*="Rich"]', 'div[class*="rich"]'
-                                            ];
-                                            
-                                            // 构建选择器字符串
-                                            var selectorString = contentSelectors.join(', ');
-                                            var contentElements = element.querySelectorAll(selectorString);
-                                            
-                                            if (contentElements.length > 0) {
-                                                for (var i = 0; i < contentElements.length; i++) {
-                                                    if (contentElements[i].textContent.trim()) {
-                                                        textContent += contentElements[i].textContent.trim() + ' ';
-                                                    }
-                                                }
-                                            }
-                                            
-                                            // 如果没有找到特定元素，尝试查找所有可能包含文本的元素
-                                            if (!textContent) {
-                                                // 查找所有子元素
-                                                var allElements = element.querySelectorAll('*');
-                                                for (var i = 0; i < allElements.length; i++) {
-                                                    var elementText = allElements[i].textContent.trim();
-                                                    // 过滤掉可能是作者、时间等信息的短文本
-                                                    if (elementText && elementText.length > 5 && 
-                                                        !elementText.match(/^(\d+分钟前|\d+小时前|\d+天前|刚刚|\d{4}-\d{2}-\d{2}|举报|回复|赞同|\d+人赞同)$/)) {
-                                                        textContent += elementText + ' ';
-                                                    }
-                                                }
-                                            }
-                                            
-                                            // 如果仍然没有找到文本，获取元素自身的文本
-                                            if (!textContent) {
-                                                textContent = element.textContent.trim();
-                                            }
-                                            
-                                            return textContent;
-                                        """, comment_element)
-                                        
-                                        if content:
-                                            logger.debug(f"评论 {j+1} 使用JavaScript获取内容成功")
-                                    except Exception as js_error:
-                                        logger.debug(f"评论 {j+1} 使用JavaScript获取内容失败: {js_error}")
-                                
-                                # 如果仍然没有内容，直接获取评论元素的文本
-                                if not content:
-                                    content = comment_element.text.strip()
-                                    if content:
-                                        logger.debug(f"评论 {j+1} 使用元素自身文本作为内容")
-                                    else:
-                                        logger.debug(f"评论 {j+1} 未找到内容")
-                                
-                                # 如果内容太长，可能包含了其他信息，尝试提取有效内容
-                                if content:
-                                    # 清理内容，移除常见的无关文本
-                                    content = re.sub(r'(\d+人赞同了该回答|\d+条评论|\d+个回复|举报|回复|赞同|\d+赞同|\d+分钟前|\d+小时前|\d+天前|刚刚|\d{4}-\d{2}-\d{2})', '', content)
-                                    content = re.sub(r'\s+', ' ', content).strip()  # 合并多个空白字符
-                                    
-                                    # 如果内容仍然很长，尝试提取第一段有意义的文本
-                                    if len(content) > 1000:
-                                        lines = content.split('\n')
-                                        if len(lines) > 1:
-                                            # 尝试找到不包含作者、时间等信息的第一段文本
-                                            meaningful_content = ""
-                                            for line in lines:
-                                                line = line.strip()
-                                                if line and len(line) > 10 and not any(keyword in line.lower() for keyword in 
-                                                                                      ['作者', '时间', '点赞', '回复', '举报', '赞同', '评论', '发布于']):
-                                                    meaningful_content += line + " "
-                                                    if len(meaningful_content) > 100:  # 如果已经有足够长的内容，可以停止
-                                                        break
-                                            
-                                            if meaningful_content:
-                                                content = meaningful_content.strip()
-                                                logger.debug(f"评论 {j+1} 内容过长，提取有意义的文本")
-                                            else:
-                                                # 如果没有找到有意义的内容，取第一段非空文本
-                                                for line in lines:
-                                                    if line.strip():
-                                                        content = line.strip()
-                                                        logger.debug(f"评论 {j+1} 内容过长，提取第一段非空文本")
-                                                        break
-                            
-                            except Exception as e:
-                                logger.warning(f"评论 {j+1} 提取内容时出错: {e}")
-                                retry_count += 1
-                                self.random_delay(1, 2)  # 短暂延迟后重试
-                                
-                                # 如果是最后一次重试，直接获取元素文本
-                                if retry_count == max_retries - 1:
-                                    try:
-                                        content = comment_element.text.strip()
-                                        logger.debug(f"评论 {j+1} 最后尝试使用元素文本")
-                                    except Exception as last_error:
-                                        logger.error(f"评论 {j+1} 最后尝试获取内容失败: {last_error}")
-                                        content = ""
-                            
-                            # 如果获取到内容，跳出重试循环
-                            if content:
-                                break
-                        
-                        # 提取评论作者
-                        author = "匿名用户"
-                        author_url = ""
-                        max_retries = 2
-                        retry_count = 0
-                        
-                        while retry_count < max_retries:
-                            try:
-                                # 尝试多种方式获取作者信息
-                                try:
-                                    author_element = comment_element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["comment_author"])
-                                except NoSuchElementException:
-                                    # 尝试其他可能的作者选择器
-                                    possible_author_selectors = [
-                                        ".UserLink-link", 
-                                        ".NestComment-avatar + a",
-                                        ".CommentItemV2-meta a",
-                                        "a[class*='author']",  # 任何包含author的类名
-                                        "a[href*='/people/']",  # 指向用户主页的链接
-                                        "a.name",
-                                        "a.username",
-                                        "a.user-name",
-                                        "a.user-link",
-                                        "a[href*='u/']",  # 可能的用户链接格式
-                                        "div[class*='author'] a",  # 作者容器中的链接
-                                        "div[class*='user'] a",  # 用户容器中的链接
-                                        ".CommentRichText-username a",  # 富文本评论中的用户名
-                                        ".RichText-UserLink a",  # 富文本中的用户链接
-                                        ".CommentContent-user a",  # 评论内容中的用户
-                                        ".CommentItem-meta a",  # 评论项元数据中的链接
-                                        ".CommentItem-author",  # 评论项作者
-                                        ".CommentItem-authorName",  # 评论项作者名
-                                        "[data-zop-usertoken] a",  # 带有用户标记的元素中的链接
-                                        "[data-za-detail-view-element_name='User'] a",  # 知乎数据属性
-                                        ".css-1gomreu a",  # 可能的CSS类名
-                                        ".css-1oy4rvw a",  # 可能的CSS类名
-                                        ".AuthorInfo-name a"  # 作者信息中的名称
-                                    ]
-                                    
-                                    author_element = None
-                                    for selector in possible_author_selectors:
-                                        try:
-                                            elements = comment_element.find_elements(By.CSS_SELECTOR, selector)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                if text and len(text) < 30:  # 用户名通常不会太长
-                                                    author_element = element
-                                                    logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 找到作者元素")
-                                                    break
-                                            if author_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as selector_error:
-                                            logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 查找作者失败: {selector_error}")
-                                            continue
-                                
-                                # 如果没有找到作者元素，尝试使用XPath
-                                if not author_element:
-                                    xpath_patterns = [
-                                        ".//a[contains(@href, '/people/')]",
-                                        ".//a[contains(@href, '/u/')]",
-                                        ".//a[contains(@class, 'author')]",
-                                        ".//a[contains(@class, 'user')]",
-                                        ".//div[contains(@class, 'author')]//a",
-                                        ".//div[contains(@class, 'user')]//a",
-                                        ".//a[contains(@class, 'UserLink')]",
-                                        ".//span[contains(@class, 'UserLink')]//a",
-                                        ".//div[contains(@class, 'CommentItem-meta')]//a",
-                                        ".//div[contains(@class, 'RichContent-inner')]//a[contains(@class, 'UserLink')]",
-                                        ".//div[contains(@class, 'CommentRichText')]//a",
-                                        ".//div[contains(@class, 'css-')]//a[contains(@href, '/people/')]",
-                                        ".//div[contains(@data-zop, 'authorName')]//a",
-                                        ".//a[@data-za-detail-view-element_name='User']",
-                                        ".//div[contains(@class, 'AuthorInfo')]//a"
-                                    ]
-                                    
-                                    for xpath in xpath_patterns:
-                                        try:
-                                            elements = comment_element.find_elements(By.XPATH, xpath)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                if text and len(text) < 30:  # 用户名通常不会太长
-                                                    author_element = element
-                                                    logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 找到作者元素")
-                                                    break
-                                            if author_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as xpath_error:
-                                            logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 查找作者失败: {xpath_error}")
-                                            continue
-                                
-                                # 如果找到了作者元素，获取文本和链接
-                                if author_element:
-                                    author = author_element.text.strip()
-                                    if not author:  # 如果文本为空，尝试获取title或aria-label属性
-                                        author = author_element.get_attribute('title') or author_element.get_attribute('aria-label') or "匿名用户"
-                                    author_url = author_element.get_attribute('href') or ""
-                                    logger.debug(f"评论 {j+1} 找到作者: {author}")
-                                    break  # 成功获取作者，跳出重试循环
-                                else:
-                                    # 尝试使用JavaScript查找作者
-                                    try:
-                                        js_result = self.driver.execute_script("""
-                                            var element = arguments[0];
-                                            var authorInfo = { name: '', url: '' };
-                                            
-                                            // 1. 查找所有链接
-                                            var links = element.querySelectorAll('a');
-                                            for (var i = 0; i < links.length; i++) {
-                                                var link = links[i];
-                                                var href = link.getAttribute('href') || '';
-                                                var text = link.textContent.trim();
-                                                
-                                                // 检查是否是用户链接
-                                                if ((href.includes('/people/') || href.includes('/u/')) && 
-                                                    text && text.length < 30 && 
-                                                    !text.includes('举报') && !text.includes('回复') && 
-                                                    !text.includes('赞同')) {
-                                                    authorInfo.name = text;
-                                                    authorInfo.url = href;
-                                                    return authorInfo;
-                                                }
-                                            }
-                                            
-                                            // 2. 尝试通过特定类名查找
-                                            var authorSelectors = [
-                                                '.UserLink-link', '.CommentItem-author', '.CommentItem-authorName',
-                                                '.AuthorInfo-name', '.RichText-UserLink', '.CommentRichText-username',
-                                                '[data-zop-usertoken]', '[data-za-detail-view-element_name="User"]'
-                                            ];
-                                            
-                                            for (var i = 0; i < authorSelectors.length; i++) {
-                                                var authorElements = element.querySelectorAll(authorSelectors[i]);
-                                                for (var j = 0; j < authorElements.length; j++) {
-                                                    var el = authorElements[j];
-                                                    var text = el.textContent.trim();
-                                                    if (text && text.length < 30) {
-                                                        authorInfo.name = text;
-                                                        // 如果元素本身是链接
-                                                        if (el.tagName === 'A') {
-                                                            authorInfo.url = el.getAttribute('href') || '';
-                                                        } else {
-                                                            // 查找元素内的链接
-                                                            var innerLink = el.querySelector('a');
-                                                            if (innerLink) {
-                                                                authorInfo.url = innerLink.getAttribute('href') || '';
-                                                            }
-                                                        }
-                                                        return authorInfo;
-                                                    }
-                                                }
-                                            }
-                                            
-                                            // 3. 查找所有可能包含作者名的元素
-                                            var allElements = element.querySelectorAll('*');
-                                            for (var i = 0; i < allElements.length; i++) {
-                                                var el = allElements[i];
-                                                var className = el.className || '';
-                                                
-                                                // 检查类名是否包含作者相关关键词
-                                                if ((className.includes('author') || className.includes('user') || 
-                                                     className.includes('name')) && el.textContent) {
-                                                    var text = el.textContent.trim();
-                                                    if (text && text.length < 30 && 
-                                                        !text.includes('举报') && !text.includes('回复') && 
-                                                        !text.includes('赞同')) {
-                                                        authorInfo.name = text;
-                                                        // 查找元素内的链接
-                                                        var innerLink = el.querySelector('a');
-                                                        if (innerLink) {
-                                                            authorInfo.url = innerLink.getAttribute('href') || '';
-                                                        }
-                                                        return authorInfo;
-                                                    }
-                                                }
-                                            }
-                                            
-                                            return authorInfo;
-                                        """, comment_element)
-                                        
-                                        if js_result and js_result.get('name'):
-                                            author = js_result.get('name')
-                                            author_url = js_result.get('url') or ""
-                                            logger.debug(f"评论 {j+1} 使用JavaScript找到作者: {author}")
-                                            break  # 成功获取作者，跳出重试循环
-                                    except Exception as js_error:
-                                        logger.debug(f"评论 {j+1} 使用JavaScript查找作者失败: {js_error}")
-                            
-                            except Exception as e:
-                                logger.warning(f"评论 {j+1} 提取作者时出错: {e}")
-                            except WebDriverException as wde:
-                                if "invalid session id" in str(wde).lower():
-                                    logger.warning(f"提取评论时间时遇到会话错误: {wde}")
-                                    self.handle_session_error()
-                                else:
-                                    logger.warning(f"提取评论时间时遇到WebDriver错误: {wde}")
-                            except Exception as e:
-                                logger.warning(f"评论 {j+1} 提取时间时出错: {e}")
-                            
-                            retry_count += 1
-                            if retry_count < max_retries:
-                                self.random_delay(0.5, 1)  # 短暂延迟后重试
-                        
-                        if author == "匿名用户":
-                            logger.debug(f"评论 {j+1} 未找到作者或提取失败，使用默认值")
-                        
-                        # 清理作者名称，去除可能的特殊字符
-                        author = re.sub(r'[\r\n\t]+', ' ', author).strip()
-                        
-                        # 提取评论时间
-                        create_time = ""
-                        max_retries = 2
-                        retry_count = 0
-                        
-                        while retry_count < max_retries:
-                            try:
-                                # 检查会话是否有效
-                                if not self.is_session_valid():
-                                    logger.warning("会话无效，尝试重置驱动")
-                                    self.handle_session_error()
-                                
-                                # 尝试多种方式获取评论时间
-                                try:
-                                    time_element = comment_element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["comment_time"])
-                                except NoSuchElementException:
-                                    # 尝试其他可能的时间选择器
-                                    possible_time_selectors = [
-                                        ".CommentItem-meta span", 
-                                        ".NestComment-meta span",
-                                        ".CommentItemV2-meta span",
-                                        ".CommentRichText-time",
-                                        ".CommentTime",
-                                        ".CommentItem-time",
-                                        ".css-1gomreu span",  # 可能的CSS类名
-                                        ".css-1oy4rvw span",  # 可能的CSS类名
-                                        "[data-tooltip-text*='发布于']",  # 带有发布时间提示的元素
-                                        "[data-tooltip*='发布于']",  # 带有发布时间提示的元素
-                                        "time",  # HTML5时间元素
-                                        "span[data-time]",  # 带有时间数据的span
-                                        "span[datetime]",  # 带有日期时间的span
-                                        "span.time",  # 时间类span
-                                        "span.date",  # 日期类span
-                                        "span.timestamp",  # 时间戳类span
-                                        "span[class*='time']",  # 任何包含time的类名
-                                        "time",  # HTML5时间元素
-                                        ".comment-time",
-                                        ".comment-date",
-                                        "span.date",
-                                        "span.timestamp",
-                                        "span[datetime]",  # 带有datetime属性的span
-                                        "*[data-tooltip-text*='20']",  # 带有日期提示的元素
-                                        "*[title*='20']",  # 标题中包含年份的元素
-                                        ".CommentItemV2-meta div",  # 评论元数据容器
-                                        ".CommentItem-meta div",
-                                        ".NestComment-meta div"
-                                    ]
-                                    
-                                    time_element = None
-                                    for selector in possible_time_selectors:
-                                        try:
-                                            elements = comment_element.find_elements(By.CSS_SELECTOR, selector)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                # 检查是否包含时间相关词汇
-                                                if any(keyword in text for keyword in ["分钟前", "小时前", "天前", "月前", "年前", "昨天", "前天", "刚刚", "20"]):
-                                                    time_element = element
-                                                    logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 找到时间元素: {text}")
-                                                    break
-                                            if time_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as selector_error:
-                                            logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 查找时间失败: {selector_error}")
-                                            continue
-                                
-                                # 如果没有找到时间元素，尝试使用XPath
-                                if not time_element:
-                                    xpath_patterns = [
-                                        ".//time",
-                                        ".//span[contains(@class, 'time')]",
-                                        ".//span[contains(text(), '分钟前') or contains(text(), '小时前') or contains(text(), '天前') or contains(text(), '月前') or contains(text(), '年前')]",
-                                        ".//span[contains(text(), '昨天') or contains(text(), '前天') or contains(text(), '刚刚')]",
-                                        ".//span[contains(@title, '20')]",  # 标题中包含年份的元素
-                                        ".//span[contains(@data-tooltip, '发布于')]",  # 带有发布时间提示的元素
-                                        ".//span[contains(@data-tooltip-text, '发布于')]",  # 带有发布时间提示的元素
-                                        ".//span[@data-time]",  # 带有时间数据的span
-                                        ".//span[@datetime]",  # 带有日期时间的span
-                                        ".//div[contains(@class, 'meta')]//span",  # 元数据容器中的span
-                                        ".//div[contains(@class, 'Meta')]//span",  # 元数据容器中的span
-                                        ".//div[contains(@class, 'time')]",  # 包含time的div
-                                        ".//div[contains(@class, 'date')]",  # 包含date的div
-                                        ".//span[contains(text(), '20')]",  # 包含年份的span
-                                        ".//div[contains(text(), '20')]",  # 包含年份的div
-                                        ".//span[contains(@data-tooltip, '20')]",  # 提示中包含年份的元素
-                                        ".//span[contains(text(), '20')]",  # 文本中包含年份的元素
-                                    ]
-                                    
-                                    for xpath in xpath_patterns:
-                                        try:
-                                            elements = comment_element.find_elements(By.XPATH, xpath)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                if text and len(text) < 50:  # 时间文本通常不会太长
-                                                    time_element = element
-                                                    logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 找到时间元素: {text}")
-                                                    break
-                                            if time_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as xpath_error:
-                                            logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 查找时间失败: {xpath_error}")
-                                            continue
-                                
-                                # 如果仍然没有找到时间元素，尝试查找所有span元素
-                                if not time_element:
-                                    try:
-                                        spans = comment_element.find_elements(By.TAG_NAME, "span")
-                                        for span in spans:
-                                            try:
-                                                text = span.text.strip()
-                                                # 检查文本是否包含时间相关词汇
-                                                if any(time_word in text for time_word in ["前", "分钟", "小时", "天", "月", "年", "昨天", "前天", "刚刚"]):
-                                                    time_element = span
-                                                    logger.debug(f"评论 {j+1} 在span元素中找到时间: {text}")
-                                                    break
-                                                # 检查是否包含日期格式 (年-月-日 或 月-日)
-                                                if re.search(r'\d{4}-\d{1,2}-\d{1,2}|\d{1,2}-\d{1,2}|\d{4}/\d{1,2}/\d{1,2}', text):
-                                                    time_element = span
-                                                    logger.debug(f"评论 {j+1} 在span元素中找到日期格式: {text}")
-                                                    break
-                                            except Exception as span_error:
-                                                continue
-                                    except Exception as span_error:
-                                        logger.debug(f"评论 {j+1} 查找span元素失败: {span_error}")
-                            except Exception as e:
-                                logger.debug(f"评论 {j+1} 提取时间时出错: {e}")
-                                continue     
-                            # 如果仍然没有找到时间元素，尝试使用JavaScript
-                            if not time_element:
-                                try:
-                                    js_result = self.driver.execute_script("""
-                                    function findTimeElement(element) {
-                                        // 时间相关关键词
-                                        const timeKeywords = ['前', '分钟', '小时', '天', '月', '年', '昨天', '前天', '刚刚', '发布于'];
-                                        const datePattern = /\d{4}[-/年]\d{1,2}[-/月]\d{1,2}|\d{1,2}[-/月]\d{1,2}|\d{4}\.\d{1,2}\.\d{1,2}/;
-                                        
-                                        // 1. 检查特定的时间相关类名
-                                        const timeClasses = ['time', 'date', 'timestamp', 'CommentTime', 'CommentRichText-time'];
-                                        for (const cls of timeClasses) {
-                                            const timeElements = element.querySelectorAll('*[class*="' + cls + '"]');
-                                            for (const el of timeElements) {
-                                                if (el.textContent && (timeKeywords.some(keyword => el.textContent.includes(keyword)) || datePattern.test(el.textContent))) {
-                                                    return el.textContent.trim();
-                                                }
-                                            }
-                                        }
-                                        
-                                        // 2. 检查特定属性
-                                        const timeAttrs = ['data-time', 'datetime', 'data-tooltip', 'data-tooltip-text', 'title'];
-                                        for (const attr of timeAttrs) {
-                                            const elements = element.querySelectorAll(`*[${attr}]`);
-                                            for (const el of elements) {
-                                                const attrValue = el.getAttribute(attr);
-                                                if (attrValue && (timeKeywords.some(keyword => attrValue.includes(keyword)) || datePattern.test(attrValue))) {
-                                                    return attrValue.trim();
-                                                }
-                                                if (el.textContent && (timeKeywords.some(keyword => el.textContent.includes(keyword)) || datePattern.test(el.textContent))) {
-                                                    return el.textContent.trim();
-                                                }
-                                            }
-                                        }
-                                        
-                                        // 3. 检查元数据区域
-                                        const metaElements = element.querySelectorAll('*[class*="meta"], *[class*="Meta"]');
-                                        for (const meta of metaElements) {
-                                            const spans = meta.querySelectorAll('span');
-                                            for (const span of spans) {
-                                                if (span.textContent && (timeKeywords.some(keyword => span.textContent.includes(keyword)) || datePattern.test(span.textContent))) {
-                                                    return span.textContent.trim();
-                                                }
-                                            }
-                                        }
-                                        
-                                        // 4. 检查所有文本节点
-                                        const textNodes = [];
-                                        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-                                        let node;
-                                        while (node = walk.nextNode()) {
-                                            const text = node.textContent.trim();
-                                            if (text && (timeKeywords.some(keyword => text.includes(keyword)) || datePattern.test(text))) {
-                                                textNodes.push(text);
-                                            }
-                                        }
-                                        
-                                        if (textNodes.length > 0) {
-                                            // 返回最短的时间文本，通常时间文本较短
-                                            return textNodes.sort((a, b) => a.length - b.length)[0];
-                                        }
-                                        
-                                        return null;
-                                    }
-                                    
-                                    return findTimeElement(arguments[0]);
-                                    """, comment_element)
-                                    
-                                    if js_result:
-                                            logger.debug(f"评论 {j+1} 使用JavaScript找到时间: {js_result}")
-                                            time_text = js_result
-                                except Exception as js_error:
-                                    logger.debug(f"评论 {j+1} 使用JavaScript查找时间失败: {js_error}")
-                                    pass
-                                except Exception as spans_error:
-                                    logger.debug(f"评论 {j+1} 查找所有span元素失败: {spans_error}")
-                                
-                                # 如果找到了时间元素，获取文本
-                                if time_element:
-                                    # 尝试从元素属性中获取更精确的时间
-                                    datetime_attr = time_element.get_attribute('datetime') or time_element.get_attribute('title') or time_element.get_attribute('data-tooltip') or time_element.get_attribute('data-tooltip-text') or time_element.get_attribute('data-time')
-                                    if datetime_attr and ('20' in datetime_attr or '-' in datetime_attr or '/' in datetime_attr or '年' in datetime_attr or '月' in datetime_attr):
-                                        logger.debug(f"评论 {j+1} 从属性中获取时间: {datetime_attr}")
-                                        create_time = datetime_attr
-                                    else:
-                                        create_time = time_element.text.strip()
-                                        logger.debug(f"评论 {j+1} 从文本中获取时间: {create_time}")
-                                    
-                                    # 清理时间文本
-                                    create_time = self.clean_time_text(create_time)
-                                    break  # 成功获取时间，跳出重试循环
-                                else:
-                                    # 尝试使用JavaScript查找时间
-                                    try:
-                                        js_result = self.driver.execute_script("""
-                                            var element = arguments[0];
-                                            var timeInfo = { text: '', attr: '' };
-                                            
-                                            // 时间相关关键词和正则表达式
-                                            var timeKeywords = ['前', '分钟', '小时', '天', '月', '年', '昨天', '前天', '刚刚', '发布于'];
-                                            var datePattern = /\d{4}[-/年]\d{1,2}[-/月]\d{1,2}|\d{1,2}[-/月]\d{1,2}|\d{4}\.\d{1,2}\.\d{1,2}/;
-                                            
-                                            // 查找所有可能包含时间的元素
-                                            var timeElements = element.querySelectorAll('time, span[class*="time"], div[class*="time"], span[class*="date"], div[class*="date"], span[data-tooltip], span[data-tooltip-text], span[title], span[datetime], span[data-time], *[class*="meta"] span, *[class*="Meta"] span');
-                                            for (var i = 0; i < timeElements.length; i++) {
-                                                var el = timeElements[i];
-                                                
-                                                // 检查元素文本
-                                                var text = el.textContent.trim();
-                                                if (text) {
-                                                    // 检查是否包含时间关键词或日期格式
-                                                    if (timeKeywords.some(function(keyword) { return text.includes(keyword); }) || datePattern.test(text)) {
-                                                        timeInfo.text = text;
-                                                        break;
-                                                    }
-                                                }
-                                                
-                                                // 检查元素属性
-                                                var attrs = ['datetime', 'title', 'data-tooltip', 'data-tooltip-text', 'data-time'];
-                                                for (var j = 0; j < attrs.length; j++) {
-                                                    if (el.hasAttribute(attrs[j])) {
-                                                        var attrValue = el.getAttribute(attrs[j]);
-                                                        if (attrValue && (timeKeywords.some(function(keyword) { return attrValue.includes(keyword); }) || datePattern.test(attrValue) || attrValue.includes('20'))) {
-                                                            timeInfo.attr = attrValue;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                                // 已经在上面处理过文本和属性，这里不需要重复
-                                                
-                                                // 如果已经找到了时间信息，就跳出循环
-                                                if (timeInfo.text || timeInfo.attr) {
-                                                    break;
-                                                }
-                                            }
-                                            
-                                            // 如果没有找到，查找所有span
-                                            if (!timeInfo.text) {
-                                                var spans = element.querySelectorAll('span');
-                                                for (var i = 0; i < spans.length; i++) {
-                                                    var text = spans[i].textContent.trim();
-                                                    if (text.match(/分钟前|小时前|天前|月前|年前|昨天|前天|刚刚/) || 
-                                                        text.match(/\d{4}-\d{1,2}-\d{1,2}/)) {
-                                                        timeInfo.text = text;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            
-                                            return timeInfo;
-                                        """, comment_element)
-                                        
-                                        if js_result and (js_result.get('text') or js_result.get('attr')):
-                                            create_time = js_result.get('attr') if js_result.get('attr') else js_result.get('text')
-                                            logger.debug(f"评论 {j+1} 使用JavaScript找到时间: {create_time}")
-                                            break  # 成功获取时间，跳出重试循环
-                                    except Exception as js_error:
-                                        logger.debug(f"评论 {j+1} 使用JavaScript查找时间失败: {js_error}")
-                            
-                            
-                            retry_count += 1
-                            if retry_count < max_retries:
-                                self.random_delay(0.5, 1)  # 短暂延迟后重试
-                        
-                        if not create_time:
-                            logger.debug(f"评论 {j+1} 未找到时间或提取失败，使用当前时间作为默认值")
-                        
-                        # 提取点赞数
-                        vote_count = 0
-                        max_retries = 2
-                        retry_count = 0
-                        
-                        while retry_count < max_retries:
-                            try:
-                                # 检查会话是否有效
-                                if not self.is_session_valid():
-                                    logger.warning("会话无效，尝试重置驱动")
-                                    self.handle_session_error()
-                                
-                                # 尝试多种方式获取点赞数
-                                try:
-                                    vote_element = comment_element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["comment_vote"])
-                                except NoSuchElementException:
-                                    # 尝试其他可能的点赞数选择器
-                                    possible_vote_selectors = [
-                                        ".CommentItem-like", 
-                                        ".NestComment-likeCount",
-                                        ".CommentItemV2-like",
-                                        "button[class*='like']",  # 任何包含like的按钮
-                                        "span[class*='vote']",  # 任何包含vote的span
-                                        "span[class*='like']",  # 任何包含like的span
-                                        ".like-button",
-                                        ".vote-button",
-                                        ".vote-count",
-                                        ".like-count",
-                                        "button[aria-label*='赞']",  # 带有赞相关aria-label的按钮
-                                        "*[data-tooltip-text*='赞']",  # 带有赞相关提示的元素
-                                        "*[title*='赞']",  # 标题中包含赞的元素
-                                        "button[class*='Vote']",  # 大写的Vote
-                                        "span[class*='Vote']",  # 大写的Vote
-                                        "div[class*='like']",  # 包含like的div
-                                        "div[class*='vote']",  # 包含vote的div
-                                    ]
-                                    
-                                    vote_element = None
-                                    for selector in possible_vote_selectors:
-                                        try:
-                                            elements = comment_element.find_elements(By.CSS_SELECTOR, selector)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                # 检查是否是数字或包含数字
-                                                if text and (text.isdigit() or re.search(r'\d+', text)):
-                                                    vote_element = element
-                                                    logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 找到点赞元素: {text}")
-                                                    break
-                                            if vote_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as selector_error:
-                                            logger.debug(f"评论 {j+1} 使用选择器 '{selector}' 查找点赞失败: {selector_error}")
-                                            continue
-                                
-                                # 如果没有找到点赞元素，尝试使用XPath
-                                if not vote_element:
-                                    xpath_patterns = [
-                                        ".//button[contains(@class, 'like')]",
-                                        ".//span[contains(@class, 'like')]",
-                                        ".//button[contains(@class, 'vote')]",
-                                        ".//span[contains(@class, 'vote')]",
-                                        ".//button[contains(@aria-label, '赞')]",
-                                        ".//span[contains(text(), '赞')]/following-sibling::span",  # 赞后面的数字
-                                        ".//span[text()='赞']/following-sibling::span",  # 精确匹配赞后面的数字
-                                        ".//button[contains(@class, 'Vote')]",  # 大写的Vote
-                                        ".//span[contains(@class, 'Vote')]",  # 大写的Vote
-                                        ".//div[contains(@class, 'like')]",  # 包含like的div
-                                        ".//div[contains(@class, 'vote')]",  # 包含vote的div
-                                    ]
-                                    
-                                    for xpath in xpath_patterns:
-                                        try:
-                                            elements = comment_element.find_elements(By.XPATH, xpath)
-                                            for element in elements:
-                                                text = element.text.strip()
-                                                # 提取数字
-                                                if text:
-                                                    numbers = re.findall(r'\d+', text)
-                                                    if numbers:
-                                                        vote_element = element
-                                                        logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 找到点赞元素: {text}")
-                                                        break
-                                            if vote_element:
-                                                break
-                                        except NoSuchElementException:
-                                            continue
-                                        except Exception as xpath_error:
-                                            logger.debug(f"评论 {j+1} 使用XPath '{xpath}' 查找点赞失败: {xpath_error}")
-                                            continue
-                                
-                                # 如果找到了点赞元素，获取文本并提取数字
-                                if vote_element:
-                                    vote_text = vote_element.text.strip()
-                                    # 尝试使用_parse_count方法解析
-                                    vote_count = self._parse_count(vote_text)
-                                    
-                                    # 如果_parse_count返回0，尝试直接提取数字
-                                    if vote_count == 0 and vote_text:
-                                        numbers = re.findall(r'\d+', vote_text)
-                                        if numbers:
-                                            vote_count = int(numbers[0])
-                                    
-                                    # 如果仍然为0，检查元素的属性
-                                    if vote_count == 0:
-                                        for attr in ['aria-label', 'title', 'data-tooltip']:
-                                            attr_value = vote_element.get_attribute(attr)
-                                            if attr_value:
-                                                numbers = re.findall(r'\d+', attr_value)
-                                                if numbers:
-                                                    vote_count = int(numbers[0])
-                                                    logger.debug(f"评论 {j+1} 从{attr}属性获取点赞数: {vote_count}")
-                                                    break
-                                    
-                                    logger.debug(f"评论 {j+1} 点赞数: {vote_count}")
-                                    break  # 成功获取点赞数，跳出重试循环
-                                else:
-                                    # 尝试使用JavaScript查找点赞数
-                                    try:
-                                        js_result = self.driver.execute_script("""
-                                            var element = arguments[0];
-                                            var voteInfo = { count: 0 };
-                                            
-                                            // 查找所有可能包含点赞数的元素
-                                            var voteElements = element.querySelectorAll('button[class*="like"], span[class*="like"], button[class*="vote"], span[class*="vote"], button[class*="Vote"], span[class*="Vote"], div[class*="like"], div[class*="vote"]');
-                                            for (var i = 0; i < voteElements.length; i++) {
-                                                var el = voteElements[i];
-                                                var text = el.textContent.trim();
-                                                var match = text.match(/\d+/);
-                                                if (match) {
-                                                    voteInfo.count = parseInt(match[0]);
-                                                    break;
-                                                }
-                                                
-                                                // 检查属性
-                                                var attrs = ['aria-label', 'title', 'data-tooltip'];
-                                                for (var j = 0; j < attrs.length; j++) {
-                                                    var attrValue = el.getAttribute(attrs[j]);
-                                                    if (attrValue) {
-                                                        match = attrValue.match(/\d+/);
-                                                        if (match) {
-                                                            voteInfo.count = parseInt(match[0]);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                                
-                                                if (voteInfo.count > 0) break;
-                                            }
-                                            
-                                            return voteInfo;
-                                        """, comment_element)
-                                        
-                                        if js_result and js_result.get('count'):
-                                            vote_count = js_result.get('count')
-                                            logger.debug(f"评论 {j+1} 使用JavaScript找到点赞数: {vote_count}")
-                                            break  # 成功获取点赞数，跳出重试循环
-                                    except Exception as js_error:
-                                        logger.debug(f"评论 {j+1} 使用JavaScript查找点赞数失败: {js_error}")
-                            
-                            except WebDriverException as wde:
-                                if "invalid session id" in str(wde).lower():
-                                    logger.warning(f"提取点赞数时遇到会话错误: {wde}")
-                                    self.handle_session_error()
-                                else:
-                                    logger.warning(f"提取点赞数时遇到WebDriver错误: {wde}")
-                            except Exception as e:
-                                logger.warning(f"评论 {j+1} 提取点赞数时出错: {e}")
-                            
-                            retry_count += 1
-                            if retry_count < max_retries and vote_count == 0:  # 只有在未获取到点赞数时才重试
-                                self.random_delay(0.5, 1)  # 短暂延迟后重试
-                        
-                        if vote_count == 0:
-                            logger.debug(f"评论 {j+1} 未找到点赞数或点赞数为0")
-                        
-                        # 生成评论ID
-                        comment_id = f"{answer_id}_comment_{j}"
-                        
-                        # 创建评论对象
-                        comment = Comment(
-                            comment_id=comment_id,
-                            answer_id=answer_id,
-                            task_id=task_id,
-                            content=content,
-                            author=author,
-                            author_url=author_url,
-                            create_time=self.parse_date_to_pg_timestamp(create_time),
-                            vote_count=vote_count,
-                            crawl_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        )
-                        
-                        comments.append(comment)
-                        
-                    except Exception as e:
-                        logger.warning(f"解析评论失败 (第{j+1}个): {e}")
-                        continue
-                
-            except NoSuchElementException:
-                logger.debug(f"未找到评论列表: {answer_id}")
-            
-            logger.info(f"评论爬取完成，共找到 {len(comments)} 个评论")
-            return comments
-            
-        except Exception as e:
-            logger.error(f"爬取评论失败: {e}")
-            return []
+    # 评论采集功能已移除
+
+# 评论采集功能已移除
+
+
+
+        # 评论采集功能已移除
     
     def clean_time_text(self, text: str) -> str:
         """清理时间文本，移除无关内容并标准化格式"""
@@ -2882,6 +1689,7 @@ class PostgresZhihuCrawler:
                 end_date=end_date
             )
             logger.info(f"创建任务: {task_id}")
+            self.current_task_id = task_id  # 设置当前任务ID
         except Exception as e:
             logger.error(f"创建任务失败: {e}")
             # 如果创建失败，尝试获取已存在的任务
@@ -2889,6 +1697,7 @@ class PostgresZhihuCrawler:
             if existing_tasks:
                 task_id = existing_tasks[0].task_id
                 logger.info(f"使用已存在的任务: {task_id}")
+                self.current_task_id = task_id  # 设置当前任务ID
             else:
                 logger.error("无法创建或找到任务，终止爬取")
                 return {
@@ -2896,7 +1705,6 @@ class PostgresZhihuCrawler:
                     'keyword': keyword,
                     'total_questions': 0,
                     'total_answers': 0,
-                    'total_comments': 0,
                     'failed_questions': 0
                 }
         
@@ -2905,7 +1713,6 @@ class PostgresZhihuCrawler:
             'keyword': keyword,
             'total_questions': 0,
             'total_answers': 0,
-            'total_comments': 0,
             'failed_questions': 0
         }
         
@@ -2916,7 +1723,7 @@ class PostgresZhihuCrawler:
             
             if not search_results:
                 logger.warning("未找到任何搜索结果")
-                self.db.update_task_status(task_id, status='completed', total_questions=0, total_answers=0, total_comments=0)
+                self.db.update_task_status(task_id, total_questions=0, total_answers=0)
                 return stats
             
             # 2. 如果需要立即处理，则遍历每个问题，爬取详情和答案
@@ -2928,8 +1735,8 @@ class PostgresZhihuCrawler:
                         # 爬取问题详情并实时保存
                         question = self.crawl_question_detail(search_result.question_url, task_id)
                         if question:
-                            # 爬取答案及评论并实时保存
-                            answers, comments_saved = self.crawl_answers(
+                            # 爬取答案并实时保存
+                            answers, _ = self.crawl_answers(
                                 search_result.question_url, 
                                 search_result.question_id, 
                                 task_id,
@@ -2937,9 +1744,8 @@ class PostgresZhihuCrawler:
                                 end_date
                             )
                             stats['total_answers'] += len(answers)
-                            stats['total_comments'] += comments_saved
                             
-                            logger.info(f"问题处理完成，答案数: {len(answers)}，评论数: {comments_saved}")
+                            logger.info(f"问题处理完成，答案数: {len(answers)}")
                         else:
                             stats['failed_questions'] += 1
                             logger.warning(f"问题详情爬取失败: {search_result.title}")
@@ -2955,19 +1761,23 @@ class PostgresZhihuCrawler:
             # 更新任务状态为完成
             self.db.update_task_status(
                 task_id,
-                status='completed',
                 total_questions=stats['total_questions'],
-                total_answers=stats['total_answers'],
-                total_comments=stats['total_comments']
+                total_answers=stats['total_answers']
             )
             
             logger.info(f"爬取完成: {stats}")
             return stats
             
+        except KeyboardInterrupt:
+            logger.warning(f"用户中断任务: {task_id}")
+            # 将任务状态设置为暂停，便于后续恢复
+            self.db.update_task_status(task_id)
+            raise  # 重新抛出异常，让上层处理
+            
         except Exception as e:
             logger.error(f"爬取过程中发生错误: {e}")
             # 更新任务状态为失败
-            self.db.update_task_status(task_id, status='failed')
+            self.db.update_task_status(task_id)
             return stats
     
     def resume_task(self, task_id: str) -> Dict:
@@ -2980,14 +1790,13 @@ class PostgresZhihuCrawler:
             logger.error(f"任务不存在: {task_id}")
             return {}
         
-        logger.info(f"任务信息: {task_info.keywords}, 状态: {task_info.status}")
+        logger.info(f"任务信息: {task_info.keywords}, 搜索阶段: {task_info.search_stage_status}, 问答阶段: {task_info.qa_stage_status}")
         
         stats = {
             'task_id': task_id,
             'keyword': task_info.keywords,
             'total_questions': 0,
             'total_answers': 0,
-            'total_comments': 0,
             'failed_questions': 0
         }
         
@@ -3008,7 +1817,7 @@ class PostgresZhihuCrawler:
                     
                     if not unprocessed_answers:
                         logger.info("任务已完成，无需恢复")
-                        self.db.update_task_status(task_id, status='completed')
+                        self.db.update_task_status(task_id)
                         return stats
                     
                     # 处理未处理的答案（爬取评论）
@@ -3023,16 +1832,9 @@ class PostgresZhihuCrawler:
                                 self.driver.get(answer.url)
                                 self.random_delay()
                                 
-                                # 查找答案元素并爬取评论
-                                answer_elements = self.driver.find_elements(By.CSS_SELECTOR, self.config.SELECTORS["answer_list"])
-                                if answer_elements:
-                                    comments = self.crawl_comments(answer_elements[0], answer.answer_id, task_id)
-                                    for comment in comments:
-                                        if self.db.save_comment(comment):
-                                            stats['total_comments'] += 1
-                                    
-                                    # 标记答案为已处理
-                                    self.db.mark_answer_processed(answer.answer_id)
+                                # 评论采集功能已移除
+                                # 标记答案为已处理
+                                self.db.mark_answer_processed(answer.answer_id, task_id)
                             
                         except Exception as e:
                             logger.error(f"处理答案失败: {e}")
@@ -3044,8 +1846,8 @@ class PostgresZhihuCrawler:
                         try:
                             logger.info(f"处理问题: {question.title[:50]}...")
                             
-                            # 爬取答案及评论
-                            answers, comments_saved = self.crawl_answers(
+                            # 爬取答案
+                            answers, _ = self.crawl_answers(
                                 question.url,
                                 question.question_id,
                                 task_id,
@@ -3054,12 +1856,11 @@ class PostgresZhihuCrawler:
                             )
                             
                             stats['total_answers'] += len(answers)
-                            stats['total_comments'] += comments_saved
                             
                             # 标记问题为已处理
-                            self.db.mark_question_processed(question.question_id)
+                            self.db.mark_question_processed(question.question_id, task_id)
                             
-                            logger.info(f"问题处理完成，答案数: {len(answers)}，评论数: {comments_saved}")
+                            logger.info(f"问题处理完成，答案数: {len(answers)}")
                             
                         except Exception as e:
                             stats['failed_questions'] += 1
@@ -3075,8 +1876,8 @@ class PostgresZhihuCrawler:
                         # 爬取问题详情
                         question = self.crawl_question_detail(search_result.question_url, task_id)
                         if question:
-                            # 爬取答案及评论
-                            answers, comments_saved = self.crawl_answers(
+                            # 爬取答案
+                            answers, _ = self.crawl_answers(
                                 search_result.question_url,
                                 search_result.question_id,
                                 task_id,
@@ -3086,12 +1887,11 @@ class PostgresZhihuCrawler:
                             
                             stats['total_questions'] += 1
                             stats['total_answers'] += len(answers)
-                            stats['total_comments'] += comments_saved
                             
                             # 标记搜索结果为已处理
                             self.db.mark_search_result_processed(search_result.question_id, task_id)
                             
-                            logger.info(f"搜索结果处理完成，答案数: {len(answers)}，评论数: {comments_saved}")
+                            logger.info(f"搜索结果处理完成，答案数: {len(answers)}")
                         else:
                             stats['failed_questions'] += 1
                             logger.warning(f"问题详情爬取失败: {search_result.title}")
@@ -3107,10 +1907,8 @@ class PostgresZhihuCrawler:
             # 更新任务状态
             self.db.update_task_status(
                 task_id,
-                status='completed',
                 total_questions=stats['total_questions'],
-                total_answers=stats['total_answers'],
-                total_comments=stats['total_comments']
+                total_answers=stats['total_answers']
             )
             
             logger.info(f"任务恢复完成: {stats}")
@@ -3118,7 +1916,161 @@ class PostgresZhihuCrawler:
             
         except Exception as e:
             logger.error(f"任务恢复失败: {e}")
-            self.db.update_task_status(task_id, status='failed')
+            self.db.update_task_status(task_id)
+            return stats
+    
+    def resume_search_stage(self, task_id: str) -> Dict:
+        """恢复搜索阶段的任务"""
+        logger.info(f"恢复搜索阶段任务: {task_id}")
+        
+        # 获取任务信息
+        task_info = self.db.get_task_info(task_id)
+        if not task_info:
+            logger.error(f"任务不存在: {task_id}")
+            return {}
+        
+        stats = {
+            'task_id': task_id,
+            'keyword': task_info.keywords,
+            'search_results': 0
+        }
+        
+        try:
+            # 继续搜索并保存搜索结果
+            logger.info(f"继续搜索关键词: {task_info.keywords}")
+            search_results = self.search_questions(
+                task_info.keywords, 
+                task_id, 
+                task_info.start_date, 
+                task_info.end_date
+            )
+            
+            stats['search_results'] = len(search_results)
+            logger.info(f"搜索完成，找到 {len(search_results)} 个结果")
+            
+            # 更新搜索阶段状态为已完成
+            self.db.update_stage_status(task_id, 'search_stage_status', 'completed')
+            logger.info("搜索阶段已完成")
+            
+            return stats
+            
+        except Exception as e:
+            logger.error(f"搜索阶段恢复失败: {e}")
+            return stats
+    
+    def resume_qa_stage(self, task_id: str) -> Dict:
+        """恢复问答采集阶段的任务"""
+        logger.info(f"恢复问答采集阶段任务: {task_id}")
+        
+        # 获取任务信息
+        task_info = self.db.get_task_info(task_id)
+        if not task_info:
+            logger.error(f"任务不存在: {task_id}")
+            return {}
+        
+        stats = {
+            'task_id': task_id,
+            'keyword': task_info.keywords,
+            'total_questions': 0,
+            'total_answers': 0,
+            'failed_questions': 0
+        }
+        
+        try:
+            # 获取最后处理的问题
+            last_question = self.db.get_last_processed_question(task_id)
+            if last_question:
+                logger.info(f"从最后处理的问题继续: {last_question.title[:50]}...")
+            
+            # 获取未处理的搜索结果
+            unprocessed_search_results = self.db.get_unprocessed_search_results(task_id)
+            logger.info(f"发现 {len(unprocessed_search_results)} 个未处理的搜索结果")
+            
+            # 处理未处理的搜索结果
+            for i, search_result in enumerate(unprocessed_search_results, 1):
+                try:
+                    logger.info(f"处理搜索结果 {i}/{len(unprocessed_search_results)}: {search_result.title[:50]}...")
+                    
+                    # 爬取问题详情
+                    question = self.crawl_question_detail(search_result.question_url, task_id)
+                    if question:
+                        # 爬取答案
+                        answers, _ = self.crawl_answers(
+                            search_result.question_url,
+                            search_result.question_id,
+                            task_id,
+                            task_info.start_date,
+                            task_info.end_date
+                        )
+                        
+                        stats['total_questions'] += 1
+                        stats['total_answers'] += len(answers)
+                        
+                        # 标记搜索结果为已处理
+                        self.db.mark_search_result_processed(search_result.question_id, task_id)
+                        
+                        logger.info(f"搜索结果处理完成，答案数: {len(answers)}")
+                    else:
+                        stats['failed_questions'] += 1
+                        logger.warning(f"问题详情爬取失败: {search_result.title}")
+                    
+                    # 随机延时
+                    self.random_delay(2, 5)
+                    
+                except Exception as e:
+                    stats['failed_questions'] += 1
+                    logger.error(f"处理搜索结果失败: {e}")
+                    continue
+            
+            # 检查是否还有未处理的问题
+            unprocessed_questions = self.db.get_unprocessed_questions(task_id)
+            logger.info(f"发现 {len(unprocessed_questions)} 个未处理的问题")
+            
+            # 处理未处理的问题
+            for question in unprocessed_questions:
+                try:
+                    logger.info(f"处理问题: {question.title[:50]}...")
+                    
+                    # 爬取答案
+                    answers, _ = self.crawl_answers(
+                        question.url,
+                        question.question_id,
+                        task_id,
+                        task_info.start_date,
+                        task_info.end_date
+                    )
+                    
+                    stats['total_answers'] += len(answers)
+                    
+                    # 标记问题为已处理
+                    self.db.mark_question_processed(question.question_id, task_id)
+                    
+                    logger.info(f"问题处理完成，答案数: {len(answers)}")
+                    
+                except Exception as e:
+                    stats['failed_questions'] += 1
+                    logger.error(f"处理问题失败: {e}")
+                    continue
+            
+            # 更新问答阶段状态为已完成
+            self.db.update_stage_status(task_id, 'qa_stage_status', 'completed')
+            logger.info("问答采集阶段已完成")
+            
+            # 如果两个阶段都完成，更新任务状态
+            task_info = self.db.get_task_info(task_id)
+            if (task_info.search_stage_status == 'completed' and 
+                task_info.qa_stage_status == 'completed'):
+                self.db.update_task_status(
+                    task_id,
+                    total_questions=stats['total_questions'],
+                    total_answers=stats['total_answers']
+                )
+                logger.info("任务完全完成")
+            
+            return stats
+            
+        except Exception as e:
+            logger.error(f"问答采集阶段恢复失败: {e}")
             return stats
     
     def batch_search_questions(self, keyword_list: List[str], start_date: str = None, end_date: str = None) -> List[str]:
@@ -3235,12 +2187,12 @@ class PostgresZhihuCrawler:
                     )
                     stats['total_questions'] += 1
                     stats['total_answers'] += len(answers)
-                    stats['total_comments'] += comments_saved
+
                     
                     # 标记搜索结果为已处理
                     self.db.mark_processed('search_results', 'question_id', search_result.question_id, search_result.task_id)
                     
-                    logger.info(f"问题处理完成，答案数: {len(answers)}，评论数: {comments_saved}")
+                    logger.info(f"问题处理完成，答案数: {len(answers)}")
                 else:
                     stats['failed_questions'] += 1
                     logger.warning(f"问题详情爬取失败: {search_result.title}")
@@ -3257,9 +2209,7 @@ class PostgresZhihuCrawler:
         for task_id in task_ids:
             try:
                 self.db.update_task_status(
-                    task_id,
-                    status='completed',
-                    stage='answers'
+                    task_id
                 )
                 stats['processed_tasks'] += 1
             except Exception as e:
