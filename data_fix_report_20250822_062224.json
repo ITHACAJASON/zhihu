@@ -1,0 +1,4280 @@
+{
+  "start_time": "2025-08-22 06:22:24",
+  "questions_fixed": 248,
+  "search_results_fixed": 254,
+  "orphaned_answers": 10,
+  "questions_without_answers": 10,
+  "details": [
+    {
+      "type": "question_fix",
+      "question_id": "24032727",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "进入知乎",
+      "old_count": 0,
+      "new_count": 492
+    },
+    {
+      "type": "question_fix",
+      "question_id": "37197524",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "如何看待海归硕士回国找不到工作的现象？",
+      "old_count": 0,
+      "new_count": 12
+    },
+    {
+      "type": "question_fix",
+      "question_id": "8867546614",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "广西海归回国补贴政策?",
+      "old_count": 0,
+      "new_count": 11
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1910726713970786471",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "通过海外人才引进回国的人才会比普通海归少走十几年的路？",
+      "old_count": 0,
+      "new_count": 9
+    },
+    {
+      "type": "question_fix",
+      "question_id": "565099226",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "心理学博士回国工作优劣势？",
+      "old_count": 0,
+      "new_count": 7
+    },
+    {
+      "type": "question_fix",
+      "question_id": "369543409",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么知乎上普遍看衰海外华人？",
+      "old_count": 0,
+      "new_count": 5
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1931368413449680882",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "中国留学生「归国热」正在升温，背后的原因和面临的挑战有哪些？",
+      "old_count": 0,
+      "new_count": 4
+    },
+    {
+      "type": "question_fix",
+      "question_id": "59583376",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么有的青千回国后，发的文章质量下降很快？",
+      "old_count": 0,
+      "new_count": 3
+    },
+    {
+      "type": "question_fix",
+      "question_id": "522982565",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "很多高学历的海归女留学生回国，哪怕貌美如花，为什么很难找到男朋友？",
+      "old_count": 0,
+      "new_count": 3
+    },
+    {
+      "type": "question_fix",
+      "question_id": "658504862",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么出过国的人回来都不描述真实的西方百姓生活？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "523963229",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "如何评价海外回国人员需要48小时内核酸结果改为12小时内这一情况？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "630793906",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "一年硕士海归一辈子都挣不回来留学的钱，为什么还要去留学？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "19998285",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外销售回国之后好跳槽吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "453762239",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "马来亚大学博士回国能任教于广深这类城市的高校吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "272049546",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "在欧洲读博士回国的认可度？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "468824664",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待数万的印度留学生要求返回中国?",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "491909541",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国博士毕业回国，年龄马上就 35 了，该去 211 做特聘副教授还是走人才引进去一本二本算了？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "635528668",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "大龄女博士毕业我该选择回国还是留美?",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "662271929",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "如何看待留学回国后选择当厨师？你对所谓「学历浪费」是什么看法，人生真的只有一条路可走吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "405928509",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "男友表示硕士毕业后想要出国读博，然后回国进大学当老师，要异国4年左右，我该怎么办？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "266847238",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "作为海归，你预计要用或用了多少年赚回留学费用？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "35035118",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国找工作有多难？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "448523550",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "墨尔本大学计算机博士回国可以和985比吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "615316337",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "未来想做高校教师，国内读博还是国外读博？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "6005887723",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "德国留学生回国率为何高达九成？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "380134081",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么知乎大多人都在鼓励留学生回国而微博却几乎是让留学生别回国？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "286229338",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么在国外待久了回国后很不舒服？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "question_fix",
+      "question_id": "625290855",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "CS/AI方向，东京大学博士回国相当于国内什么水平院校？入教职可以选择什么水平高校？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "661131652",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "本人现在在某央企工作，外派非洲已经5年了，年薪税前约50w左右，在海外久了好想回家，怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "313530600",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国找工作是很难吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "592667418",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士毕业回国还是留美？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1900002472052883635",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "大龄海外博士回国有希望吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "68451742",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外博士毕业回国工作应该走校招还是社招？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "634058194",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么很多留学生选择回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "31181028",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "为什么说海归如果想回国就要早回？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "631075448",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "留学生回国是因为在国外混不下去了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "49531312",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "本科留学生回国现状？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "282928200",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "30岁单身女青年 海外工作 该不该回国重新开始？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "8750292530",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "五年后博士毕业回国期望如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "606143509",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "那些花钱去海外上水硕的学生回国后都怎么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "487498755",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "关于海外留学生的回国后隔离问题~?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "615120336",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "牛剑博士回国申请教职的认可度如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "378706911",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待疫情期间部分留学生回国被某些网民辱骂?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1926085976809252747",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "留学生该不该回国发展(上海)？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "659760707",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "海归回国后找工作究竟有多难?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1929152689444484752",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "放弃海外生活回国打拼的你们，现在过得还好吗？有没有某个瞬间觉得选择错了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "414947862",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "你见过最惨的985毕业生混成什么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "353310576",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待中国留学生逐渐归国现象。？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "269301913",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国，如何选择？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "667545236",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "为什么现在的海归和以前的海归感觉不一样呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "264504214",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国应届博士回国到底好吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "325144561",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士最惨能惨到什么程度？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "56359288",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外留学回国创业是种怎样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "398296249",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "跟随刚回国的博导读博是什么体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "648780938",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "美国前50高校助理教授，回国拿海外优青有多稳？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "401298409",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "是什么原因导致疫情期间很多国外留学生不回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1923228089124631290",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "父母因为我不愿留在新加坡工作而选择回国发展对我怨气连天，我真的做错了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "64695508",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "如何看待8位哈佛博士不要绿卡，集体回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "63726036",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "目前海外人文社科类博士回国进985/211高校拿教职的要求有多高？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "20404175",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么 2010 年来很多海外留学的中国人已经拿到绿卡了却又纷纷回中国发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "46952784",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "用人单位愿意招海归吗？为什么？海归的优劣势在哪？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "299246319",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么男女留学生对于回国的态度有明显差异？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "640221613",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "怎么看待为了逃避国内的内卷就带孩子移民去了澳大利亚？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "302430305",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "留学博士回国待遇怎么样啊？该去哪家公司啊？可以给科普下？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1936981779778090447",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国文科博士回国军校文职人才引进？教学科研岗 vs 教学岗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "454160520",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "为什么有的海归刚回国会有一段时间不适应国内环境？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "661085071",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么出国的人都不愿意再回国了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "535859506",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国外博后和国内博后差异？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "630748479",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "如果目标是回国任教的话，国外博好还是国内博好?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "327447867",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "那些海归又归海的人，你们过得怎么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1906687627224150657",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "海归回国内找工作，优劣势分别有哪些？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "411171941",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "留学有海外工作经历真的回国更有优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "581077637",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外博士回国工作几年了，再出国博后可以吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "39020413",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国外临床医学博士毕业回国就业可以吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "618276961",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为啥国内总有些人羡慕外国生活，却不愿意出国呢?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "662573880",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "以目前的形势，国内临床医学土博读国外博士后能更有利于回国发展吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "452967511",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "我应该为了找女朋友从硅谷回国么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "67052309",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "那些年常驻海外的你，回国都干嘛了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "294507856",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "从海外留学回国工作都会经历一段不适应期吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "30882068",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "去海外做博后值得吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1887323553906537624",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "35➕还在做博士后，想回国工作还有机会吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "24722903",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外博士毕业后什么时候回国最合适?1博士毕业直接回国;2博士毕业后博后几年在回;3其他。我在英国读博...",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "64105703",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "有几年海外工程的工作经验，回国之后可以往哪方面发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "558745459",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海归博士回国怎么找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "325388551",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "如果我在国外工作多年，现意欲归国，工资怎么带回来？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1895835988120540474",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "出国之后入了籍 今后怎么回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "329754701",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归金融方面回国就业发展前景如何?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1908310423398233391",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生回国真的会在很多方面遭受偏见吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "269025840",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "留学结束后你会选择回国还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "302674533",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外博士毕业，回国找工作，你有哪些建议或经验可以分享？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "345196332",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "当年美国人不想让钱学森回国，为什么不敢暗杀他？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1899360555153727696",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "董明珠会因海归抵制道歉吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "565298145",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "为什么一些留学生回国后就不快乐了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "636703333",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "我该选择去国外做博后吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1901594195078149303",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归留学人员原来那么吃香，怎么现在一下子就不行了呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "66935118",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "身为 28 岁的海龟金融男，为什么回国后薪水却很低？该做点什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "28387838",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待部分海外名牌大学留学生在毕业后不回国效力？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "658621203",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生回国己经不受认可了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "535790548",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "出国读博士，回来去高校，有必要吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1940210975270740478",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外管理学博士可以回国找工商管理专业么的工作么?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "27487570",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "北大本科毕业，在国外的学校念 PhD 心理落差很大怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "63084215",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士毕业是去国外做博后还是在国内做博后？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "451774392",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "想知道现在留学生回国找工作情况?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "604803281",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外硕士回国读博有优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "428655788",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生回国算个人问题还是社会问题？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "602363583",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "剑桥博士回国能进C9教书吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "601971025",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外博士毕业回国找教职，高校更看重哪些因素？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "263366111",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "作为一名留学生，你为什么回到中国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "356541382",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "想回国的话还要不要入外籍？入外籍后回国发展有多麻烦？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "520799309",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外博士，为了将来回国拿帽子，该怎么和国内的大佬建立联系？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "380688768",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "为什么很多海归回国都做了行政?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "546186385",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "现实是回国的人多还是出国的人多?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "54667581",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "出国后第一次回国是怎样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "529644548",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士毕业留欧洲还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "298489462",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "出国读博后回来以后好就业么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "698273486",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "被外国遣返回国的人会如何处理？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "452321242",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士得到足够的尊重了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "6952327621",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生回国，都是怎么找对象？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "602021080",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "为什么中国人去非洲务工后，大多不愿意回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "563223884",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "在海外漂泊多年突然回国工作是什么样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "427124505",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外排名1000以外大学的博士，回国就业怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1904041624083887961",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么大部分人听到“留学”还是习惯以回国作为讨论点？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "381105419",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "截至目前，我国海外华侨总人口在五千多万，如果海外华人都开始准备回国，大家有什么想法？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "640062089",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "有哪些历史梗被玩得多了，就被潜移默化当成史实的案例?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "457478394",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "想问问各位回国的留学生，你们有后悔过回国工作的选择吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "14308884300",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "请问国内本科毕业+海外一年硕士+回国攻读博士学位，这样的安排，可行吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1938493943626073437",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外回国 offer可以推迟多久入职?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "660165483",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国内985土博，想申请国外的博士后，鉴于目前的国际形势，可以给一些建议吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "14996083278",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "我建议把毕业留学生全部遣返，让他们把学到的知识回去建设自己的国家怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "328193133",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "继续PhD还是quit回国工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1938636961033217139",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "中国银行调整海外派遣人员政策，规定回国后两年内不得辞职，这是否能有效杜绝人才外流现象？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "488535010",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "如何看待留学生不吃香大批海归回国找工作遇冷？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "624363851",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "当前中国内地，博士学位，已经贬值到了何种程度？未来会如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "379015449",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待欧美的中国留学生在疫情爆发后大量回国避难？这是一个正确的决定吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "363549168",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "请问回国生活工作后的海归们有哪些culture shock? 大家是如何慢慢调整适应的...... ...",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "305472045",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "国外博士毕业之后，大家选择回国还是继续在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "642565069",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士毕业不喜欢科研却选择了海外博士后，还有后悔的机会吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "22983987",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "在海外的工作经验会成为回国后的优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "25108818",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "怎样看待海归回国创业？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "21559835",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "在国外工作一两年，再回国工作的利与弊有哪些？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "291037378",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "2018年-2020年海归回国前景怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "651709306",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国外博士毕业选择做博后几年后再回国还是直接回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "624411493",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "真实回访｜留学毕业回国后，那些海归现在过的怎么样?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1901049665392182911",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "回国工作还是海外就业？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "497370830",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "大批留学生归国坐冷板凳，留学生学历真的不吃香了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "33618992",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "有海外工作经验的海归回国后是如何经历转型的？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "46897866",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "真的有那么多人认为留学生回国是因为在国外混不下去吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "464137968",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国后求职就业以及生活的适应性怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "545404397",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "加拿大留学生为什么在完成学业后大多选择了回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "36823006",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "留学生回国有了海归的头衔，是不是就成了香饽饽？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "608932340",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "有了博士学位该回国吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "534262813",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国读PhD毕业如何留下？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "452834454",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海博回国找教职还是继续博后？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "552688594",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么经常看到有人说男留学生回国的多，女留学生回国的少?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "654110333",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "博士，想退学回国工作?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "59469447",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么说欧洲是博士的天堂？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "380483782",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么过来人很多推荐出国读博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "31189376",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "从国外读完博士回来在中国大学任教要具备哪些条件？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "355791397",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学一半放弃了回国的都过得怎么样了，还读书吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "473469896",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "有多少海归回国，能够年薪百万？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "539624039",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外本硕回国读博和国内本硕出国读博的认可度差很多吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "354007301",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "回国读博还是继续在美国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "663345003",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "如何看待这一次的研究生博士扩招?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "860635901",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "大部份留学国外的人会选择回国，但有一部份说什么也不回来了，为什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1929470530051904068",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "留学生（留学生的学生）对国家的发展做出了巨大贡献。为什么国内对部分海归人员越来越不重视了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "21780119",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国所具有的优势与劣势分别是什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "634429689",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "到底要不要出国做博后?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "466525147",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美博毕业是留美还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "273995341",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如果你是海外留学生，毕业后，你会选择回国就业，还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1908806629299844105",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "现在真的有迹象，国外归国留学生在国内被歧视吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "393833585",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "大龄海归回国后很受挫，想问问一直在国内怎么才能混好?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "267641780",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外华人入外籍之后回中国能干什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "556777500",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国top30理工科博士回国工作的待遇和清北博士相比哪个更好？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "36392676",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归选择回国发展的原因是什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "442448131",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生中途回国怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "554445679",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "十八大以来超八成留学人员学成归国，如何看待这一趋势，为什么越来越多的留学生选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "310602433",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国，为什么感觉不好找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "419978660",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么很多人国外读硕选择回国读博士？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "514680501",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外顶级名校做博后和海外顶级名校的博士有多大差距？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1918679705109927318",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "海外留学生如何回国求职？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "23052912",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海归博士的就业情况如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "639052344",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "境外资金如何合法回国到个人账户？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "8279875549",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "2024 年多位顶尖科学家相继全职回国任教，第四次科学家海归潮来了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "558274171",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外工程干五年回国可以干什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "525299789",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国已7年了，回国后我有一种“海归的求生欲”，怎么调整心态面对旁人的不理解？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "608226445",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "有人在非洲待了不到一年就回国的吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "67330244",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "title": "高校老师收入不高，为什么大批海归却会很努力成为高校老师？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "594394091",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "在饭局上被亲爸酒后骂“假博士”怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "652005667",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "有些人在国内混不好，为什么觉得在国外就能过得好？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "330307307",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国外读的博士，计划回国工作。是先做博后好还是直接高校入职好呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "410793965",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "国外打工五年。回国能干啥！?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1883391528392692898",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "现在的留学生们，你们更希望归国发展，还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "663899651",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "你为什么不留在澳大利亚？而是选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "428414994",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外排名1000+博士，回国就业（包括工业，研究所，学校）在简历关会被hr卡么?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "666957004",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待留学生回国就业前景？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "294500428",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "定居海外后为何不愿意回国了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "430620552",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "您认为经济学海归回国最值得的选择是？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "665123389",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "新加坡还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "333768312",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外旅居很久的朋友，回国后有哪些不适应的吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "13584462864",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "qs前100深度学习/大模型相关博士回国薪资如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "605755500",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么很多留学博士不愿回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "61956493",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "去海外读完博士，32 岁的我，是否还有未来?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "482897804",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "一个有工作经验的海归回国找工作的一些感触有什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "278190858",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "留学博士如何回国找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "392014233",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么最近很多人反感留学生回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "645107350",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "如何看待留学生热帖「因为不想回国，被妈妈拉黑了」？如果是你，你会怎么处理？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "617277595",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国家留学基金博士后到期后是否可以延期一年回国工作吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "357738944",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "花钱去国外混个博士文凭是回国当大学老师的捷径吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "527590618",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "国外硕士想回国读博该怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "265422295",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "在国外读博士，会永远失去“根正苗红”的机会--对回国发展造成重大影响吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "318147256",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "日本留学生回国就业前景怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "405830443",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外博士毕业，回国做博士后是一种什么体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "313739505",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "海外博士(后)会因此回国么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "31543819",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外华人可以重新回国并恢复中国国籍吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "657655417",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "好奇出国留学的人为什么不在国外继续发展还要回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "11676512680",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "中国博士在未来的就业情况也会如此吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1920954775169659973",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "想听听大家留学之后是回国还是留下了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "477856507",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外华人为什么回国相亲?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "306938023",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "如何看待好多中国学者在国外做五到十年博后也不回国的现像？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "40393469",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "本科海归留学毕业后回国何去何从？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "548068430",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "出国博士后还是留在国内发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "544649260",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "美国top20大学博士后，回国能找什么样的教职？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "565266252",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外硕士工作一年回国，是否应该考虑读博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "624947695",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "寻求回国找教职的意见？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "307242848",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么很多留学生都喜欢偷偷摸摸的回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "648097538",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "出国后换了国籍怎么回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "638179469",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "移民出去的普通人，有没有那么一瞬间是后悔过的?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "653132944",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么都出国留学了，有些人不在国外继续发展还要回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "40162545",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国就业都要注意些什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1895860530016679404",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "我国博士后已超 40 万人，这一数据说明了什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "1913601598615187511",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "有没有在海外工作的博士想回国工作的？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "496079523",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "出国留学后应不应该回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "545469587",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "是否可以去国外做个博后然后回国去业界?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "552276039",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "大家讲一讲海归博士回国遇到过哪些坑？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "12009836764",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "我能回国生活吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "458955483",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "未来的博士到高校当老师会不会很难啊？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "59590356",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "海归回国，投行还是四大？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "358823764",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "主动选择回国的海归发展如何，后没后悔？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "283689247",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "title": "作为一名海归，你觉得回国找工作哪些因素让你觉得烦恼？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "626528706",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "为什么高校老师很少见国外硕博，大部分都是国内硕国外博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "406433101",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "近几年为什么越来越多的人在海外拿了本硕学位后，回到国内读博士？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "53506947",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "如何看待中国绿卡大松绑，博士回国直接拿绿卡的政策及可能的后果？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "267233133",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外留学，到底应在什么时机回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "27969036",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "留学生回国考研值不值得？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "484946335",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "海外生活的中国人应该在什么时机回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "62674667",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "近年，在美国拿到博士学位的中国籍应届毕业生，有多少回国了？境况如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "598878756",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "title": "33岁海外男博士是应该回国博后，还是找一个双非安定下来？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "question_fix",
+      "question_id": "503018723",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "title": "为什么会有留学生在毕业之后选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "dba1dc54-fa5c-4dea-9020-210cecbcb686",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "24032727",
+      "title": "学金融的海归回国一般都去哪里工作?具体做什么?",
+      "old_count": 0,
+      "new_count": 492
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9fe39e74-6df7-425a-bf7c-6e208d0c2c32",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "37197524",
+      "title": "如何看待海归硕士回国找不到工作的现象？",
+      "old_count": 0,
+      "new_count": 12
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f07aa5e9-ea55-4d48-904a-947873520498",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "8867546614",
+      "title": "广西海归回国补贴政策?",
+      "old_count": 0,
+      "new_count": 11
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "480fa479-1b97-439a-9e90-e3b18b64ed14",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "1910726713970786471",
+      "title": "通过海外人才引进回国的人才会比普通海归少走十几年的路？",
+      "old_count": 0,
+      "new_count": 9
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f391d652-377f-4d65-80de-40df1362892b",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "565099226",
+      "title": "心理学博士回国工作优劣势？",
+      "old_count": 0,
+      "new_count": 7
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ac115439-abb5-4b68-9d9a-fa2952ffc58f",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "369543409",
+      "title": "为什么知乎上普遍看衰海外华人？",
+      "old_count": 0,
+      "new_count": 5
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "07cdda8a-91a6-46ae-9eac-b7044843b7b6",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "457478394",
+      "title": "想问问各位回国的留学生，你们有后悔过回国工作的选择吗？",
+      "old_count": 0,
+      "new_count": 4
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "eb637b69-d8ba-4477-9d89-4c3b19cffb08",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1931368413449680882",
+      "title": "中国留学生「归国热」正在升温，背后的原因和面临的挑战有哪些？",
+      "old_count": 0,
+      "new_count": 4
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "17466805-8a16-47fb-9d3a-0b601df5860f",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "67330244",
+      "title": "高校老师收入不高，为什么大批海归却会很努力成为高校老师？",
+      "old_count": 0,
+      "new_count": 3
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0f89388b-ece6-4d82-bd22-cef6cce6aa4d",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "522982565",
+      "title": "很多高学历的海归女留学生回国，哪怕貌美如花，为什么很难找到男朋友？",
+      "old_count": 0,
+      "new_count": 3
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9d4ae004-c34d-4cbb-a4e7-a61b8667304f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "59583376",
+      "title": "为什么有的青千回国后，发的文章质量下降很快？",
+      "old_count": 0,
+      "new_count": 3
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f3ccf9bb-1253-4118-811e-4400557f3815",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "523963229",
+      "title": "如何评价海外回国人员需要48小时内核酸结果改为12小时内这一情况？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d6854a7c-8fbd-46de-a80a-ed5452e1c46d",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "35035118",
+      "title": "海归回国找工作有多难？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e6414ea6-a480-446e-ae49-a1ffc78ac9f3",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "19998285",
+      "title": "海外销售回国之后好跳槽吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "cd00993f-ccfa-4836-b860-632661af51a4",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "266847238",
+      "title": "作为海归，你预计要用或用了多少年赚回留学费用？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a81dd663-97ff-4ac9-b3d3-d7ee02af7bfb",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "272049546",
+      "title": "在欧洲读博士回国的认可度？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6764ed90-c76e-4dde-ba25-6d6d0aa9795f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "491909541",
+      "title": "美国博士毕业回国，年龄马上就 35 了，该去 211 做特聘副教授还是走人才引进去一本二本算了？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "fe280506-8f75-491d-be02-aba585733c1a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "286229338",
+      "title": "为什么在国外待久了回国后很不舒服？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4e4f2a83-8f41-4935-9227-feaa3b0abfbf",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "453762239",
+      "title": "马来亚大学博士回国能任教于广深这类城市的高校吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "3c893056-3a4c-4bbc-986f-76c7ca94ec19",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "488535010",
+      "title": "如何看待留学生不吃香大批海归回国找工作遇冷？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "452fe5ab-94cd-4146-abe3-2efe36ce677b",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "658504862",
+      "title": "为什么出过国的人回来都不描述真实的西方百姓生活？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "47332fd0-9110-4a1a-b25d-bf6eeca179aa",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "630793906",
+      "title": "一年硕士海归一辈子都挣不回来留学的钱，为什么还要去留学？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "031f4b5e-fe5d-45b7-bcf6-b07cd45e979b",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "468824664",
+      "title": "如何看待数万的印度留学生要求返回中国?",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "66ec907f-40bd-4aff-971c-6a9b09cb9bc5",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "448523550",
+      "title": "墨尔本大学计算机博士回国可以和985比吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4b035d37-1750-43fb-82d3-fff2bc2e6b59",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "380134081",
+      "title": "为什么知乎大多人都在鼓励留学生回国而微博却几乎是让留学生别回国？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "7b88e4b8-bf55-458d-88d4-3b913739f05c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "635528668",
+      "title": "大龄女博士毕业我该选择回国还是留美?",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9d4a9333-97ba-420b-b7b4-4fc70dddddc6",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "405928509",
+      "title": "男友表示硕士毕业后想要出国读博，然后回国进大学当老师，要异国4年左右，我该怎么办？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e3397f4d-2ade-417d-9f48-b7b8e5e39c9d",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "662271929",
+      "title": "如何看待留学回国后选择当厨师？你对所谓「学历浪费」是什么看法，人生真的只有一条路可走吗？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "34ef606a-ec1d-4665-b377-ce64a19cfd5a",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "6005887723",
+      "title": "德国留学生回国率为何高达九成？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a0737f76-3371-42d1-aa57-ba5eebda6ab0",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "615316337",
+      "title": "未来想做高校教师，国内读博还是国外读博？",
+      "old_count": 0,
+      "new_count": 2
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2644500e-5340-4d82-88fa-7378c3c0f785",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "6952327621",
+      "title": "留学生回国，都是怎么找对象？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "37332da1-1692-4a0d-b83a-89a5f8461774",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "452967511",
+      "title": "我应该为了找女朋友从硅谷回国么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c5549e96-29ae-42e4-add9-23c9a74a0d43",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "36823006",
+      "title": "留学生回国有了海归的头衔，是不是就成了香饽饽？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2eb90952-c903-4396-82a0-d18b1de416a3",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "666957004",
+      "title": "如何看待留学生回国就业前景？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f25dd72c-fb1b-4df5-9c48-81fc141e3f7e",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "358823764",
+      "title": "主动选择回国的海归发展如何，后没后悔？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0e3424d5-10b1-4b27-8058-623ab0d865af",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "64105703",
+      "title": "有几年海外工程的工作经验，回国之后可以往哪方面发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4fc59b5b-79a3-4b03-9d15-3acfe05e6838",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "544649260",
+      "title": "美国top20大学博士后，回国能找什么样的教职？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "15f565fb-ab6d-480f-acde-4f46fe16fc3a",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "378706911",
+      "title": "如何看待疫情期间部分留学生回国被某些网民辱骂?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ebcd6c33-7b2a-4be2-88db-442cf69449e5",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "269301913",
+      "title": "海归回国，如何选择？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1c9b4065-1d9d-401a-908e-3afb9d6d2b57",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "636703333",
+      "title": "我该选择去国外做博后吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b848e9bc-8145-4237-bd4b-17de921e7585",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "606143509",
+      "title": "那些花钱去海外上水硕的学生回国后都怎么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f91aedcf-3de1-4751-b2d0-e7f51dbf095a",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "33618992",
+      "title": "有海外工作经验的海归回国后是如何经历转型的？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "00f60377-3006-4a90-b0c8-64f3b59d5d86",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "535859506",
+      "title": "国外博后和国内博后差异？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5473dcf9-7f57-4b28-b812-2c958562de15",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "264504214",
+      "title": "美国应届博士回国到底好吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b30995ce-6e43-437a-898c-b84aa7f2471f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "8279875549",
+      "title": "2024 年多位顶尖科学家相继全职回国任教，第四次科学家海归潮来了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "49897d1c-6797-462c-b1db-a145f2f99880",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "452834454",
+      "title": "海博回国找教职还是继续博后？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "57f21b8b-20ed-43ef-a94f-7052840b9119",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "329754701",
+      "title": "海归金融方面回国就业发展前景如何?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8ec77558-c981-4d23-80b4-0afeb07eaaf4",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "354007301",
+      "title": "回国读博还是继续在美国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "81bad0fb-cb33-4e41-afde-be9ffd4cbf1d",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "318147256",
+      "title": "日本留学生回国就业前景怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9c493d27-2c6e-4c05-b794-ff62b4c5cee8",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "401298409",
+      "title": "是什么原因导致疫情期间很多国外留学生不回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f03a141a-0c95-4610-a1f7-875166472139",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "325144561",
+      "title": "博士最惨能惨到什么程度？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "97ef2f3f-34b0-4b70-b32d-d22b20b7c178",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "410793965",
+      "title": "国外打工五年。回国能干啥！?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "94e0d308-4738-4416-be83-fa79d70a4590",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "545404397",
+      "title": "加拿大留学生为什么在完成学业后大多选择了回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d52ba9a0-5ee7-4886-be6c-b4fb33c59a06",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "594394091",
+      "title": "在饭局上被亲爸酒后骂“假博士”怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e4247aab-bbec-4503-9c53-71f205dd4b2c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "452321242",
+      "title": "博士得到足够的尊重了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b8c37aee-20b0-469d-892f-8f1f45b53783",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "428655788",
+      "title": "留学生回国算个人问题还是社会问题？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2137457f-bd61-43b4-b490-534ce5e71300",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "68451742",
+      "title": "海外博士毕业回国工作应该走校招还是社招？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "70c7b132-9ab1-490e-9540-37fc8bd6d9f6",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "289448089",
+      "title": "海归博士为什么选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2bb2ae74-5eec-48af-aed0-5397f6b42478",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "313530600",
+      "title": "海归回国找工作是很难吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "528d7222-021d-4233-8c70-10ae959ad7a8",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "645107350",
+      "title": "如何看待留学生热帖「因为不想回国，被妈妈拉黑了」？如果是你，你会怎么处理？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "61edc3bf-6c7e-4ee4-b44f-01ff534616fe",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "598878756",
+      "title": "33岁海外男博士是应该回国博后，还是找一个双非安定下来？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ffb65dc2-540f-43e0-8d79-7f29c106ece7",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "665123389",
+      "title": "新加坡还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9e227060-04d4-4d8b-a9bb-75b8d14be6de",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "66935118",
+      "title": "身为 28 岁的海龟金融男，为什么回国后薪水却很低？该做点什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "419021a3-7060-4dd1-86cd-43f0ce2abc4f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "625290855",
+      "title": "CS/AI方向，东京大学博士回国相当于国内什么水平院校？入教职可以选择什么水平高校？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c763c1b5-6cc7-41a2-a0bf-bd17e4a537aa",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "630748479",
+      "title": "如果目标是回国任教的话，国外博好还是国内博好?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0348fb7c-a609-448f-841b-61029bb26188",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "63726036",
+      "title": "目前海外人文社科类博士回国进985/211高校拿教职的要求有多高？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2201ca38-7570-4776-8cb8-8b563dfd2feb",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "298489462",
+      "title": "出国读博后回来以后好就业么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d59d4270-3e1c-492c-8266-179c6b51bfe5",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "648780938",
+      "title": "美国前50高校助理教授，回国拿海外优青有多稳？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "84c630a0-3af2-406a-971d-54f43a20d4c4",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "59590356",
+      "title": "海归回国，投行还是四大？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8097887f-4191-4c16-9cb0-687b93bb479e",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "294500428",
+      "title": "定居海外后为何不愿意回国了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "3616721a-05d6-4a4d-9457-d8408f804f16",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "1936981779778090447",
+      "title": "美国文科博士回国军校文职人才引进？教学科研岗 vs 教学岗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "dbf61867-85a5-4421-bbf2-9fdf065327eb",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "618276961",
+      "title": "为啥国内总有些人羡慕外国生活，却不愿意出国呢?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5c49948f-2795-4df7-9243-eca87a37984d",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "31181028",
+      "title": "为什么说海归如果想回国就要早回？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c5cb5754-3b2e-4225-8de6-d3f100b2f917",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "860635901",
+      "title": "大部份留学国外的人会选择回国，但有一部份说什么也不回来了，为什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8b662fcc-fd46-493d-a238-cfeb1c39f00e",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "667545236",
+      "title": "为什么现在的海归和以前的海归感觉不一样呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "451cb1cb-1c3d-4403-bc9e-0dc4e72811a0",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "313739505",
+      "title": "海外博士(后)会因此回国么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "aa061d42-2c2e-44df-bd90-804ed01b08d3",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "454160520",
+      "title": "为什么有的海归刚回国会有一段时间不适应国内环境？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4cb13455-7579-48d3-a0ae-e1f504cf60bc",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "1922784518668030895",
+      "title": "海归留学生回国求职辅导机构哪家好？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "48ff49d6-61b5-4ae1-a4d8-738217633503",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "363549168",
+      "title": "请问回国生活工作后的海归们有哪些culture shock? 大家是如何慢慢调整适应的...... ...",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "fae2baeb-8684-4a9c-9c03-2da5858b5fbc",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "306938023",
+      "title": "如何看待好多中国学者在国外做五到十年博后也不回国的现像？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9a4601c2-da29-4c5f-8c8a-3dd1669274be",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "662573880",
+      "title": "以目前的形势，国内临床医学土博读国外博士后能更有利于回国发展吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ac7816e2-95b9-4c1f-b1a5-9883344d95da",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "28387838",
+      "title": "如何看待部分海外名牌大学留学生在毕业后不回国效力？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "98892508-12a8-4dcc-b383-c233d2a3e762",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "61956493",
+      "title": "去海外读完博士，32 岁的我，是否还有未来?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1ff637ae-87cb-4b8e-85ac-f2920acda3b0",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "49531312",
+      "title": "本科留学生回国现状？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "3330418c-b376-459a-89d9-51fb6ed3ea21",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "392014233",
+      "title": "为什么最近很多人反感留学生回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "86dfefc2-b0e5-4790-8afd-cf6b8f143082",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "411171941",
+      "title": "留学有海外工作经历真的回国更有优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "51e20285-66a0-41e9-ad01-428d487028b5",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "457478394",
+      "title": "想问问各位回国的留学生，你们有后悔过回国工作的选择吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0cc2b49d-158b-4de0-ba3d-f41329e9ca50",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "46897866",
+      "title": "真的有那么多人认为留学生回国是因为在国外混不下去吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "37222353-8ae8-4344-9213-4197476cc4ec",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "657655417",
+      "title": "好奇出国留学的人为什么不在国外继续发展还要回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "43c09b10-a533-4376-a3ac-5f7b143e45c6",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "40393469",
+      "title": "本科海归留学毕业后回国何去何从？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a7746637-5546-460d-8ebc-17e87ab6d2ee",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "529644548",
+      "title": "博士毕业留欧洲还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "31c3988b-47c2-4bc8-969b-5dfd313efda2",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "398296249",
+      "title": "跟随刚回国的博导读博是什么体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d4e3e98d-346f-42d7-9677-18430a81c11e",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "640062089",
+      "title": "有哪些历史梗被玩得多了，就被潜移默化当成史实的案例?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8e2e32a5-4ae4-4a44-8398-aa4395da5a9c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "624947695",
+      "title": "寻求回国找教职的意见？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "474b6a4b-951a-479a-8221-d3fddc036b79",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "269025840",
+      "title": "留学结束后你会选择回国还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "596df2df-9655-4440-9a8c-d82a4b61d24d",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "464137968",
+      "title": "海归回国后求职就业以及生活的适应性怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4b62ada8-32ab-4715-bc89-951cb69a92e3",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "305472045",
+      "title": "国外博士毕业之后，大家选择回国还是继续在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c6416a59-ea24-4a50-933c-efe84daf5742",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "22983987",
+      "title": "在海外的工作经验会成为回国后的优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e23b2dd2-672f-4990-955c-589705654d2c",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1883391528392692898",
+      "title": "现在的留学生们，你们更希望归国发展，还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "76fd0ea7-33eb-4739-85fd-fbcbfe731819",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "659760707",
+      "title": "海归回国后找工作究竟有多难?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0dde05ae-fee7-4b72-a33e-18c83b6df946",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "545469587",
+      "title": "是否可以去国外做个博后然后回国去业界?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ffbc99b3-3cec-4718-8f47-572c15ceebda",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "427124505",
+      "title": "海外排名1000以外大学的博士，回国就业怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1bf9a8e6-7217-48fc-96cf-fd54267f5a01",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "267641780",
+      "title": "海外华人入外籍之后回中国能干什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "488c571a-57cf-4dca-bccb-1688eb2a343d",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "539624039",
+      "title": "海外本硕回国读博和国内本硕出国读博的认可度差很多吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8881351b-f38f-495f-a2bc-e83277d604b8",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "654110333",
+      "title": "博士，想退学回国工作?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "590ebcc9-be59-4228-a3d5-cb4fbe19cf77",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "601971025",
+      "title": "海外博士毕业回国找教职，高校更看重哪些因素？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "37b42118-9b0d-4b24-b99f-fc9697dd18ae",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "558745459",
+      "title": "海归博士回国怎么找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "7fb6d60c-2f1d-4ce9-a843-3f69dec20407",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1895835988120540474",
+      "title": "出国之后入了籍 今后怎么回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4d6468f6-e9db-48ea-be7f-9ca60b496725",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "451774392",
+      "title": "想知道现在留学生回国找工作情况?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "40b3df79-ffa6-486e-87a7-9ef5fdfc75d1",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "299246319",
+      "title": "为什么男女留学生对于回国的态度有明显差异？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c900765e-bec2-45b4-8139-8bf23378891e",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "558274171",
+      "title": "海外工程干五年回国可以干什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "fb19fe65-f872-4f7e-b138-6fa423bcd902",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "380688768",
+      "title": "为什么很多海归回国都做了行政?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e14d309f-8eab-4099-82db-699cf15ca57a",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "458955483",
+      "title": "未来的博士到高校当老师会不会很难啊？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "023a361c-93c8-4318-a41c-eaac3beabba3",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "617277595",
+      "title": "国家留学基金博士后到期后是否可以延期一年回国工作吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c3735bd2-83a7-4c24-92a4-897da63f1055",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "414947862",
+      "title": "你见过最惨的985毕业生混成什么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ecdf12de-e9ad-4812-afcf-fbdb728b536f",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "379015449",
+      "title": "如何看待欧美的中国留学生在疫情爆发后大量回国避难？这是一个正确的决定吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ac9b3353-5106-47f5-84f1-6fd56b350e12",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "602021080",
+      "title": "为什么中国人去非洲务工后，大多不愿意回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "07f64206-a02b-478c-a2e0-450e2284441a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "333768312",
+      "title": "海外旅居很久的朋友，回国后有哪些不适应的吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1f2c9b7e-d383-48c5-9dbc-0bda505304e1",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "663899651",
+      "title": "你为什么不留在澳大利亚？而是选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "569a4884-801e-4d60-b231-2fdb7f2d60ea",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1908310423398233391",
+      "title": "留学生回国真的会在很多方面遭受偏见吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "64bc9582-3e33-48a8-b24e-c401c0268998",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "11676512680",
+      "title": "中国博士在未来的就业情况也会如此吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "352dc016-dde4-46dd-810b-3b1717d42656",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "12009836764",
+      "title": "我能回国生活吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "da91cb84-3758-401a-8ec7-acf939fead3d",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1913601598615187511",
+      "title": "有没有在海外工作的博士想回国工作的？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "294d10d4-fccf-491d-a335-a83156611dac",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "581077637",
+      "title": "海外博士回国工作几年了，再出国博后可以吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d03cde3c-51ab-4556-9b88-6f4f6671d822",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1900002472052883635",
+      "title": "大龄海外博士回国有希望吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "7563fb78-8ca2-457a-b427-05e87de69e08",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "466525147",
+      "title": "美博毕业是留美还是回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ec18a55b-790e-4edd-ab30-76ec018116c1",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "273995341",
+      "title": "如果你是海外留学生，毕业后，你会选择回国就业，还是留在国外？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4cbc7220-3e27-44a1-b126-8ad631a0a431",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "8750292530",
+      "title": "五年后博士毕业回国期望如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e5796f0c-8ecc-495e-9548-fba1daf3360c",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "477856507",
+      "title": "海外华人为什么回国相亲?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c094980f-6357-45ef-be5e-fa4d12ea851c",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "604803281",
+      "title": "海外硕士回国读博有优势吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "77267e4e-4fbc-41f8-9a18-36346243dcdd",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "626528706",
+      "title": "为什么高校老师很少见国外硕博，大部分都是国内硕国外博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5b81c3ac-0708-4a9f-8c37-94b790fca586",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "24722903",
+      "title": "海外博士毕业后什么时候回国最合适?1博士毕业直接回国;2博士毕业后博后几年在回;3其他。我在英国读博...",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "74cad4eb-344a-4661-9016-e345f4a40115",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "520799309",
+      "title": "海外博士，为了将来回国拿帽子，该怎么和国内的大佬建立联系？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1bda819e-0f37-4b4c-ac77-019e68d49a85",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "64695508",
+      "title": "如何看待8位哈佛博士不要绿卡，集体回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0875b1db-1226-4473-bd4d-6eaba5616c9f",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "325388551",
+      "title": "如果我在国外工作多年，现意欲归国，工资怎么带回来？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "7e21cb88-be4a-4eb5-a729-17bd39ebab9d",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "1940210975270740478",
+      "title": "海外管理学博士可以回国找工商管理专业么的工作么?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c75ed155-a29f-4a98-a9c0-8ebbdd1913fe",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "67330244",
+      "title": "高校老师收入不高，为什么大批海归却会很努力成为高校老师？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "763ac6ab-70e9-457f-b2bd-c594c999c1b5",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "27487570",
+      "title": "北大本科毕业，在国外的学校念 PhD 心理落差很大怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "db3b7dc1-7ea4-46a7-ad2e-44d033f654af",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "46952784",
+      "title": "用人单位愿意招海归吗？为什么？海归的优劣势在哪？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5d401271-f139-42b5-8d29-ff14e08e3c97",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "30882068",
+      "title": "去海外做博后值得吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5b56be75-49c0-4e4e-aa5d-3ab9b42598d4",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1923228089124631290",
+      "title": "父母因为我不愿留在新加坡工作而选择回国发展对我怨气连天，我真的做错了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2ed68de5-1de3-41fb-87ba-65f6f9cc9121",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "640221613",
+      "title": "怎么看待为了逃避国内的内卷就带孩子移民去了澳大利亚？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6ed19586-a611-4474-9ca6-43181326d9b5",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "419978660",
+      "title": "为什么很多人国外读硕选择回国读博士？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "aa1649f4-322c-45b6-8d55-e71d1fa16d37",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "31543819",
+      "title": "海外华人可以重新回国并恢复中国国籍吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f21831ba-01a1-456a-8aa0-a9f4422383fa",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "525299789",
+      "title": "海归回国已7年了，回国后我有一种“海归的求生欲”，怎么调整心态面对旁人的不理解？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b65442f1-c875-4f40-9234-5bc9cf303334",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "39020413",
+      "title": "国外临床医学博士毕业回国就业可以吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "46721586-f1ef-45dc-8004-0d89010518df",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "59469447",
+      "title": "为什么说欧洲是博士的天堂？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f84321bb-3dd9-478e-a1fd-738dfb8b382f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "302674533",
+      "title": "海外博士毕业，回国找工作，你有哪些建议或经验可以分享？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "3fd3e7d8-1f68-4890-8923-dc8017c6abc5",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "487498755",
+      "title": "关于海外留学生的回国后隔离问题~?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "04cf3857-d618-417a-8ee1-1ff3991bd873",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "503018723",
+      "title": "为什么会有留学生在毕业之后选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "fde9da28-3349-4228-bce1-37c731f57c14",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "54667581",
+      "title": "出国后第一次回国是怎样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c4ac8931-cfd0-45d4-9cda-49bd53399d19",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "14308884300",
+      "title": "请问国内本科毕业+海外一年硕士+回国攻读博士学位，这样的安排，可行吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "71a94f1f-6946-4c63-9b00-4dde97c38c8f",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "36392676",
+      "title": "海归选择回国发展的原因是什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6b184b50-9e3c-4b89-9f1d-17ea4ce68b16",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "454160520",
+      "title": "为什么有的海归刚回国会有一段时间不适应国内环境？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b5a1d410-72f4-4557-ba77-f8aa07d92f22",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "1887323553906537624",
+      "title": "35➕还在做博士后，想回国工作还有机会吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b8e38898-23ac-4273-8c76-190c74a1b998",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1920954775169659973",
+      "title": "想听听大家留学之后是回国还是留下了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ec6799d7-e468-458a-9ff4-8b1f3d8dc1d4",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "565298145",
+      "title": "为什么一些留学生回国后就不快乐了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "bf04281e-1235-4c85-9d12-68c0d3dc196d",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "67052309",
+      "title": "那些年常驻海外的你，回国都干嘛了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b17daffa-34a4-4bdd-807e-57424d748c15",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "661131652",
+      "title": "本人现在在某央企工作，外派非洲已经5年了，年薪税前约50w左右，在海外久了好想回家，怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ff50f709-9b81-42cc-be8f-15c1285495d3",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "653132944",
+      "title": "为什么都出国留学了，有些人不在国外继续发展还要回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5f088ad7-7040-4ebd-a6c6-bf1af460028c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "605755500",
+      "title": "为什么很多留学博士不愿回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "26cfeb3e-5da7-430b-aded-85c038ca6583",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "1899360555153727696",
+      "title": "董明珠会因海归抵制道歉吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c12d0fe5-4f9b-42bd-bd33-347188031e78",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "639052344",
+      "title": "境外资金如何合法回国到个人账户？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "4fcc2d32-9672-4d9d-b93e-41ec18ca232a",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "23052912",
+      "title": "海归博士的就业情况如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "919de73b-b00b-40a2-a214-ae5e1e71fb60",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1938493943626073437",
+      "title": "海外回国 offer可以推迟多久入职?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ebaed605-5378-485f-8f56-5fd2e1d8e77b",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "327447867",
+      "title": "那些海归又归海的人，你们过得怎么样了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ff74bda8-85f2-4d4a-a94c-3d7f7670fda7",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "660165483",
+      "title": "国内985土博，想申请国外的博士后，鉴于目前的国际形势，可以给一些建议吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5eb24f65-bd97-4239-84eb-5ad990e64bed",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "282928200",
+      "title": "30岁单身女青年 海外工作 该不该回国重新开始？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ca479dc6-161e-449a-a3c3-fce292dbe4e5",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "535790548",
+      "title": "出国读博士，回来去高校，有必要吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ea03a016-3810-4139-a725-8b965f19a193",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "514680501",
+      "title": "海外顶级名校做博后和海外顶级名校的博士有多大差距？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f6f33e90-ad4e-449b-bdae-0c2e1165b156",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "556777500",
+      "title": "美国top30理工科博士回国工作的待遇和清北博士相比哪个更好？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a13f253e-ef16-4104-9ba3-5911262089be",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "482897804",
+      "title": "一个有工作经验的海归回国找工作的一些感触有什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "34e3cfd5-ddd0-4dc4-bd51-8554d86ab4ea",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "554445679",
+      "title": "十八大以来超八成留学人员学成归国，如何看待这一趋势，为什么越来越多的留学生选择回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "10bfb7dc-2f64-40c3-8662-9bb575d2fc1d",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "20404175",
+      "title": "为什么 2010 年来很多海外留学的中国人已经拿到绿卡了却又纷纷回中国发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "fde19f09-397b-4034-baf6-4f30f860c80a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1929152689444484752",
+      "title": "放弃海外生活回国打拼的你们，现在过得还好吗？有没有某个瞬间觉得选择错了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "744c5a14-9598-4e4d-8991-d736b7b12b8e",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "307242848",
+      "title": "为什么很多留学生都喜欢偷偷摸摸的回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "69e2a170-473f-45bc-9fe6-fcb632bc0473",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1904041624083887961",
+      "title": "为什么大部分人听到“留学”还是习惯以回国作为讨论点？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1a4d8431-32e6-411b-8c09-1b4a1eafb2f7",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1908806629299844105",
+      "title": "现在真的有迹象，国外归国留学生在国内被歧视吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e76a435e-dab1-4b10-be95-61e44c2cac49",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "283689247",
+      "title": "作为一名海归，你觉得回国找工作哪些因素让你觉得烦恼？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "7b8851ac-73eb-4a49-bf81-dbd76c39c035",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "380483782",
+      "title": "为什么过来人很多推荐出国读博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "61ebf43e-d41b-4e3c-95d1-411c29bdd848",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "548068430",
+      "title": "出国博士后还是留在国内发展？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8d75c5de-4c94-4e05-a06a-5639ce1b0383",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "21780119",
+      "title": "海归回国所具有的优势与劣势分别是什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9cb669c7-d42a-41d0-b1e9-52f9cc5e9e92",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "442448131",
+      "title": "留学生中途回国怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "60e39754-92c4-4728-8814-ddb8b54f463c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "357738944",
+      "title": "花钱去国外混个博士文凭是回国当大学老师的捷径吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b6e4408a-2ec7-4eef-b39d-2c71932934b9",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "615120336",
+      "title": "牛剑博士回国申请教职的认可度如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ff142adb-ab97-4e5b-b7d9-3a6d556fd2fc",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "1901594195078149303",
+      "title": "海归留学人员原来那么吃香，怎么现在一下子就不行了呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6f4e5e00-6c61-4160-97e8-8263f0efba56",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "13584462864",
+      "title": "qs前100深度学习/大模型相关博士回国薪资如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "37007c09-d074-4e69-ad90-770ccb3bb24a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "608226445",
+      "title": "有人在非洲待了不到一年就回国的吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ed5f3e4e-a620-431b-bfa2-63c021f064ca",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "565266252",
+      "title": "海外硕士工作一年回国，是否应该考虑读博？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "52f64ade-40fb-4870-9466-bb9d87d6d6e8",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "267233133",
+      "title": "海外留学，到底应在什么时机回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "615f8201-a606-4955-9b0d-d7e1a8e005b3",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "345196332",
+      "title": "当年美国人不想让钱学森回国，为什么不敢暗杀他？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c9572f84-7d60-49b7-9b04-7e9c7f4d9233",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "393833585",
+      "title": "大龄海归回国后很受挫，想问问一直在国内怎么才能混好?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5303a447-8208-4a9b-b74a-1f6010ff6114",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "302430305",
+      "title": "留学博士回国待遇怎么样啊？该去哪家公司啊？可以给科普下？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a09495aa-ac03-43a0-8d98-d40bee7b43bc",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "53506947",
+      "title": "如何看待中国绿卡大松绑，博士回国直接拿绿卡的政策及可能的后果？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "53618cc2-faab-474a-97e5-fe2ea105e1b4",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "497370830",
+      "title": "大批留学生归国坐冷板凳，留学生学历真的不吃香了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6198e5da-a5f3-4049-a576-062a4e1d624d",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "634058194",
+      "title": "为什么很多留学生选择回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9140fc57-366f-405f-9620-6c45f6e02ed4",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "592667418",
+      "title": "博士毕业回国还是留美？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "1c2c1398-f63e-4281-8d98-6de709da0e42",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "496079523",
+      "title": "出国留学后应不应该回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "61c916f7-5e96-41c1-875d-3afcd8d0630e",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "405830443",
+      "title": "海外博士毕业，回国做博士后是一种什么体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "844a10f8-a50e-48ad-a4de-f0bfc8f64f65",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "56359288",
+      "title": "海外留学回国创业是种怎样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f557637f-359f-44eb-9103-4f7dd5878da6",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "1929470530051904068",
+      "title": "留学生（留学生的学生）对国家的发展做出了巨大贡献。为什么国内对部分海归人员越来越不重视了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "22bf7b9c-7caa-4af5-a333-2007bef1d0c2",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "428414994",
+      "title": "海外排名1000+博士，回国就业（包括工业，研究所，学校）在简历关会被hr卡么?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b8b3b095-b877-4699-8a72-66b85cbcfe57",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "651709306",
+      "title": "国外博士毕业选择做博后几年后再回国还是直接回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c06efc7b-df8d-4356-a9d4-b4a7c28df61a",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "663345003",
+      "title": "如何看待这一次的研究生博士扩招?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "be6cd619-9793-4b7b-9b2a-e5d30f9ed056",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1901049665392182911",
+      "title": "回国工作还是海外就业？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e17aacab-ccb3-4125-8497-7abe8694eebe",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "602363583",
+      "title": "剑桥博士回国能进C9教书吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "17cc1cfd-e07a-469b-b181-f6034a6aa6db",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "473469896",
+      "title": "有多少海归回国，能够年薪百万？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0bf51add-944c-4952-a658-9c88319e82a3",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "381105419",
+      "title": "截至目前，我国海外华侨总人口在五千多万，如果海外华人都开始准备回国，大家有什么想法？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "beb4ff04-89f5-4112-9a3f-7f7e02eb87b7",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "608932340",
+      "title": "有了博士学位该回国吗?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "93f4797c-b687-43a5-86a9-ea900ad7da4a",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "25108818",
+      "title": "怎样看待海归回国创业？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9162e3e3-20c7-455d-bb6c-63a40e9cd462",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "698273486",
+      "title": "被外国遣返回国的人会如何处理？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9756de6b-3768-4e2f-be33-93d55865fa20",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "624363851",
+      "title": "当前中国内地，博士学位，已经贬值到了何种程度？未来会如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5ba461a9-6be7-4a2c-9be6-153c6897a70c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "406433101",
+      "title": "近几年为什么越来越多的人在海外拿了本硕学位后，回到国内读博士？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5f667341-10d9-4c61-a9b8-dc3202ba70f3",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "1918679705109927318",
+      "title": "海外留学生如何回国求职？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "faa61c43-c1ef-4715-be71-1c611fbe0c3a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "546186385",
+      "title": "现实是回国的人多还是出国的人多?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "f6a6b3a6-c0c2-4ff6-bca1-6e7cedcc12d9",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "563223884",
+      "title": "在海外漂泊多年突然回国工作是什么样的体验？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d369cd21-53c9-47e7-8485-7b4c046131fa",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "294507856",
+      "title": "从海外留学回国工作都会经历一段不适应期吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "5adbc774-1c22-4166-baf1-3a3d4df64c7b",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "658621203",
+      "title": "留学生回国己经不受认可了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "407c7dcf-7da9-4926-ac36-0af9469c8b45",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "552276039",
+      "title": "大家讲一讲海归博士回国遇到过哪些坑？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "aa386108-ed5b-411e-bd12-b7b319aeec64",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "21559835",
+      "title": "在国外工作一两年，再回国工作的利与弊有哪些？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "55d43590-508f-47b5-907c-6b64c03aec72",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "310602433",
+      "title": "海归回国，为什么感觉不好找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "eb92f89c-093d-406e-9679-bd7154c216a2",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "638179469",
+      "title": "移民出去的普通人，有没有那么一瞬间是后悔过的?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d53f1805-6da0-4fef-b7ca-81cfb953325e",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "330307307",
+      "title": "国外读的博士，计划回国工作。是先做博后好还是直接高校入职好呢？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "8f39604a-8969-4c26-9cb7-18b6e4a54e46",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "353310576",
+      "title": "如何看待中国留学生逐渐归国现象。？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "e38b98b1-40e4-4272-b144-d42785cc4f8f",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "430620552",
+      "title": "您认为经济学海归回国最值得的选择是？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b424af7c-150a-4c71-94d9-3100e6ae7c3b",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "291037378",
+      "title": "2018年-2020年海归回国前景怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0f45ecc9-c656-476a-b2aa-c3fb780084f9",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "265422295",
+      "title": "在国外读博士，会永远失去“根正苗红”的机会--对回国发展造成重大影响吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "daf81731-c736-4cc4-82e8-55778548b64e",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "278190858",
+      "title": "留学博士如何回国找工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d78784af-f8b7-488d-b332-9b30a64babdf",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "40162545",
+      "title": "海归回国就业都要注意些什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a1f2a02c-4c9f-43ff-8074-3cb596c89a2c",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "62674667",
+      "title": "近年，在美国拿到博士学位的中国籍应届毕业生，有多少回国了？境况如何？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ae249cbc-8016-4fad-8d23-c0a94c45a952",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "263366111",
+      "title": "作为一名留学生，你为什么回到中国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "6fce0191-177a-4064-a1a5-692d8d8751df",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "1938636961033217139",
+      "title": "中国银行调整海外派遣人员政策，规定回国后两年内不得辞职，这是否能有效杜绝人才外流现象？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "b4130335-bd29-4efa-a56a-590c9671a4b7",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "355791397",
+      "title": "留学一半放弃了回国的都过得怎么样了，还读书吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "754cdef6-d143-4710-9963-7ab407e03e9b",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "552688594",
+      "title": "为什么经常看到有人说男留学生回国的多，女留学生回国的少?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "45157c83-4b67-40aa-ae02-1714cbcef2c2",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "31189376",
+      "title": "从国外读完博士回来在中国大学任教要具备哪些条件？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "33ff321a-2ed0-4f90-a5c4-068c5bee67ac",
+      "task_id": "001d4a45-1d07-45d6-9d59-3d76f46556b9",
+      "question_id": "624411493",
+      "title": "真实回访｜留学毕业回国后，那些海归现在过的怎么样?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "79d18d74-26d4-4e21-ae3f-2eca02b41e99",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "634429689",
+      "title": "到底要不要出国做博后?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "a9e48064-d5d9-4d6a-b7fe-15e33dbcfc5a",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "648097538",
+      "title": "出国后换了国籍怎么回国?",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "438ba3a6-8c9c-4758-9f55-e28a5669fa0e",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "1895860530016679404",
+      "title": "我国博士后已超 40 万人，这一数据说明了什么？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "99fc2396-98d2-4004-b849-fa6bb3c59f9f",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "631075448",
+      "title": "留学生回国是因为在国外混不下去了吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "32c4c51e-ed71-4944-b794-717f274a9670",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "1906687627224150657",
+      "title": "海归回国内找工作，优劣势分别有哪些？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "2463bef6-e526-45a5-b600-fefd8cb051fa",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "63084215",
+      "title": "博士毕业是去国外做博后还是在国内做博后？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "c4f21da4-9e9a-437a-be80-9c991a43907b",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "527590618",
+      "title": "国外硕士想回国读博该怎么办？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "29b52537-a104-4673-aa87-e3b077d6dd41",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "534262813",
+      "title": "美国读PhD毕业如何留下？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "eaf6460e-3f83-4fa4-bf0d-64269a9f4705",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "652005667",
+      "title": "有些人在国内混不好，为什么觉得在国外就能过得好？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ac0aab74-54f4-4b99-bb94-30f1bd9f8b7f",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "356541382",
+      "title": "想回国的话还要不要入外籍？入外籍后回国发展有多麻烦？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "00f3d83e-7fb8-4b49-9c20-903f1ced966d",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "1926085976809252747",
+      "title": "留学生该不该回国发展(上海)？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "d03f8f3f-e369-4bff-ac08-d77e27d89885",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "661085071",
+      "title": "为什么出国的人都不愿意再回国了？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "0a0a5319-f542-479c-8eb3-9ad4f5a07c1c",
+      "task_id": "6e7f3a3c-35bb-4672-b80e-b076b5917627",
+      "question_id": "488535010",
+      "title": "如何看待留学生不吃香大批海归回国找工作遇冷？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "81f72894-308a-431c-8ce8-06250778073e",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "question_id": "484946335",
+      "title": "海外生活的中国人应该在什么时机回国？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "ad40a1f8-65d4-4607-a565-4b6fc36e2200",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "27969036",
+      "title": "留学生回国考研值不值得？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "23e49b50-fe30-4bc1-9940-b3e081e2220e",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "642565069",
+      "title": "博士毕业不喜欢科研却选择了海外博士后，还有后悔的机会吗？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "61ee06ea-ccf6-4c69-a49c-489ff6fa991f",
+      "task_id": "4b56850b-8129-4e5f-a52e-0841af6f3b74",
+      "question_id": "328193133",
+      "title": "继续PhD还是quit回国工作？",
+      "old_count": 0,
+      "new_count": 1
+    },
+    {
+      "type": "search_result_fix",
+      "result_id": "9241d47b-2d58-48e3-94b1-a2c42e80fbfd",
+      "task_id": "cd8c0915-9bce-4f09-8ae3-06dc26c78592",
+      "question_id": "14996083278",
+      "title": "我建议把毕业留学生全部遣返，让他们把学到的知识回去建设自己的国家怎么样？",
+      "old_count": 0,
+      "new_count": 1
+    }
+  ],
+  "end_time": "2025-08-22 06:22:24"
+}
