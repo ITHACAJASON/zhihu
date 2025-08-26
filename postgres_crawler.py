@@ -10,6 +10,7 @@ import random
 import re
 import json
 import pickle
+import hashlib
 from urllib.parse import urljoin, urlparse, parse_qs
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime, timedelta
@@ -44,6 +45,15 @@ class PostgresZhihuCrawler:
         # 初始化PostgreSQL数据库管理器
         self.db = PostgreSQLManager(postgres_config)
         self.current_task_id = None  # 当前任务ID，用于中断处理
+
+        # 初始化API爬虫（用于获取答案内容）
+        try:
+            from zhihu_api_crawler import ZhihuAPIAnswerCrawler
+            self.api_crawler = ZhihuAPIAnswerCrawler()
+            logger.info("API爬虫初始化成功")
+        except Exception as e:
+            logger.warning(f"API爬虫初始化失败: {e}")
+            self.api_crawler = None
         
         self.cache_dir = Path("cache")
         self.cache_dir.mkdir(exist_ok=True)
@@ -332,6 +342,7 @@ class PostgresZhihuCrawler:
             no_progress_count = 0  # 连续无进展的次数
             max_no_progress = 5  # 增加最大连续无进展次数
             scroll_up_executed = False  # 标记是否已执行向上滚动策略
+            consecutive_target_reached = 0  # 连续达到预期答案数量的次数
         except WebDriverException as e:
             if "invalid session id" in str(e).lower():
                 logger.error(f"滚动加载时遇到会话错误: {e}")
@@ -343,13 +354,20 @@ class PostgresZhihuCrawler:
         
         try:
             
-            # 尝试获取问题的预期答案总数
+            # 尝试获取问题的预期答案总数，使用更准确的方法
             try:
-                answer_count_element = self.driver.find_element(By.CSS_SELECTOR, self.config.SELECTORS["question_answer_count"])
-                expected_answer_count = self._parse_count(answer_count_element.text)
-                logger.info(f"问题标记的总回答数: {expected_answer_count}")
+                # 首先尝试使用get_accurate_answer_count方法
+                expected_answer_count = self.get_accurate_answer_count()
+                if expected_answer_count > 0:
+                    logger.info(f"通过get_accurate_answer_count获取到预期答案数: {expected_answer_count}")
+                else:
+                    # 备用方法：使用原有的选择器
+                    answer_count_element = self.driver.find_element(By.CSS_SELECTOR, self.config.SELECTORS["question_answer_count"])
+                    expected_answer_count = self._parse_count(answer_count_element.text)
+                    logger.info(f"通过选择器获取到预期答案数: {expected_answer_count}")
             except Exception as e:
                 logger.debug(f"获取问题标记的总回答数失败: {e}")
+                expected_answer_count = 0
             
             # 记录初始答案数量
             try:
@@ -448,8 +466,14 @@ class PostgresZhihuCrawler:
                         
                         # 如果已知预期答案总数，且已加载数量接近或超过预期，则认为加载完成
                         if expected_answer_count > 0 and current_answer_count >= expected_answer_count * 0.95:  # 允许5%的误差
-                            logger.info(f"已加载 {current_answer_count} 个答案，接近或超过预期总数 {expected_answer_count}，停止滚动")
-                            break
+                            consecutive_target_reached += 1
+                            logger.info(f"已加载 {current_answer_count} 个答案，接近或超过预期总数 {expected_answer_count}（连续第{consecutive_target_reached}次）")
+                            # 连续2次达到目标才停止，确保稳定
+                            if consecutive_target_reached >= 2:
+                                logger.info(f"连续{consecutive_target_reached}次达到预期答案数量，停止滚动")
+                                break
+                        else:
+                            consecutive_target_reached = 0  # 重置连续达到目标次数
                             
                     except Exception as e:
                         logger.debug(f"检查当前答案数量失败: {e}")
@@ -637,8 +661,14 @@ class PostgresZhihuCrawler:
                     if expected_answer_count > 0 and current_count > 0:
                         # 考虑到可能有一些答案被删除或隐藏，允许有少量差异
                         if current_count >= expected_answer_count * 0.9:
-                            logger.info(f"已加载大部分答案：当前 {current_count}，预期 {expected_answer_count}，停止滚动")
-                            break
+                            consecutive_target_reached += 1
+                            logger.info(f"已加载大部分答案：当前 {current_count}，预期 {expected_answer_count}（连续第{consecutive_target_reached}次）")
+                            # 连续2次达到目标才停止，确保稳定
+                            if consecutive_target_reached >= 2:
+                                logger.info(f"连续{consecutive_target_reached}次达到预期答案数量，停止滚动")
+                                break
+                        else:
+                            consecutive_target_reached = 0  # 重置连续达到目标次数
                     
                     # 如果连续5次高度不变，检查答案数量是否也没有变化
                     if unchanged_count >= 5:
@@ -1019,13 +1049,19 @@ class PostgresZhihuCrawler:
                     view_count = 0
                     logger.debug("未找到浏览量")
                 
-                # 提取答案数
+                # 提取答案数 - 使用新的准确统计方法
                 try:
-                    answer_element = self.driver.find_element(By.CSS_SELECTOR, self.config.SELECTORS["question_answer_count"])
-                    answer_count = self._parse_count(answer_element.text)
-                except NoSuchElementException:
-                    answer_count = 0
-                    logger.debug("未找到答案数")
+                    answer_count = self.get_accurate_answer_count()
+                    logger.info(f"使用新方法获取到答案数: {answer_count}")
+                except Exception as e:
+                    logger.warning(f"新方法获取答案数失败，尝试旧方法: {e}")
+                    try:
+                        answer_element = self.driver.find_element(By.CSS_SELECTOR, self.config.SELECTORS["question_answer_count"])
+                        answer_count = self._parse_count(answer_element.text)
+                        logger.info(f"使用旧方法获取到答案数: {answer_count}")
+                    except NoSuchElementException:
+                        answer_count = 0
+                        logger.debug("未找到答案数")
                 
                 # 提取标签
                 tags = []
@@ -1078,6 +1114,9 @@ class PostgresZhihuCrawler:
             if not question_url.startswith('http'):
                 question_url = urljoin(self.config.BASE_URL, question_url)
             
+            # 获取预期答案数量（在页面加载后获取）
+            expected_answer_count = 0
+            
             try:
                 self.driver.get(question_url)
                 self.random_delay()
@@ -1095,6 +1134,10 @@ class PostgresZhihuCrawler:
             
             # 等待页面加载
             self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+            
+            # 获取预期答案数量
+            expected_answer_count = self.get_accurate_answer_count()
+            logger.info(f"预期答案数量: {expected_answer_count}")
             
             # 检查并点击"查看全部回答"按钮（如果存在）
             try:
@@ -1427,7 +1470,18 @@ class PostgresZhihuCrawler:
                         author_url = ""
                         logger.debug(f"答案 {i+1} 未找到作者")
                     
-                    # 提取创建时间
+                    # 提取发布时间
+                    publish_time_text = ""
+                    try:
+                        publish_time_element = element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["answer_publish_time"])
+                        publish_time_text = publish_time_element.text.strip()
+                        # 处理"发布于 yyyy-mm-dd hh:mm"格式
+                        if "发布于" in publish_time_text:
+                            publish_time_text = publish_time_text.replace("发布于", "").strip()
+                    except NoSuchElementException:
+                        logger.debug(f"答案 {i+1} 未找到发布时间")
+                    
+                    # 提取创建时间（保持原有逻辑作为备用）
                     try:
                         time_element = element.find_element(By.CSS_SELECTOR, self.config.SELECTORS["answer_time"])
                         create_time_text = time_element.text.strip()
@@ -1465,10 +1519,12 @@ class PostgresZhihuCrawler:
                         question_id=question_id,
                         task_id=task_id,
                         content=content,
+                        content_hash=self.calculate_content_hash(content),
                         author=author,
                         author_url=author_url,
                         create_time=self.parse_date_to_pg_timestamp(create_time_text),
                         update_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # 添加更新时间
+                        publish_time=self.parse_date_to_pg_timestamp(publish_time_text) if publish_time_text else self.parse_date_to_pg_timestamp(create_time_text),
                         vote_count=vote_count,
                         comment_count=0,  # 评论功能已移除
                         url=answer_url,
@@ -1488,7 +1544,35 @@ class PostgresZhihuCrawler:
                     logger.warning(f"解析答案失败 (第{i+1}个): {e}")
                     continue
             
-            logger.info(f"答案爬取完成，共保存 {len(answers)} 个答案")
+            # 验证采集到的答案数量
+            actual_count = len(answers)
+            logger.info(f"答案爬取完成，共保存 {actual_count} 个答案")
+            
+            # 如果实际数量明显少于预期数量，尝试额外的滚动和重新获取
+            if expected_answer_count > 0 and actual_count < expected_answer_count * 0.8:
+                logger.warning(f"实际答案数量({actual_count})明显少于预期数量({expected_answer_count})，尝试额外滚动")
+                
+                # 额外滚动尝试
+                for retry in range(3):
+                    logger.info(f"第{retry+1}次额外滚动尝试")
+                    if self.scroll_to_load_more():
+                        # 重新获取答案元素
+                        answers_selector = self.config.SELECTORS.get("answers_list", ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div")
+                        new_answer_elements = self.driver.find_elements(By.CSS_SELECTOR, answers_selector)
+                        
+                        if len(new_answer_elements) > len(answer_elements):
+                            logger.info(f"发现更多答案元素: {len(new_answer_elements)} (之前: {len(answer_elements)})")
+                            # 这里可以选择重新处理新发现的答案，但为了简化，我们只记录
+                            break
+                    else:
+                        logger.info("滚动已达到页面底部，停止额外尝试")
+                        break
+            
+            # 记录最终统计信息
+            if expected_answer_count > 0:
+                coverage_rate = (actual_count / expected_answer_count) * 100
+                logger.info(f"答案覆盖率: {coverage_rate:.1f}% ({actual_count}/{expected_answer_count})")
+            
             return answers, 0
             
         except Exception as e:
@@ -1585,6 +1669,17 @@ class PostgresZhihuCrawler:
                 years = int(re.search(r'(\d+)年前', text).group(1))
                 return datetime.now() - timedelta(days=years*365)
             
+            # 处理"发布于 yyyy-mm-dd hh:mm"格式
+            if '发布于' in text:
+                # 提取"发布于"后面的时间部分
+                time_match = re.search(r'发布于\s*(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})', text)
+                if time_match:
+                    time_str = time_match.group(1)
+                    try:
+                        return datetime.strptime(time_str, '%Y-%m-%d %H:%M')
+                    except ValueError:
+                        pass
+            
             # 处理绝对时间格式
             for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%m-%d %H:%M', '%Y-%m-%d %H:%M', '%m月%d日', '%Y-%m-%d']:
                 try:
@@ -1665,6 +1760,73 @@ class PostgresZhihuCrawler:
         except Exception as e:
             logger.debug(f"解析数量失败: {count_text}, {e}")
             return 0
+    
+    def get_accurate_answer_count(self) -> int:
+        """获取准确的回答数量
+        
+        直接使用 class="Card ViewAll" 的 div 属性中 data-za-extra-module 里的 item_num 数值
+        
+        Returns:
+            int: 总回答数量
+        """
+        total_count = 0
+        
+        try:
+            # 优先查找 class="Card ViewAll" 的元素
+            view_all_elements = self.driver.find_elements(By.CSS_SELECTOR, '.Card.ViewAll')
+            
+            for element in view_all_elements:
+                try:
+                    data_attr = element.get_attribute('data-za-extra-module')
+                    if data_attr and 'item_num' in data_attr:
+                        import json
+                        data_json = json.loads(data_attr.replace('&quot;', '"'))
+                        item_num = data_json.get('card', {}).get('content', {}).get('item_num')
+                        if item_num and isinstance(item_num, (int, str)):
+                            try:
+                                total_count = int(item_num)
+                                logger.info(f"从Card ViewAll的data-za-extra-module获取到item_num: {item_num}")
+                                break  # 找到就退出循环
+                            except ValueError:
+                                continue
+                except (json.JSONDecodeError, ValueError, KeyError) as e:
+                    continue
+            
+            # 如果没有找到Card ViewAll元素，尝试其他data-za-extra-module元素作为备用
+            if total_count == 0:
+                logger.info("未找到Card ViewAll元素，尝试其他data-za-extra-module元素")
+                data_elements = self.driver.find_elements(By.CSS_SELECTOR, '[data-za-extra-module]')
+                for element in data_elements:
+                    try:
+                        data_attr = element.get_attribute('data-za-extra-module')
+                        if data_attr and 'item_num' in data_attr:
+                            import json
+                            data_json = json.loads(data_attr.replace('&quot;', '"'))
+                            item_num = data_json.get('card', {}).get('content', {}).get('item_num')
+                            if item_num and isinstance(item_num, (int, str)):
+                                try:
+                                    total_count = max(total_count, int(item_num))
+                                    logger.info(f"从备用data-za-extra-module获取到item_num: {item_num}")
+                                except ValueError:
+                                    continue
+                    except (json.JSONDecodeError, ValueError, KeyError) as e:
+                        continue
+            
+            logger.info(f"最终统计的回答数量: {total_count}")
+            
+            return total_count
+            
+        except Exception as e:
+            logger.error(f"获取准确回答数量失败: {e}")
+            return 0
+    
+    def calculate_content_hash(self, content: str) -> str:
+        """计算内容的MD5哈希值用于去重"""
+        if not content:
+            return ""
+        # 清理内容：去除多余空白字符，统一换行符
+        cleaned_content = re.sub(r'\s+', ' ', content.strip())
+        return hashlib.md5(cleaned_content.encode('utf-8')).hexdigest()
     
     def crawl_by_keyword(self, keyword: str, start_date: str = None, end_date: str = None, process_immediately: bool = True) -> Dict:
         """按关键字爬取数据（PostgreSQL版本）

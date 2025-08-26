@@ -1,0 +1,37 @@
+{
+  "type": "question",
+  "title": "海外岗未来回国发展如何?",
+  "question_type": "normal",
+  "created": 1573185912,
+  "updated_time": 1573185912,
+  "url": "https://www.zhihu.com/api/v4/questions/354793553",
+  "answer_count": 3,
+  "follower_count": 10,
+  "excerpt": "我是今年应届（非通信专业）提前批签了中兴的五营海外。刚开始想的是趁着年轻想出去国外看一看，但是后来听很多人说没技术的海外岗未来回国很难发展，到时候没技术没人脉两眼一抹黑，就非常慌。而且现在我也在看工作招聘，很纠结是去中兴还是换一个符合自己专业的工作。 另外，有没有前辈愿意分享一下自己在海外岗的日常，平时工作，或者出门旅游什么的都可以，小弟在这里谢谢各位。",
+  "detail": "<p>我是今年应届（非通信专业）提前批签了中兴的五营海外。刚开始想的是趁着年轻想出去国外看一看，但是后来听很多人说没技术的海外岗未来回国很难发展，到时候没技术没人脉两眼一抹黑，就非常慌。而且现在我也在看工作招聘，很纠结是去中兴还是换一个符合自己专业的工作。</p><p>另外，有没有前辈愿意分享一下自己在海外岗的日常，平时工作，或者出门旅游什么的都可以，小弟在这里谢谢各位。</p>",
+  "author": {
+    "id": "8fd89f7a66cba1c4d92bfe0aff7da01f",
+    "url_token": "dumpli",
+    "name": "Dumpli",
+    "avatar_url": "https://picx.zhimg.com/v2-c8e383bee8b9dea84b792389494006f5_l.jpg?source=1def8aca",
+    "avatar_url_template": "https://picx.zhimg.com/v2-c8e383bee8b9dea84b792389494006f5.jpg?source=1def8aca",
+    "is_org": false,
+    "type": "people",
+    "url": "https://www.zhihu.com/api/v4/people/8fd89f7a66cba1c4d92bfe0aff7da01f",
+    "user_type": "people",
+    "headline": "",
+    "badge": [],
+    "badge_v2": {
+      "title": "",
+      "merged_badges": [],
+      "detail_badges": [],
+      "icon": "",
+      "night_icon": ""
+    },
+    "gender": 1,
+    "is_advertiser": false,
+    "is_privacy": false
+  },
+  "relationship": {},
+  "id": "354793553"
+}

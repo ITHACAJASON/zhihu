@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-08-25 20:53:57",
+  "total_questions": 3,
+  "successful_questions": 0,
+  "failed_questions": [
+    {
+      "question_id": "354793553",
+      "reason": "API调用失败或返回空数据"
+    },
+    {
+      "question_id": "25038841",
+      "reason": "API调用失败或返回空数据"
+    },
+    {
+      "question_id": "19551593",
+      "reason": "API调用失败或返回空数据"
+    }
+  ],
+  "successful_questions_list": [],
+  "summary": {},
+  "recommendations": [
+    "❌ 所有API测试失败，建议：",
+    "1. 重新获取完整的登录cookies",
+    "2. 检查网络环境和反爬限制",
+    "3. 考虑使用Selenium备选方案"
+  ]
+}

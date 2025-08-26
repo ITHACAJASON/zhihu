@@ -95,7 +95,7 @@ class ZhihuConfig:
         "answer_content": ".RichContent-inner",
         "answer_author": ".AuthorInfo-name a",
         "answer_time": ".ContentItem-time",
-        "answer_publish_time": "#QuestionAnswers-answers > div > div > div > div:nth-child(2) > div > div:nth-child(2) > div > div > div.RichContent.RichContent--unescapable > div:nth-child(2) > div.ContentItem-time > a > span",
+        "answer_publish_time": ".ContentItem-time span",
         "answer_vote_count": ".VoteButton--up .VoteButton-label, .ContentItem-actions span > span > button",
         "answer_url": ".ContentItem-title a",
         

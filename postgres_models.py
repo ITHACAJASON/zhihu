@@ -90,6 +90,7 @@ class Answer:
     question_id: str
     task_id: str
     content: str
+    content_hash: str = ""
     author: str = ""
     author_url: str = ""
     create_time: str = ""
@@ -206,6 +207,7 @@ class PostgreSQLManager:
                     question_id VARCHAR(100) NOT NULL,
                     task_id VARCHAR(36) NOT NULL,
                     content TEXT NOT NULL,
+                    content_hash VARCHAR(64),
                     author VARCHAR(100),
                     author_url TEXT,
                     create_time TIMESTAMP,
@@ -397,12 +399,13 @@ class PostgreSQLManager:
                 
                 cursor.execute('''
                     INSERT INTO answers 
-                    (answer_id, question_id, task_id, content, author, author_url,
+                    (answer_id, question_id, task_id, content, content_hash, author, author_url,
                      create_time, update_time, publish_time, vote_count, comment_count, url,
                      is_author, processed, crawl_time)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (answer_id) DO UPDATE SET
                     content = EXCLUDED.content,
+                    content_hash = EXCLUDED.content_hash,
                     author = EXCLUDED.author,
                     author_url = EXCLUDED.author_url,
                     create_time = EXCLUDED.create_time,
@@ -416,7 +419,7 @@ class PostgreSQLManager:
                     crawl_time = EXCLUDED.crawl_time,
                     updated_at = CURRENT_TIMESTAMP
                 ''', (answer.answer_id, answer.question_id, answer.task_id,
-                      answer.content, answer.author, answer.author_url,
+                      answer.content, answer.content_hash, answer.author, answer.author_url,
                       answer.create_time, answer.update_time, answer.publish_time, answer.vote_count,
                       answer.comment_count, answer.url, answer.is_author,
                       answer.processed, answer.crawl_time))
@@ -585,6 +588,22 @@ class PostgreSQLManager:
                 'questions': {'total': question_count, 'processed': question_processed},
                 'answers': {'total': answer_count, 'processed': answer_processed}
             }
+    
+    def get_unique_answer_count(self, question_id: str, task_id: str) -> int:
+        """获取去重后的回答数量（基于content_hash去重）"""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT COUNT(DISTINCT content_hash) 
+                    FROM answers 
+                    WHERE question_id = %s AND task_id = %s AND content_hash IS NOT NULL AND content_hash != ''
+                ''', (question_id, task_id))
+                result = cursor.fetchone()
+                return result[0] if result else 0
+        except Exception as e:
+            self.logger.error(f"获取去重回答数量失败: {e}")
+            return 0
     
     def get_tasks_by_keyword(self, keyword: str) -> List[TaskInfo]:
         """根据关键词获取任务"""

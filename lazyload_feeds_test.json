@@ -1,0 +1,2424 @@
+[
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjE25IHIOmqqQmSAiEKBzExMTk3NjMSCDE0OTg2NjkyGAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/6f14de5d7691e352462293b6ed7e0de1_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pic1.zhimg.com/6f14de5d7691e352462293b6ed7e0de1.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://pic1.zhimg.com/v2-a4a733d68844ff22956ae0ada4bd9d6c_l.png?source=1def8aca",
+          "description": "被 500 个人关注",
+          "medal_avatar_frame": "",
+          "medal_id": "972477022068568064",
+          "medal_name": "备受瞩目",
+          "mini_avatar_url": "https://picx.zhimg.com/v2-a4a733d68844ff22956ae0ada4bd9d6c_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "专业修理各种高手",
+        "id": "987564e461008d5425ec1573f2c09356",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": true,
+        "name": "止水",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/987564e461008d5425ec1573f2c09356",
+        "url_token": "kisufans",
+        "user_type": "people"
+      },
+      "comment_count": 3,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1343700818,
+      "decorative_labels": [],
+      "excerpt": "之前也有过这个过程，不过结果很糟糕... 其实最核心的，得找到发现人才的渠道，最好是可以进入到那些人才比较集中的地方，这样效果好一点。",
+      "extras": "",
+      "favlists_count": 0,
+      "force_login_when_click_read_more": false,
+      "id": "14986692",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "3 赞同 · 3 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 0,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1343700818,
+      "url": "https://www.zhihu.com/api/v4/answers/14986692",
+      "visible_only_to_author": false,
+      "voteup_count": 3
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c724e20578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjd9egFIOmqqQmSAh4KBDEwOTESCDEyMjA0NzY1GAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/v2-12a47dcf1cf141556018d42d2a7d26f4_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pica.zhimg.com/v2-12a47dcf1cf141556018d42d2a7d26f4.jpg?source=1def8aca",
+        "badge": [
+          {
+            "description": "知乎 创始人 & CEO",
+            "topics": [],
+            "type": "identity"
+          },
+          {
+            "description": "优秀答主",
+            "topics": [],
+            "type": "best_answerer"
+          }
+        ],
+        "badge_v2": {
+          "detail_badges": [
+            {
+              "description": "创业话题下的优秀答主",
+              "detail_type": "best_answerer",
+              "icon": "https://pica.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "night_icon": "https://pic1.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "sources": [
+                {
+                  "avatar_path": "v2-af063bec99e4decd9aa90c38d709e46f",
+                  "avatar_url": "https://picx.zhimg.com/v2-af063bec99e4decd9aa90c38d709e46f_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550560",
+                  "name": "创业",
+                  "priority": 0,
+                  "token": "19550560",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550560"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            },
+            {
+              "description": "知乎 创始人 & CEO",
+              "detail_type": "identity_people",
+              "icon": "https://pica.zhimg.com/v2-2ddc5cc683982648f6f123616fb4ec09_l.png?source=32738c0c",
+              "night_icon": "https://pica.zhimg.com/v2-2ddc5cc683982648f6f123616fb4ec09_l.png?source=32738c0c",
+              "sources": [],
+              "title": "已认证的个人",
+              "type": "identity",
+              "url": "https://zhuanlan.zhihu.com/p/96956163"
+            }
+          ],
+          "icon": "https://picx.zhimg.com/v2-27bfcba90e66db79ce8768ab807e017e_l.png?source=32738c0c",
+          "merged_badges": [
+            {
+              "description": "创业话题下的优秀答主",
+              "detail_type": "best",
+              "icon": "",
+              "night_icon": "",
+              "sources": [
+                {
+                  "avatar_path": "v2-af063bec99e4decd9aa90c38d709e46f",
+                  "avatar_url": "https://picx.zhimg.com/v2-af063bec99e4decd9aa90c38d709e46f_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550560",
+                  "name": "创业",
+                  "priority": 0,
+                  "token": "19550560",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550560"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            },
+            {
+              "description": "知乎 创始人 & CEO",
+              "detail_type": "identity_people",
+              "icon": "",
+              "night_icon": "",
+              "sources": [],
+              "title": "认证",
+              "type": "identity",
+              "url": "https://zhuanlan.zhihu.com/p/96956163"
+            }
+          ],
+          "night_icon": "https://picx.zhimg.com/v2-27bfcba90e66db79ce8768ab807e017e_l.png?source=32738c0c",
+          "title": "创业话题下的优秀答主"
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-b9c90b8615a3f2e45b30d4e33d1f6e7b_l.png?source=1def8aca",
+          "description": "成为「优秀答主」即可获得",
+          "medal_avatar_frame": "",
+          "medal_id": "972466021521641472",
+          "medal_name": "优秀答主",
+          "mini_avatar_url": "https://picx.zhimg.com/v2-b9c90b8615a3f2e45b30d4e33d1f6e7b_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "知乎 001 号员工",
+        "id": "6733f12c60e7e98ea7491f20de46f79e",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": true,
+        "is_org": false,
+        "is_privacy": false,
+        "kvip_info": {
+          "is_vip": true,
+          "target_url": "https://www.zhihu.com/kvip/purchase",
+          "vip_icon": {
+            "night_mode_url": "https://picx.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae",
+            "url": "https://picx.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae"
+          }
+        },
+        "name": "周源",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/6733f12c60e7e98ea7491f20de46f79e",
+        "url_token": "zhouyuan",
+        "user_type": "people",
+        "vip_info": {
+          "is_vip": true,
+          "vip_icon": {
+            "night_mode_url": "https://pic1.zhimg.com/v2-c9686ff064ea3579730756ac6c289978.jpg?source=88ceefae",
+            "url": "https://pic1.zhimg.com/v2-4812630bc27d642f7cafcd6cdeca3d7a.jpg?source=88ceefae"
+          }
+        }
+      },
+      "comment_count": 223,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1293551134,
+      "decorative_labels": [],
+      "endorsements": [
+        {
+          "background_color": {
+            "alpha": 0.1,
+            "group": "GYL02A"
+          },
+          "elements": [
+            {
+              "height": 16,
+              "image_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "image_key": "zhicon_icon_24_label_daily",
+              "type": "IMAGE",
+              "width": 16
+            },
+            {
+              "content": "知乎日报收录",
+              "font_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "font_size": 13,
+              "is_bold": true,
+              "max_line": 1,
+              "type": "TEXT"
+            }
+          ],
+          "sub_elements": [],
+          "sub_elements_type": "DESCRIPTION",
+          "za": {
+            "block_text": "daily",
+            "text": "",
+            "type": "text"
+          }
+        }
+      ],
+      "excerpt": "其实从 08 年到现在，我一直想这事能不能有点窍门，或者是实用的方法，结论是几乎没有。 我用过的大家都用的方法： 在水木上发贴子（有点效果） 在蓝色理想上发贴子（无效） 在技术邮件组里发贴子（无效）买 51job/智联 最便宜的服务（有点效果）给所有可以想到的人打电话，请他们推荐（无效） 给所有和你讨论过创业，喝过点小酒的人打电话（无效） 约前同事私下谈（有效） 我用过的大家可能没有用的方法： 上 twitter，看 XXX …",
+      "extras": "",
+      "favlists_count": 3299,
+      "force_login_when_click_read_more": false,
+      "id": "12204765",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "label_info": {
+        "foreground_color": {
+          "alpha": 1,
+          "group": "GYL02A"
+        },
+        "icon_url": "https://pic1.zhimg.com/v2-7c78739988ab4ff4a514ec34565dd7a9_r.png?source=1def8aca",
+        "text": "日报收录",
+        "type": "daily"
+      },
+      "matrix_tips": "3142 赞同 · 3299 收藏 · 223 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 874,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1293595467,
+      "url": "https://www.zhihu.com/api/v4/answers/12204765",
+      "visible_only_to_author": false,
+      "voteup_count": 3142
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c225c31578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxij4MoSIOmqqQmSAiIKCDEwOTgxMzUwEggzODk3MzQ3NRgEIgpJTUFHRV9URVhU",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/v2-4388f61d80dc81a57a29fad499a5875b_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-4388f61d80dc81a57a29fad499a5875b.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-e36c8e7550cbb669c40a97382df224d6_l.png?source=1def8aca",
+          "description": "累计登录 100 天",
+          "medal_avatar_frame": "",
+          "medal_id": "972480281613197312",
+          "medal_name": "每天逛逛",
+          "mini_avatar_url": "https://picx.zhimg.com/v2-e36c8e7550cbb669c40a97382df224d6_r.png?source=1def8aca"
+        },
+        "gender": 0,
+        "headline": "要像宇宙一样多元",
+        "id": "2e8da83eda500c598bff559a6e28b7fa",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "蜜儿mmmia",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/2e8da83eda500c598bff559a6e28b7fa",
+        "url_token": "xuanxuan1day",
+        "user_type": "people"
+      },
+      "comment_count": 28,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1423118643,
+      "decorative_labels": [],
+      "excerpt": "关于《创业公司如何招聘》，这篇文章翻译得很好，推荐大家一起看看：） 招聘几乎是所有互联网创业公司最头痛的事情，找到一个优秀又适合的人才并不比找到一个完美的人生伴侣要来得轻松。创业公司怎么才能在合适的时候找到合适的人才呢？著名的硅谷孵化器 Y Combinator 的主席 Sam Altman ① 给出了他的一些意见、经验和思考。 ① Sam Altman 是硅谷孵化器 Y Combinator 的主席 原文: How to hire - Sam Altman 翻译： Teambition …",
+      "extras": "",
+      "favlists_count": 1361,
+      "force_login_when_click_read_more": false,
+      "id": "38973475",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "634 赞同 · 1361 收藏 · 28 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 300,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1455605478,
+      "url": "https://www.zhihu.com/api/v4/answers/38973475",
+      "visible_only_to_author": false,
+      "voteup_count": 634
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c87d796578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjZ7vg1IOmqqQmSAiMKCDQwNzI4OTE1EgkxMTMxMjkzMDUYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/v2-66dfbf6e227ea2b8cee2c3d33cdb022a_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pica.zhimg.com/v2-66dfbf6e227ea2b8cee2c3d33cdb022a.jpg?source=1def8aca",
+        "badge": [
+          {
+            "description": "优秀答主",
+            "topics": [],
+            "type": "best_answerer"
+          }
+        ],
+        "badge_v2": {
+          "detail_badges": [
+            {
+              "description": "互联网话题下的优秀答主",
+              "detail_type": "best_answerer",
+              "icon": "https://pica.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "night_icon": "https://pica.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "sources": [
+                {
+                  "avatar_path": "v2-c1ea3804dc369dbfad3de0c405c0a3d2",
+                  "avatar_url": "https://pic1.zhimg.com/v2-c1ea3804dc369dbfad3de0c405c0a3d2_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550517",
+                  "name": "互联网",
+                  "priority": 0,
+                  "token": "19550517",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550517"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "icon": "https://pic1.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "merged_badges": [
+            {
+              "description": "互联网话题下的优秀答主",
+              "detail_type": "best",
+              "icon": "",
+              "night_icon": "",
+              "sources": [
+                {
+                  "avatar_path": "v2-c1ea3804dc369dbfad3de0c405c0a3d2",
+                  "avatar_url": "https://pic1.zhimg.com/v2-c1ea3804dc369dbfad3de0c405c0a3d2_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550517",
+                  "name": "互联网",
+                  "priority": 0,
+                  "token": "19550517",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550517"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "night_icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "title": "互联网话题下的优秀答主"
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "有瞰学社创始人&amp;CEO，《运营之光》、《非线性成长》作者。",
+        "id": "b36e278fb1f419f9605ed78974d27ad4",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "kvip_info": {
+          "is_vip": true,
+          "target_url": "https://www.zhihu.com/kvip/purchase",
+          "vip_icon": {
+            "night_mode_url": "https://pic1.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae",
+            "url": "https://pic1.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae"
+          }
+        },
+        "name": "黄有璨",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/b36e278fb1f419f9605ed78974d27ad4",
+        "url_token": "huangyoucan",
+        "user_type": "people"
+      },
+      "comment_count": 58,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1469453840,
+      "decorative_labels": [],
+      "endorsements": [
+        {
+          "background_color": {
+            "alpha": 0.1,
+            "group": "GYL02A"
+          },
+          "elements": [
+            {
+              "height": 16,
+              "image_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "image_key": "zhicon_icon_24_label_daily",
+              "type": "IMAGE",
+              "width": 16
+            },
+            {
+              "content": "知乎日报收录",
+              "font_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "font_size": 13,
+              "is_bold": true,
+              "max_line": 1,
+              "type": "TEXT"
+            }
+          ],
+          "sub_elements": [],
+          "sub_elements_type": "DESCRIPTION",
+          "za": {
+            "block_text": "daily",
+            "text": "",
+            "type": "text"
+          }
+        }
+      ],
+      "excerpt": "周末两天，有篇叫做《没事别想不开去创业公司》的文章在朋友圈刷屏了。 然而，请恕我直言，这篇10W+文章被疯转的背后，所折射出来的很多现象和价值观，我实在忍不住想喷几句。 在此要先明确一个背景—— 这篇文章的写作出发点或许是想要给予一些想要去创业公司或想要创业的人一些善意的提醒，但实际的结果来看，它起到的作用却恰恰相反——它可能反而成为了一大群不靠谱创业者们用于自我安慰的一剂没有任何指导意义的心灵毒药。…",
+      "extras": "",
+      "favlists_count": 571,
+      "force_login_when_click_read_more": false,
+      "id": "113129305",
+      "is_collapsed": false,
+      "is_copyable": false,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "label_info": {
+        "foreground_color": {
+          "alpha": 1,
+          "group": "GYL02A"
+        },
+        "icon_url": "https://pica.zhimg.com/v2-7c78739988ab4ff4a514ec34565dd7a9_r.png?source=1def8aca",
+        "text": "日报收录",
+        "type": "daily"
+      },
+      "matrix_tips": "708 赞同 · 571 收藏 · 58 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 164,
+      "thumbnail_info": {
+        "count": 3,
+        "thumbnails": [
+          {
+            "height": 286,
+            "token": "49d9b31b60d15b46106692e876176b46",
+            "type": "image",
+            "url": "https://picx.zhimg.com/80/49d9b31b60d15b46106692e876176b46_720w.jpg?source=1def8aca",
+            "width": 687
+          },
+          {
+            "height": 226,
+            "token": "7354524ca722c77784617cd674566a78",
+            "type": "image",
+            "url": "https://pic1.zhimg.com/80/7354524ca722c77784617cd674566a78_720w.jpg?source=1def8aca",
+            "width": 701
+          },
+          {
+            "height": 290,
+            "token": "2d4d946cdaa31c19ed933b75619c3a4d",
+            "type": "image",
+            "url": "https://pic1.zhimg.com/80/2d4d946cdaa31c19ed933b75619c3a4d_720w.jpg?source=1def8aca",
+            "width": 715
+          }
+        ],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1624439300,
+      "url": "https://www.zhihu.com/api/v4/answers/113129305",
+      "visible_only_to_author": false,
+      "voteup_count": 708
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c32215c558c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjr8ooGIOmqqQmSAiAKBjIyMzcxORIIMTI3NjE0NTEYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/7ba7ab10a562016b6ec063a6d43c1587_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/7ba7ab10a562016b6ec063a6d43c1587.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "https://www.linkev.com/?a_aid=itlr",
+        "id": "72d26f9f0c7c6d0b2bab73418c595c6b",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "itlr",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/72d26f9f0c7c6d0b2bab73418c595c6b",
+        "url_token": "itlr",
+        "user_type": "people"
+      },
+      "comment_count": 22,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1308450411,
+      "decorative_labels": [],
+      "excerpt": "如果你没和创新工厂这样的大单位拉上关系，招聘会很艰难。你的问题是“怎么招人”，可以有很多层意思，下面是一些个人体会。 定高一点的标准创业公司通常不需要很多人，但需要尽可能牛逼的人，因为创业公司的第一阶段很短，如果这些人不够牛逼，到第二阶段的时候，他们就力不从心；如果创业公司里做事的人都是泛泛之辈，甚至级别更低的，那么很多事儿就没有可操作性，管理方式就必须得适应管理泛泛之辈的哲学，团队的文化的形成…",
+      "extras": "",
+      "favlists_count": 199,
+      "force_login_when_click_read_more": false,
+      "id": "12761451",
+      "is_collapsed": false,
+      "is_copyable": false,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "245 赞同 · 199 收藏 · 22 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 65,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1450828138,
+      "url": "https://www.zhihu.com/api/v4/answers/12761451",
+      "visible_only_to_author": false,
+      "voteup_count": 245
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c863132578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjo9egFIOmqqQmSAh4KBDEwOTYSCDEyMjA0Nzc2GAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/c677f2847_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pic1.zhimg.com/c677f2847.jpg?source=1def8aca",
+        "badge": [
+          {
+            "description": "优秀答主",
+            "topics": [],
+            "type": "best_answerer"
+          }
+        ],
+        "badge_v2": {
+          "detail_badges": [
+            {
+              "description": "移动互联网等 3 个话题下的优秀答主",
+              "detail_type": "best_answerer",
+              "icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "night_icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "sources": [
+                {
+                  "avatar_path": "v2-fe71450f2b6db1ff977db228d5ad942e",
+                  "avatar_url": "https://pic1.zhimg.com/v2-fe71450f2b6db1ff977db228d5ad942e_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550547",
+                  "name": "移动互联网",
+                  "priority": 0,
+                  "token": "19550547",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550547"
+                },
+                {
+                  "avatar_path": "343a031b1",
+                  "avatar_url": "https://picx.zhimg.com/343a031b1_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550638",
+                  "name": "社交网络",
+                  "priority": 0,
+                  "token": "19550638",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550638"
+                },
+                {
+                  "avatar_path": "v2-c1ea3804dc369dbfad3de0c405c0a3d2",
+                  "avatar_url": "https://pic1.zhimg.com/v2-c1ea3804dc369dbfad3de0c405c0a3d2_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550517",
+                  "name": "互联网",
+                  "priority": 0,
+                  "token": "19550517",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550517"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "icon": "https://pic1.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "merged_badges": [
+            {
+              "description": "移动互联网等 3 个话题下的优秀答主",
+              "detail_type": "best",
+              "icon": "",
+              "night_icon": "",
+              "sources": [
+                {
+                  "avatar_path": "v2-fe71450f2b6db1ff977db228d5ad942e",
+                  "avatar_url": "https://pic1.zhimg.com/v2-fe71450f2b6db1ff977db228d5ad942e_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550547",
+                  "name": "移动互联网",
+                  "priority": 0,
+                  "token": "19550547",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550547"
+                },
+                {
+                  "avatar_path": "343a031b1",
+                  "avatar_url": "https://picx.zhimg.com/343a031b1_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550638",
+                  "name": "社交网络",
+                  "priority": 0,
+                  "token": "19550638",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550638"
+                },
+                {
+                  "avatar_path": "v2-c1ea3804dc369dbfad3de0c405c0a3d2",
+                  "avatar_url": "https://pic1.zhimg.com/v2-c1ea3804dc369dbfad3de0c405c0a3d2_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19550517",
+                  "name": "互联网",
+                  "priority": 0,
+                  "token": "19550517",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19550517"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "night_icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "title": "移动互联网等 3 个话题下的优秀答主"
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-e36c8e7550cbb669c40a97382df224d6_l.png?source=1def8aca",
+          "description": "累计登录 100 天",
+          "medal_avatar_frame": "",
+          "medal_id": "972480281613197312",
+          "medal_name": "每天逛逛",
+          "mini_avatar_url": "https://pica.zhimg.com/v2-e36c8e7550cbb669c40a97382df224d6_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "",
+        "id": "17236dbda9d1e11286068ade7021c335",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "kvip_info": {
+          "is_vip": true,
+          "target_url": "https://www.zhihu.com/kvip/purchase",
+          "vip_icon": {
+            "night_mode_url": "https://pic1.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae",
+            "url": "https://pic1.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae"
+          }
+        },
+        "name": "keso",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/17236dbda9d1e11286068ade7021c335",
+        "url_token": "keso",
+        "user_type": "people"
+      },
+      "comment_count": 35,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1293552096,
+      "decorative_labels": [],
+      "endorsements": [
+        {
+          "background_color": {
+            "alpha": 0.1,
+            "group": "GYL02A"
+          },
+          "elements": [
+            {
+              "height": 16,
+              "image_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "image_key": "zhicon_icon_24_label_daily",
+              "type": "IMAGE",
+              "width": 16
+            },
+            {
+              "content": "知乎日报收录",
+              "font_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "font_size": 13,
+              "is_bold": true,
+              "max_line": 1,
+              "type": "TEXT"
+            }
+          ],
+          "sub_elements": [],
+          "sub_elements_type": "DESCRIPTION",
+          "za": {
+            "block_text": "daily",
+            "text": "",
+            "type": "text"
+          }
+        }
+      ],
+      "excerpt": "创业公司招人确实很难，尤其是现在大公司都在高薪抢人，创业公司能给别人的承诺的东西，除了梦想，其他很少。即使像LightInTheBox这种已在业界小有名气，又有知名CEO的公司，招人也是很难的事，经常遇到已经基本谈定的人，最终告诉你，他去阿里上班了。 很难，但仍有一些办法。 从你的用户中找。在你的用户中，更容易找到有共同梦想的人。豆瓣最初就是这么干的，阿北那时候没钱，只有一个产品和产品所反映出来的理念，豆瓣前10名…",
+      "extras": "",
+      "favlists_count": 465,
+      "force_login_when_click_read_more": false,
+      "id": "12204776",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "label_info": {
+        "foreground_color": {
+          "alpha": 1,
+          "group": "GYL02A"
+        },
+        "icon_url": "https://picx.zhimg.com/v2-7c78739988ab4ff4a514ec34565dd7a9_r.png?source=1def8aca",
+        "text": "日报收录",
+        "type": "daily"
+      },
+      "matrix_tips": "540 赞同 · 465 收藏 · 35 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 182,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1293552096,
+      "url": "https://www.zhihu.com/api/v4/answers/12204776",
+      "visible_only_to_author": false,
+      "voteup_count": 540
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c295c31578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxio7ukFIOmqqQmSAh4KBDcxOTkSCDEyMjIwMjAwGAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/a61aa599c_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/a61aa599c.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "连续创业者",
+        "id": "3045287de1718c630833ed2ddb9ecd66",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "叶滨",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/3045287de1718c630833ed2ddb9ecd66",
+        "url_token": "benye",
+        "user_type": "people"
+      },
+      "comment_count": 4,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1297324022,
+      "decorative_labels": [],
+      "excerpt": "互联网企业本身带有媒体的性质，所以从用户中招人非常重要。我在创办海报网的过程中，随着海报网在时尚圈的知名度越来越高，招编辑变得越来越容易。当时很明显的看到，从51job发来的简历虽然多，但质量普遍不好；而通过海报网的招聘启事发来的简历和求职信往往写的热情洋溢，并附有翔实的资料（包括一些人发来泳装照，呵呵），而且确实有很多优秀人才。后来我们完全取消了51job的广告。 不过同样是海报网，招技术人员的过程就相…",
+      "extras": "",
+      "favlists_count": 49,
+      "force_login_when_click_read_more": false,
+      "id": "12220200",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "52 赞同 · 49 收藏 · 4 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 22,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1297324022,
+      "url": "https://www.zhihu.com/api/v4/answers/12220200",
+      "visible_only_to_author": false,
+      "voteup_count": 52
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c7e4431578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEPCAQQAxjHsIqCASDpqqkJkgIjCgg3OTY2ODk4NBIJMjcyNzk5ODE1GAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/v2-a86bb52ee5c13f17a1eaf70d909904ea_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-a86bb52ee5c13f17a1eaf70d909904ea.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": -1,
+        "headline": "硬科技投资，微信关注：创新工场（chuangxin2009）",
+        "id": "291a8bb7699d804ea3edf07356691dbe",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": true,
+        "is_privacy": false,
+        "name": "创新工场",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/291a8bb7699d804ea3edf07356691dbe",
+        "url_token": "chuang-xin-gong-chang",
+        "user_type": "organization"
+      },
+      "comment_count": 36,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1512702880,
+      "decorative_labels": [],
+      "endorsements": [
+        {
+          "background_color": {
+            "alpha": 0.1,
+            "group": "GYL02A"
+          },
+          "elements": [
+            {
+              "height": 16,
+              "image_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "image_key": "zhicon_icon_24_label_daily",
+              "type": "IMAGE",
+              "width": 16
+            },
+            {
+              "content": "知乎日报收录",
+              "font_color": {
+                "alpha": 1,
+                "group": "GYL02A"
+              },
+              "font_size": 13,
+              "is_bold": true,
+              "max_line": 1,
+              "type": "TEXT"
+            }
+          ],
+          "sub_elements": [],
+          "sub_elements_type": "DESCRIPTION",
+          "za": {
+            "block_text": "daily",
+            "text": "",
+            "type": "text"
+          }
+        }
+      ],
+      "excerpt": "第一，CEO一定要把20%－30%的时间花在找人上面，而且找人的时候不能太功利。找人这件事情其实是人脉的事，你必须有一个非常强的人脉，要常常看看通讯录或微信上有哪些强人，并维护这个关系。否则当你真的需要的时候，你都不知道去哪里找。 看到很厉害的人，就跟他认识，联系，常见面，哪怕没有目的。技术出身的CEO最容易犯这个错，他们总是做什么事就要有个目的，其实不需要，跟人social，广交朋友，没有任何坏处，看到能人就交…",
+      "extras": "",
+      "favlists_count": 557,
+      "force_login_when_click_read_more": false,
+      "id": "272799815",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "label_info": {
+        "foreground_color": {
+          "alpha": 1,
+          "group": "GYL02A"
+        },
+        "icon_url": "https://picx.zhimg.com/v2-7c78739988ab4ff4a514ec34565dd7a9_r.png?source=1def8aca",
+        "text": "日报收录",
+        "type": "daily"
+      },
+      "matrix_tips": "560 赞同 · 557 收藏 · 36 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 110,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1514520535,
+      "url": "https://www.zhihu.com/api/v4/answers/272799815",
+      "visible_only_to_author": false,
+      "voteup_count": 560
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c99fe8e538c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxiU8MwqIOmqqQmSAiIKCDMxMTcxMjQ2Egg4OTMzOTkyNBgEIgpJTUFHRV9URVhU",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/v2-de92f622ce94df6400c2a49bc6bec613_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pica.zhimg.com/v2-de92f622ce94df6400c2a49bc6bec613.jpg?source=1def8aca",
+        "badge": [
+          {
+            "description": "优秀答主",
+            "topics": [],
+            "type": "best_answerer"
+          }
+        ],
+        "badge_v2": {
+          "detail_badges": [
+            {
+              "description": "用户界面设计等 2 个话题下的优秀答主",
+              "detail_type": "best_answerer",
+              "icon": "https://pic1.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "night_icon": "https://pic1.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+              "sources": [
+                {
+                  "avatar_path": "v2-4d668108fc0924196f4d7b0b1d7d2494",
+                  "avatar_url": "https://picx.zhimg.com/v2-4d668108fc0924196f4d7b0b1d7d2494_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19559209",
+                  "name": "用户界面设计",
+                  "priority": 0,
+                  "token": "19559209",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19559209"
+                },
+                {
+                  "avatar_path": "594a64959",
+                  "avatar_url": "https://pic1.zhimg.com/594a64959_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19561709",
+                  "name": "用户体验设计",
+                  "priority": 0,
+                  "token": "19561709",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19561709"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "merged_badges": [
+            {
+              "description": "用户界面设计等 2 个话题下的优秀答主",
+              "detail_type": "best",
+              "icon": "",
+              "night_icon": "",
+              "sources": [
+                {
+                  "avatar_path": "v2-4d668108fc0924196f4d7b0b1d7d2494",
+                  "avatar_url": "https://picx.zhimg.com/v2-4d668108fc0924196f4d7b0b1d7d2494_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19559209",
+                  "name": "用户界面设计",
+                  "priority": 0,
+                  "token": "19559209",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19559209"
+                },
+                {
+                  "avatar_path": "594a64959",
+                  "avatar_url": "https://pic1.zhimg.com/594a64959_720w.jpg?source=32738c0c",
+                  "description": "",
+                  "id": "19561709",
+                  "name": "用户体验设计",
+                  "priority": 0,
+                  "token": "19561709",
+                  "type": "topic",
+                  "url": "https://www.zhihu.com/topic/19561709"
+                }
+              ],
+              "title": "优秀答主",
+              "type": "best",
+              "url": "https://www.zhihu.com/question/48509984"
+            }
+          ],
+          "night_icon": "https://picx.zhimg.com/v2-4a07bc69c4bb04444721f35b32125c75_l.png?source=32738c0c",
+          "title": "用户界面设计等 2 个话题下的优秀答主"
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-9251b676c9f4283fdc5e04261a7e534f_l.png?source=1def8aca",
+          "description": "「向科学要答案 2022」活动期间，首次为相关领域下的优质黄标内容送出赞同",
+          "medal_avatar_frame": "",
+          "medal_id": "1502699219463389184",
+          "medal_name": "点赞科学 2022",
+          "mini_avatar_url": "https://pica.zhimg.com/v2-9251b676c9f4283fdc5e04261a7e534f_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "AI创造力·创想家",
+        "id": "695f2d14bcd60f76d67160f4eb39bb10",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "kvip_info": {
+          "is_vip": true,
+          "target_url": "https://www.zhihu.com/kvip/purchase",
+          "vip_icon": {
+            "night_mode_url": "https://pic1.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae",
+            "url": "https://picx.zhimg.com/v2-57fe7feb4813331d5eca02ef731e12c9.jpg?source=88ceefae"
+          }
+        },
+        "name": "吴卓浩",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/695f2d14bcd60f76d67160f4eb39bb10",
+        "url_token": "uxbang",
+        "user_type": "people"
+      },
+      "comment_count": 10,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1457159605,
+      "decorative_labels": [],
+      "endorsements": [
+        {
+          "action_url": "https://www.zhihu.com/column/uxbang",
+          "background_color": {
+            "alpha": 0.08,
+            "group": "GBL01A"
+          },
+          "elements": [
+            {
+              "height": 16,
+              "image_color": {
+                "alpha": 1,
+                "group": "GBL01A"
+              },
+              "image_key": "zhicon_icon_24_column_fill",
+              "type": "IMAGE",
+              "width": 16
+            },
+            {
+              "content": "收录于 · 体验帮",
+              "font_color": {
+                "alpha": 1,
+                "group": "GBL01A"
+              },
+              "font_size": 13,
+              "is_bold": false,
+              "max_line": 1,
+              "type": "TEXT"
+            },
+            {
+              "height": 12,
+              "image_color": {
+                "alpha": 1,
+                "group": "GBL01A"
+              },
+              "image_key": "zhicon_icon_16_arrow_right",
+              "type": "IMAGE",
+              "width": 12
+            }
+          ],
+          "sub_elements": [],
+          "sub_elements_type": "DESCRIPTION",
+          "za": {
+            "block_text": "Column",
+            "text": "收录于 · 体验帮",
+            "type": "text"
+          }
+        }
+      ],
+      "excerpt": "招聘要点人是公司最重要的财富。对的人能把二流的想法干成一流的事情，错的人会把一流的想法干成二流的事情。人的能力和文化同样重要。对的人不仅自己会越变越好，还会带动周围的人越变越好。错的人进来，不仅反而会让你和团队花更多的时间，结果还不好。招聘最大的成本，是找错人 - 尝试融入 - 出问题 - 替换，耽误时间、事情和机会的总成本。你在面试的人，一旦通过，就会长年累月的跟你在一起工作。你愿意和ta一起面对艰巨的…",
+      "extras": "",
+      "favlists_count": 318,
+      "force_login_when_click_read_more": false,
+      "id": "89339924",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "168 赞同 · 318 收藏 · 10 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 65,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1585057076,
+      "url": "https://www.zhihu.com/api/v4/answers/89339924",
+      "visible_only_to_author": false,
+      "voteup_count": 168
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5ccffaea568c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjhi9sGIOmqqQmSAiAKBjc1MDQyMBIIMTQwNzUzNjEYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/d9e54e202_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/d9e54e202.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": -1,
+        "headline": "「微建築」为建築提供无限可能！",
+        "id": "1a4664a252fdfe497a89ba1e0e5a34eb",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "邱巍",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/1a4664a252fdfe497a89ba1e0e5a34eb",
+        "url_token": "weixiao223",
+        "user_type": "people"
+      },
+      "comment_count": 5,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1332237961,
+      "decorative_labels": [],
+      "excerpt": "有某些人工作可能是这样： 在高职不如高薪，高薪不如高兴的择业观影响下， 作为企业员工不仅仅关心自己的薪水， 同是也关心的企业前景，企业发展了大家都有益； 虽然大多数公司需要靠薪水留住员工， 但是薪水更多的是来源于客户，来源于市场； 一个值8000元的人，就别讨价还价只愿付他7500元。 即使省下了500块，实际上却凉了他的心，一有更好的机会，人家拔脚就走。 相反，痛痛快快付他10000元，他会拿出两倍的能耐为你卖命干。…",
+      "extras": "",
+      "favlists_count": 3,
+      "force_login_when_click_read_more": false,
+      "id": "14075361",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "13 赞同 · 3 收藏 · 5 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 3,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1332237961,
+      "url": "https://www.zhihu.com/api/v4/answers/14075361",
+      "visible_only_to_author": false,
+      "voteup_count": 13
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c352b3a578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEPCAQQAxiguNLHCiDpqqkJkgIlCgk1NDU0NjcyMDkSCjI4MzQ2MDMwNDAYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pica.zhimg.com/v2-44668171775ac91b579d0f839815868c_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-44668171775ac91b579d0f839815868c.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-dd06ba4287e38df90b69b57a5901e271_l.png?source=1def8aca",
+          "description": "评论 500 次",
+          "medal_avatar_frame": "",
+          "medal_id": "972462538273792000",
+          "medal_name": "乐于交流",
+          "mini_avatar_url": "https://pic1.zhimg.com/v2-dd06ba4287e38df90b69b57a5901e271_r.png?source=1def8aca"
+        },
+        "gender": -1,
+        "headline": "elarafx.com创始人",
+        "id": "25cbbb7cca0fd4220b86f12faf1679ed",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "Elvic Liang",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/25cbbb7cca0fd4220b86f12faf1679ed",
+        "url_token": "elvicliang",
+        "user_type": "people"
+      },
+      "comment_count": 6,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1673104663,
+      "decorative_labels": [],
+      "excerpt": "说一下自己的一点经验： 招人是创业公司CEO最核心的能力，最初的团队基本决定了后续公司的天花板，公司的发展也许是个指数曲线，但是人才素质其实是个抛物线（起点决定落点）网上发帖用处不太大，也试过买招聘网站的会员，也没有啥收获。反而是当年和朋友一起搞的专业群和论坛发挥了很大的作用，在上面找到了一些优秀的人当年拿着ppt找投资人的时候声称团队已经初具规模，其实一个人都没有，拿到投资意向以后才开始找的人（现在…",
+      "extras": "",
+      "favlists_count": 395,
+      "force_login_when_click_read_more": false,
+      "id": "2834603040",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "263 赞同 · 395 收藏 · 6 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 66,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1673105221,
+      "url": "https://www.zhihu.com/api/v4/answers/2834603040",
+      "visible_only_to_author": false,
+      "voteup_count": 263
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c2873b2778c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxiqtdkGIOmqqQmSAiAKBjczOTI3MBIIMTQwNDc5MTQYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/v2-c8dd8572b1c35d2c1452eb5d576c4ff8_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pic1.zhimg.com/v2-c8dd8572b1c35d2c1452eb5d576c4ff8.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://picx.zhimg.com/v2-c26a65592e2109d144bb55fecc48841a_l.png?source=1def8aca",
+          "description": "回答 100 个问题",
+          "medal_avatar_frame": "",
+          "medal_id": "972440607604559872",
+          "medal_name": "知无不言",
+          "mini_avatar_url": "https://picx.zhimg.com/v2-c26a65592e2109d144bb55fecc48841a_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "《十亿消费者》译者，德艺双馨老司机",
+        "id": "81051275941cc8da663fa05b61c4002e",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "周自强",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/81051275941cc8da663fa05b61c4002e",
+        "url_token": "zhou-zi-qiang",
+        "user_type": "people"
+      },
+      "comment_count": 6,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1331816928,
+      "decorative_labels": [],
+      "excerpt": "回答：创业公司确定招什么人多少人？ 这和创业公司的实际业务以及战略直接相关。很多企业一上来就希望招牛人，招不到了就退而求其次。其实是为了招人而招人，却没有考虑到这个阶段业务发展的实际需要，以及企业拥有的实际资源。 企业战略（或小企业策略）中，有一项非常重要，但容易被忽略的的内容是：企业阶段性的目标是什么？需要什么样的人来做？如何设计组织架构？这是创始人团队需要认真讨论的。 如果你此阶段的目标只是打…",
+      "extras": "",
+      "favlists_count": 73,
+      "force_login_when_click_read_more": false,
+      "id": "14047914",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "51 赞同 · 73 收藏 · 6 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 17,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1357381599,
+      "url": "https://www.zhihu.com/api/v4/answers/14047914",
+      "visible_only_to_author": false,
+      "voteup_count": 51
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5ca71f3a578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxiDyu4FIOmqqQmSAh8KBTM4MDAwEggxMjI5NzQ3NRgEIgpJTUFHRV9URVhU",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/v2-abed1a8c04700ba7d72b45195223e0ff_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-abed1a8c04700ba7d72b45195223e0ff.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": -1,
+        "headline": "智明星通 行云 CEO",
+        "id": "8e372383e49688eb0f056b869eb9c8fe",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": true,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "唐彬森",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/8e372383e49688eb0f056b869eb9c8fe",
+        "url_token": "tangbinsen",
+        "user_type": "people"
+      },
+      "comment_count": 11,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1301658270,
+      "decorative_labels": [],
+      "excerpt": "如果你想打造一个10年的公司，人品是第一位的，然后是成长性的，最后才是当前拥有的经验； 如果你只想让这个公司两年就卖掉，经验第一，成长性第二，人品无所谓，反正就在一起两年",
+      "extras": "",
+      "favlists_count": 30,
+      "force_login_when_click_read_more": false,
+      "id": "12297475",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "76 赞同 · 30 收藏 · 11 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 18,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1301658270,
+      "url": "https://www.zhihu.com/api/v4/answers/12297475",
+      "visible_only_to_author": false,
+      "voteup_count": 76
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c11cc31578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxiApsIGIOmqqQmSAiAKBjU4NzM0OBIIMTM2NjkxMjAYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/v2-88d2ca11756c309860afcd1cc965f875_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-88d2ca11756c309860afcd1cc965f875.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "生命就是一个一个的修炼与旅程",
+        "id": "8b5e076db10f7171b52c14f855713605",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "产品仁",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/8b5e076db10f7171b52c14f855713605",
+        "url_token": "chanpinrenr",
+        "user_type": "people"
+      },
+      "comment_count": 2,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1326187833,
+      "decorative_labels": [],
+      "excerpt": "这个问题@周源回答的非常好了，我想针对与他的回答做一些补充，和大家一起分享，减少我们在创业道路上的险阻。 除了资金以外的困难，莫过于招人了，实际上创业公司的财富并不是项目，而是自己的团队，项目可以再有，优秀的团队是非常难求的。 我觉的和产品运营一样，从大的方向区分，有两个方向，线上和线下。先说下线上： 线上找人的网站有很多，知乎本身就是一个，举个简单例子，你想招聘一名产品经理（这个应该是各个创业公司…",
+      "extras": "",
+      "favlists_count": 53,
+      "force_login_when_click_read_more": false,
+      "id": "13669120",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "38 赞同 · 53 收藏 · 2 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 16,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1326198010,
+      "url": "https://www.zhihu.com/api/v4/answers/13669120",
+      "visible_only_to_author": false,
+      "voteup_count": 38
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c35ae39578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxi21vsFIOmqqQmSAiAKBjEyMzg4NhIIMTI1MTIwNTQYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pic1.zhimg.com/0bef00943_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/0bef00943.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": -1,
+        "headline": "HR Manager at Innovation Works",
+        "id": "2dfe7694d374055f96b1fded73e818bd",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "Amanda Li",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/2dfe7694d374055f96b1fded73e818bd",
+        "url_token": "amanda-li",
+        "user_type": "people"
+      },
+      "comment_count": 5,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1305470857,
+      "decorative_labels": [],
+      "excerpt": "以上各位说的都很有道理，根据我的经验再补充说一下： 1. 内部推荐依然是最有效的渠道：要和公司的HR team配合起来，充分挖掘内部资源； 2. 各种招聘渠道都需要运营：候选人就是你的用户，要充分了解你的用户，这样才能提高渠道效率；不存在无效的渠道，很多时候是你没有运营好：）",
+      "extras": "",
+      "favlists_count": 6,
+      "force_login_when_click_read_more": false,
+      "id": "12512054",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "11 赞同 · 6 收藏 · 5 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 2,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1305470857,
+      "url": "https://www.zhihu.com/api/v4/answers/12512054",
+      "visible_only_to_author": false,
+      "voteup_count": 11
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c8fbb30578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjOhIsGIOmqqQmSAiAKBjIyNDYxMhIIMTI3NjM3MjYYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pica.zhimg.com/v2-d81e1bf5939d70e5431b84da38def33d_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/v2-d81e1bf5939d70e5431b84da38def33d.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://pic1.zhimg.com/v2-a4a733d68844ff22956ae0ada4bd9d6c_l.png?source=1def8aca",
+          "description": "被 500 个人关注",
+          "medal_avatar_frame": "",
+          "medal_id": "972477022068568064",
+          "medal_name": "备受瞩目",
+          "mini_avatar_url": "https://pic1.zhimg.com/v2-a4a733d68844ff22956ae0ada4bd9d6c_r.png?source=1def8aca"
+        },
+        "gender": 0,
+        "headline": "",
+        "id": "7c46b6d1bcce082e7fbcb3080bb75130",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "jennifer",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/7c46b6d1bcce082e7fbcb3080bb75130",
+        "url_token": "chen-chun-xiao-31",
+        "user_type": "people"
+      },
+      "comment_count": 1,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1308494677,
+      "decorative_labels": [],
+      "excerpt": "创业公司最开始的加入者的水平很重要，除了在专业技能上能独当一面，也要随时能够成为多面手，解决问题的能力要非常强，并且具有很高的热情。第一批员工常常最靠谱的方式是同事推荐，因为在创业阶段，不会有公司品牌知名度的宣传投入，招聘员工很关键的一点是价值观要match, 要有同心同德捞起袖子携手奋斗的精神，这时候口口相传的口碑是格外重要的，因为已有员工自身的气质和能力决定了他周围往往有和他类似的人，而他传递出去…",
+      "extras": "",
+      "favlists_count": 38,
+      "force_login_when_click_read_more": false,
+      "id": "12763726",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "24 赞同 · 38 收藏 · 1 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 16,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1308494677,
+      "url": "https://www.zhihu.com/api/v4/answers/12763726",
+      "visible_only_to_author": false,
+      "voteup_count": 24
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c053532578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjHipsGIOmqqQmSAiAKBjMyOTg4NxIIMTMwMjY2MzEYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/eec122c3388b0a3d69569648b5bef3b5_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pica.zhimg.com/eec122c3388b0a3d69569648b5bef3b5.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "https://pica.zhimg.com/v2-7565d834d652a9960da0cedd8d7952ee_l.png?source=1def8aca",
+          "description": "被 100 个人关注",
+          "medal_avatar_frame": "",
+          "medal_id": "972477022068568064",
+          "medal_name": "备受瞩目",
+          "mini_avatar_url": "https://picx.zhimg.com/v2-7565d834d652a9960da0cedd8d7952ee_r.png?source=1def8aca"
+        },
+        "gender": 1,
+        "headline": "",
+        "id": "882b0d910707a779dad18ca444cc8bd0",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "沈洽金",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/882b0d910707a779dad18ca444cc8bd0",
+        "url_token": "sen_king",
+        "user_type": "people"
+      },
+      "comment_count": 2,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1312992897,
+      "decorative_labels": [],
+      "excerpt": "1.创业公司不宜过度扩张，前期应该为小团队作业，宁可大家累点，也不要盲目的招人 过度扩张的最大问题在于前期创业公司的资本沉淀小，内部结构动荡，在无法判断员工能力的时候盲目招人会大量消耗公司的资本，并同时影响着公司内部稳定。懒惰与不负责任等问题会在某个员工身上开始蔓延，最终扩散到整个公司。 2.关于人才的取舍问题 在创业初期，选择一位与你有共同理想目标的人与你一起奋斗，比起选择一位能力超群却飘忽不定的人…",
+      "extras": "",
+      "favlists_count": 18,
+      "force_login_when_click_read_more": false,
+      "id": "13026631",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "20 赞同 · 18 收藏 · 2 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 5,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1312992897,
+      "url": "https://www.zhihu.com/api/v4/answers/13026631",
+      "visible_only_to_author": false,
+      "voteup_count": 20
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5cfe5034578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxjF4M8HIOmqqQmSAiEKBzE1MjM3NDASCDE1OTg2NzU3GAQiCklNQUdFX1RFWFQ=",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/b79957ba9_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/b79957ba9.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "摄影爱好者",
+        "id": "3fe710429e41fe25cb81ca0beef08422",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "萧影",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/3fe710429e41fe25cb81ca0beef08422",
+        "url_token": "cnherui",
+        "user_type": "people"
+      },
+      "comment_count": 1,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1358688020,
+      "decorative_labels": [],
+      "excerpt": "1.需求方一定要亲力亲为，不要把希望交给人事或招聘部门，自己写招聘需求，自己去网站搜索，自己去技术群找人，交给人事部门，永远是找不到最合适的人。 2.阶梯式找人，技术总监要总经理自己找，部门经理就让技术总监去找，依次按照组织架构层层负责。 3.面试时要坦诚，我们可能会失败，类似的言论还是要讲清楚，真诚待人",
+      "extras": "",
+      "favlists_count": 8,
+      "force_login_when_click_read_more": false,
+      "id": "15986757",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "7 赞同 · 8 收藏 · 1 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 2,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1358688020,
+      "url": "https://www.zhihu.com/api/v4/answers/15986757",
+      "visible_only_to_author": false,
+      "voteup_count": 7
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c7d1826578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxii2ZEGIOmqqQmSAiAKBjI2ODI0MBIIMTI4NzI4NjYYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://pica.zhimg.com/0382dd9376963fa239e1e2342e1127e2_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://picx.zhimg.com/0382dd9376963fa239e1e2342e1127e2.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "iOS开发者，OurCoders创始人",
+        "id": "97f2c1bc8a8f7cc8eb5ff27c89f10c68",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "郝培强",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/97f2c1bc8a8f7cc8eb5ff27c89f10c68",
+        "url_token": "tinyfool",
+        "user_type": "people"
+      },
+      "comment_count": 105,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1310308374,
+      "decorative_labels": [],
+      "excerpt": "先广告一下，找技术人才可以去 OurCoders (我们程序员) 发招聘帖，效果不错。 ＝＝＝ 我的公司叫泰尼网络科技有限公司，我们的产品是 http://iApp4Me.com （此产品已经关闭，公司还没倒闭）。 有人说要用最好的价钱找最好的人才。结果是我认为充足的天使投资，要是都雇我找得到的最好的人的话，也就够花两三个月的。而且他们我不一定能够说服跟我混。我个人能力有限，不认为我有带领超级团队的能力。 所以，我去找跟我互补的…",
+      "extras": "",
+      "favlists_count": 376,
+      "force_login_when_click_read_more": false,
+      "id": "12872866",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "691 赞同 · 376 收藏 · 105 评论",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 193,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1442396384,
+      "url": "https://www.zhihu.com/api/v4/answers/12872866",
+      "visible_only_to_author": false,
+      "voteup_count": 691
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5cb14f35578c7a70d8",
+    "is_jump_native": false
+  },
+  {
+    "type": "question_feed_card",
+    "target_type": "answer",
+    "target": {
+      "answer_type": "normal",
+      "attached_info": "ogEOCAQQAxiOm/kFIOmqqQmSAiAKBjEwNzgzOBIIMTI0NzE2OTQYBCIKSU1BR0VfVEVYVA==",
+      "author": {
+        "avatar_url": "https://picx.zhimg.com/b45c55059_l.jpg?source=1def8aca",
+        "avatar_url_template": "https://pic1.zhimg.com/b45c55059.jpg?source=1def8aca",
+        "badge": [],
+        "badge_v2": {
+          "detail_badges": [],
+          "icon": "",
+          "merged_badges": [],
+          "night_icon": "",
+          "title": ""
+        },
+        "exposed_medal": {
+          "avatar_url": "",
+          "description": "",
+          "medal_id": "0",
+          "medal_name": ""
+        },
+        "gender": 1,
+        "headline": "能人所不能，为人所不为，成人所不成。",
+        "id": "1e05682d57ed9acfce30b6391cbf8a51",
+        "is_advertiser": false,
+        "is_followed": false,
+        "is_following": false,
+        "is_org": false,
+        "is_privacy": false,
+        "name": "楚白",
+        "type": "people",
+        "url": "https://www.zhihu.com/api/v4/people/1e05682d57ed9acfce30b6391cbf8a51",
+        "url_token": "maobinchao",
+        "user_type": "people",
+        "vip_info": {
+          "is_vip": true,
+          "vip_icon": {
+            "night_mode_url": "https://picx.zhimg.com/v2-c9686ff064ea3579730756ac6c289978.jpg?source=88ceefae",
+            "url": "https://pica.zhimg.com/v2-4812630bc27d642f7cafcd6cdeca3d7a.jpg?source=88ceefae"
+          }
+        }
+      },
+      "comment_count": 0,
+      "content_mark": {},
+      "content_need_truncated": false,
+      "created_time": 1305014524,
+      "decorative_labels": [],
+      "excerpt": "确保创业的基础架构（核心团队）稳定。剩下的，跟普通企业一样招新人。 万一某个时间段缺人招不到合适的，核心团队择人顶上。",
+      "extras": "",
+      "favlists_count": 2,
+      "force_login_when_click_read_more": false,
+      "id": "12471694",
+      "is_collapsed": false,
+      "is_copyable": true,
+      "is_jump_native": false,
+      "is_mine": false,
+      "is_sticky": false,
+      "is_visible": true,
+      "matrix_tips": "4 赞同 · 2 收藏",
+      "question": {
+        "created": 1293507216,
+        "id": "19551593",
+        "question_type": "normal",
+        "relationship": null,
+        "title": "创业公司怎么招人？",
+        "type": "question",
+        "updated_time": 1512309180,
+        "url": "https://www.zhihu.com/api/v4/questions/19551593"
+      },
+      "relationship": {
+        "upvoted_followees": []
+      },
+      "relevant_info": {
+        "is_relevant": false,
+        "relevant_text": "",
+        "relevant_type": ""
+      },
+      "sticky_info": "",
+      "thanks_count": 1,
+      "thumbnail_info": {
+        "count": 0,
+        "thumbnails": [],
+        "type": "thumbnail_info"
+      },
+      "type": "answer",
+      "updated_time": 1305014524,
+      "url": "https://www.zhihu.com/api/v4/answers/12471694",
+      "visible_only_to_author": false,
+      "voteup_count": 4
+    },
+    "skip_count": false,
+    "position": 0,
+    "cursor": "d0d82d8d958c8c5c5ffd30578c7a70d8",
+    "is_jump_native": false
+  }
+]

@@ -27,14 +27,15 @@ class ZhihuAPIAnswerCrawler:
         self.config = ZhihuConfig()
         self.session = requests.Session()
         self.db = PostgreSQLManager(postgres_config)
-        
-        # 设置更完整的请求头
+
+        # 设置完整的浏览器请求头
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
             'Accept': '*/*',
             'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,de;q=0.7,zh-TW;q=0.6',
             'Accept-Encoding': 'gzip, deflate, br, zstd',
-            'Connection': 'keep-alive',
+            'DNT': '1',
+            'Priority': 'u=1, i',
             'Referer': 'https://www.zhihu.com/',
             'Sec-Ch-Ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
             'Sec-Ch-Ua-Mobile': '?0',
@@ -44,10 +45,7 @@ class ZhihuAPIAnswerCrawler:
             'Sec-Fetch-Site': 'same-origin',
             'X-Requested-With': 'fetch',
             'X-Zse-93': '101_3_3.0',
-            'X-Zse-96': '2.0_i+=xqLYUBFXNL+XX4sbJm4I3OWfZt1XoFRpR7HcC4NIiHmMcq5k2N=RkYMo4m7FK',
-            'X-Zst-81': '3_2.0aR_sn77yn6O92wOB8hPZnQr0EMYxc4f18wNBUgpTQ6nxERFZY0Y0-4Lm-h3_tufIwJS8gcxTgJS_AuPZNcXCTwxI78YxEM20s4PGDwN8gGcYAupMWufIoLVqr4gxrRPOI0cY7HL8qun9g93mFukyigcmebS_FwOYPRP0E4rZUrN9DDom3hnynAUMnAVPF_PhaueTFRxKAUS_wCpKhGe_OvoLjUHYQugLhgOmUcLYSixKgve8xBX92cOfZCxfQBeTV4xKeQVL8wY_-vx0ADcf_GeYTUVp0cxfxU30evxGVqpfXwwMRDLLyvXKbexVquF0YiSGxJx9zBeu-bX05DHYHUVfVUeYr9FLXUN82LH_9DSKJu2_5GpmVg_zQ7VpOggmBiOO-Dufr8YBrvHmfGpOJvxmcMXVX9SCBDgG3CHGIGpBO9VyxBV9wDUqLGpmtBVZ-gomeDUBObeYfwLmADC8e7pmyhpxWheGRhNqQ7OCe8cs',
-            'DNT': '1',
-            'Priority': 'u=1, i'
+            'X-Zse-96': '2.0_wS8D0lCP6oBAj9x4uDSPyLgAMPC0L2UwfHo/ub+SA2K6shtNgmidqur6=JupIeMJ'
         }
         self.session.headers.update(self.headers)
         
@@ -63,9 +61,9 @@ class ZhihuAPIAnswerCrawler:
             'editable_content,attachment,voteup_count,reshipment_settings,'
             'comment_permission,created_time,updated_time,review_info,'
             'relevant_info,question,excerpt,is_labeled,paid_info,'
-            'paid_info_content,relationship.is_authorized,is_author,voting,'
-            'is_thanked,is_nothelp,is_recognized;data[*].mark_infos[*].url;'
-            'data[*].author.follower_count,vip_info,badge[*].topics;'
+            'paid_info_content,reaction_instruction,relationship.is_authorized,'
+            'is_author,voting,is_thanked,is_nothelp,content;'
+            'data[*].author.follower_count,vip_info,kvip_info,badge[*].topics;'
             'data[*].settings.table_of_content.enabled'
         )
         
@@ -148,48 +146,98 @@ class ZhihuAPIAnswerCrawler:
             logger.error(f"提取问题ID失败: {e}")
             return None
     
-    def build_answers_api_url(self, question_id: str, cursor: str = None, offset: int = 0, limit: int = 5) -> str:
-        """构建答案API URL - 使用feeds端点"""
-        url = f"{self.api_base_url}/{question_id}/feeds"
+    def build_answers_api_url(self, question_id: str, cursor: str = None, offset: int = 0, limit: int = 20) -> str:
+        """构建答案API URL - 使用answers端点，支持完整的懒加载分页"""
+        url = f"{self.api_base_url}/{question_id}/answers"
         params = {
             'include': self.answers_include_params,
-            'limit': limit,
-            'offset': offset,
-            'order': 'default',
+            'limit': str(limit),
+            'offset': str(offset),
             'platform': 'desktop',
-            'ws_qiangzhisafe': 0
+            'sort_by': 'default'
         }
-        
+
+        # 处理分页参数 - 优先使用cursor，然后是offset
         if cursor:
             params['cursor'] = cursor
-            
-        # 添加session_id（可以使用时间戳生成）
+            logger.info(f"🔄 使用cursor分页: {cursor}")
+        else:
+            params['offset'] = str(offset)
+            logger.info(f"🔄 使用offset分页: {offset}")
+
+        # 添加session_id（基于时间戳生成）
         import time
         params['session_id'] = str(int(time.time() * 1000000))
-        
+
         # 手动构建URL以避免编码问题
-        param_str = '&'.join([f"{k}={v}" for k, v in params.items()])
-        return f"{url}?{param_str}"
-    
-    def fetch_answers_page(self, question_id: str, cursor: str = None, offset: int = 0, limit: int = 20) -> Optional[Dict]:
-        """获取指定问题的答案页面数据"""
+        param_str = '&'.join([f"{k}={v}" for k, v in params.items() if v != ''])
+        full_url = f"{url}?{param_str}"
+
+        logger.debug(f"构建的API URL: {full_url}")
+        return full_url
+
+    def _establish_session(self, question_id: str) -> bool:
+        """建立会话 - 先访问问题页面"""
+        try:
+            question_url = f"https://www.zhihu.com/question/{question_id}"
+
+            # 使用适合页面访问的headers
+            page_headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,de;q=0.7,zh-TW;q=0.6',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'DNT': '1',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            }
+
+            response = self.session.get(question_url, headers=page_headers, timeout=30)
+
+            if response.status_code == 200:
+                logger.info("✓ 成功建立会话，访问问题页面")
+                return True
+            else:
+                logger.warning(f"建立会话失败: {response.status_code}")
+                return False
+
+        except Exception as e:
+            logger.error(f"建立会话异常: {e}")
+            return False
+
+    def fetch_answers_page(self, question_id: str, cursor: str = None, offset: int = 0, limit: int = 20,
+                          save_response_callback: callable = None, page_num: int = 0) -> Optional[Dict]:
+        """获取指定问题的答案页面数据 - 支持cursor分页"""
         max_retries = 3
-        
+
         for attempt in range(max_retries):
             try:
+                # 重要：先访问问题页面建立会话
+                self._establish_session(question_id)
+
                 url = self.build_answers_api_url(question_id, cursor, offset, limit)
-                logger.info(f"请求答案API: offset={offset}, limit={limit} (尝试 {attempt + 1}/{max_retries})")
-                
+
+                # 记录请求参数
+                if cursor:
+                    logger.info(f"请求答案API: cursor={cursor}, limit={limit} (尝试 {attempt + 1}/{max_retries})")
+                else:
+                    logger.info(f"请求答案API: offset={offset}, limit={limit} (尝试 {attempt + 1}/{max_retries})")
+
                 # 添加随机延时
                 if attempt > 0:
                     time.sleep(2 ** attempt)
-                
+
                 # 更新referer为具体问题页面
                 headers = self.headers.copy()
                 headers['Referer'] = f'https://www.zhihu.com/question/{question_id}'
-                
+
                 response = self.session.get(url, headers=headers, timeout=30)
-                
+
                 # 检查响应状态
                 if response.status_code == 403:
                     logger.warning("收到403错误，可能需要登录或cookies已过期")
@@ -197,31 +245,58 @@ class ZhihuAPIAnswerCrawler:
                         logger.error("API访问被拒绝，请检查登录状态或cookies")
                         return None
                     continue
-                
+
                 response.raise_for_status()
-                
+
                 # 检查响应内容
                 if not response.text.strip():
                     logger.warning("收到空响应")
                     continue
-                
+
                 data = response.json()
-                
-                # 验证响应数据结构 - feeds端点返回的结构
+
+                # 保存响应数据（如果提供了回调函数）
+                if save_response_callback and data:
+                    try:
+                        save_response_callback(data, page_num, cursor, offset)
+                    except Exception as e:
+                        logger.warning(f"保存响应数据时发生错误: {e}")
+
+                # 验证响应数据结构 - answers端点返回的结构
                 if not isinstance(data, dict):
                     logger.warning("响应数据格式不正确")
                     continue
-                
-                # feeds端点可能返回data字段或直接返回答案列表
+
+                # 检查是否有数据
+                answers_data = data.get('data', [])
+                paging_info = data.get('paging', {})
+
+                if answers_data:
+                    logger.info(f"✅ 获取到 {len(answers_data)} 个答案")
+                    # 显示第一个答案的基本信息
+                    if answers_data:
+                        first_answer = answers_data[0]
+                        answer_id = first_answer.get('id', 'N/A')
+                        author_name = first_answer.get('author', {}).get('name', 'N/A')
+                        vote_count = first_answer.get('voteup_count', 0)
+                        logger.info(f"📝 第一个答案: ID={answer_id}, 作者={author_name}, 点赞={vote_count}")
+                else:
+                    logger.warning("⚠️ 响应中没有数据")
+
+                # 检查分页信息
+                if paging_info:
+                    is_end = paging_info.get('is_end', True)
+                    next_url = paging_info.get('next', '')
+                    logger.info(f"📄 分页信息: is_end={is_end}, has_next={bool(next_url)}")
+
+                # answers端点返回标准结构
                 if 'data' in data:
-                    return data
-                elif isinstance(data, dict) and ('paging' in data or 'totals' in data):
                     return data
                 else:
                     logger.warning(f"响应数据格式不符合预期，尝试 {attempt + 1}/{max_retries}")
                     logger.debug(f"响应数据: {data}")
                     continue
-                
+
             except requests.exceptions.RequestException as e:
                 logger.error(f"请求答案API失败 (尝试 {attempt + 1}/{max_retries}): {e}")
                 if attempt == max_retries - 1:
@@ -234,37 +309,75 @@ class ZhihuAPIAnswerCrawler:
                 logger.error(f"获取答案页面数据时发生未知错误 (尝试 {attempt + 1}/{max_retries}): {e}")
                 if attempt == max_retries - 1:
                     return None
-        
+
         return None
     
-    def parse_answer_data(self, answer_data: Dict, question_id: str, task_id: str) -> Optional[Answer]:
-        """解析单个答案数据"""
+    def fetch_single_answer_content(self, answer_id: str) -> str:
+        """获取单个答案的完整内容"""
         try:
+            url = f"https://www.zhihu.com/api/v4/answers/{answer_id}"
+
+            # 使用更全面的include参数来获取content
+            params = {
+                'include': 'content,comment_count,voteup_count,created_time,updated_time,author,question'
+            }
+
+            response = self.session.get(url, headers=self.headers, params=params, timeout=30)
+
+            if response.status_code == 200:
+                data = response.json()
+                content = data.get('content', '')
+                logger.debug(f"获取答案 {answer_id} 内容成功，长度: {len(content)}")
+                return content
+            else:
+                logger.warning(f"获取答案 {answer_id} 内容失败: {response.status_code}")
+                return ''
+
+        except Exception as e:
+            logger.error(f"获取答案 {answer_id} 内容异常: {e}")
+            return ''
+
+    def parse_answer_data(self, answer_data: Dict, question_id: str, task_id: str) -> Optional[Answer]:
+        """解析单个答案数据 - 适配answers端点的数据结构"""
+        try:
+            if not answer_data:
+                logger.warning("答案数据为空")
+                return None
+
             # 提取答案基本信息
             answer_id = str(answer_data.get('id', ''))
+
+            # 如果列表接口没有返回content，尝试获取单个答案的content
             content = answer_data.get('content', '')
-            
+            if not content and answer_id:
+                logger.info(f"答案 {answer_id} 没有content，尝试单独获取")
+                content = self.fetch_single_answer_content(answer_id)
+
             # 提取作者信息
             author_info = answer_data.get('author', {})
             author_name = author_info.get('name', '')
             author_url_token = author_info.get('url_token', '')
             author_url = f"https://www.zhihu.com/people/{author_url_token}" if author_url_token else ''
-            
+
             # 提取时间信息
             created_time = answer_data.get('created_time', 0)
             updated_time = answer_data.get('updated_time', 0)
-            
+
             # 转换时间戳为ISO格式
             create_time_str = datetime.fromtimestamp(created_time).isoformat() if created_time else ''
             update_time_str = datetime.fromtimestamp(updated_time).isoformat() if updated_time else ''
-            
+
             # 提取统计信息
             vote_count = answer_data.get('voteup_count', 0)
             comment_count = answer_data.get('comment_count', 0)
-            
+
             # 构建答案URL
             answer_url = f"https://www.zhihu.com/question/{question_id}/answer/{answer_id}"
-            
+
+            # 从关系数据中提取is_author信息
+            relationship = answer_data.get('relationship', {})
+            is_author = relationship.get('is_author', False)
+
             # 创建Answer对象
             answer = Answer(
                 answer_id=answer_id,
@@ -279,76 +392,127 @@ class ZhihuAPIAnswerCrawler:
                 vote_count=vote_count,
                 comment_count=comment_count,
                 url=answer_url,
-                is_author=answer_data.get('is_author', False)
+                is_author=is_author
             )
-            
+
             return answer
-            
+
         except Exception as e:
             logger.error(f"解析答案数据失败: {e}")
+            logger.debug(f"答案数据结构: {answer_data}")
             return None
     
-    def crawl_all_answers_for_question(self, question_url: str, task_id: str, 
-                                     max_answers: int = None) -> Tuple[List[Answer], int]:
-        """爬取指定问题的所有答案"""
+    def crawl_all_answers_for_question(self, question_url: str, task_id: str,
+                                     max_answers: int = None, save_response_callback: callable = None) -> Tuple[List[Answer], int]:
+        """爬取指定问题的所有答案 - 支持完整的懒加载和cursor分页"""
         question_id = self.extract_question_id_from_url(question_url)
         if not question_id:
             logger.error(f"无法从URL提取问题ID: {question_url}")
             return [], 0
-        
-        logger.info(f"开始爬取问题 {question_id} 的所有答案")
-        
+
+        logger.info(f"🚀 开始懒加载爬取问题 {question_id} 的所有答案")
+
         all_answers = []
+        cursor = None
         offset = 0
         limit = 20  # 每页获取20个答案
         page_count = 0
-        
+
         while True:
             page_count += 1
-            logger.info(f"正在获取第 {page_count} 页答案 (offset={offset})")
-            
-            # 获取当前页数据
-            page_data = self.fetch_answers_page(question_id, offset, limit)
+            logger.info(f"📄 获取第 {page_count} 页答案 (cursor={cursor}, offset={offset})")
+
+            # 获取当前页数据 - 支持cursor分页，并保存响应
+            page_data = self.fetch_answers_page(question_id, cursor, offset, limit, save_response_callback, page_count)
             if not page_data:
                 logger.error(f"获取第 {page_count} 页数据失败")
                 break
-            
+
             # 解析分页信息
             paging = page_data.get('paging', {})
             is_end = paging.get('is_end', True)
+            next_url = paging.get('next', '')
+
+            # 获取答案数据
             answers_data = page_data.get('data', [])
-            
-            logger.info(f"第 {page_count} 页获取到 {len(answers_data)} 个答案")
-            
+
+            logger.info(f"📦 第 {page_count} 页获取到 {len(answers_data)} 个答案")
+
             # 解析答案数据
+            page_answers = 0
             for answer_data in answers_data:
                 answer = self.parse_answer_data(answer_data, question_id, task_id)
                 if answer:
                     all_answers.append(answer)
-                    
+                    page_answers += 1
+
                     # 检查是否达到最大答案数限制
                     if max_answers and len(all_answers) >= max_answers:
-                        logger.info(f"已达到最大答案数限制: {max_answers}")
+                        logger.info(f"✅ 已达到最大答案数限制: {max_answers}")
                         return all_answers, len(all_answers)
-            
+
+            logger.info(f"📝 本页解析出 {page_answers} 个有效答案")
+
             # 检查是否已经到最后一页
             if is_end:
-                logger.info(f"已获取所有答案，共 {len(all_answers)} 个")
+                logger.info(f"🎯 已到达最后一页")
                 break
-            
-            # 更新offset准备获取下一页
-            offset += limit
-            
+
+            # 解析下一页参数 - 支持cursor分页
+            if next_url:
+                next_params = self._parse_next_url_params(next_url)
+                if 'cursor' in next_params:
+                    cursor = next_params['cursor']
+                    logger.info(f"🔄 更新cursor: {cursor}")
+                elif 'offset' in next_params:
+                    offset = int(next_params['offset'])
+                    cursor = None  # 清除cursor
+                    logger.info(f"🔄 更新offset: {offset}")
+                else:
+                    # 降级到offset递增
+                    offset += limit
+                    cursor = None
+                    logger.info(f"🔄 递增offset: {offset}")
+            else:
+                # 降级到offset递增
+                offset += limit
+                cursor = None
+                logger.info(f"🔄 递增offset: {offset}")
+
             # 添加延时避免请求过快
-            time.sleep(1)
-            
+            time.sleep(2)
+
             # 安全检查：避免无限循环
-            if page_count > 1000:  # 最多1000页
-                logger.warning(f"已达到最大页数限制，停止爬取")
+            if page_count > 100:  # 最多100页
+                logger.warning(f"⚠️ 已达到最大页数限制，停止爬取")
                 break
-        
-        logger.info(f"问题 {question_id} 答案爬取完成，共获取 {len(all_answers)} 个答案")
+
+        logger.info(f"🎉 问题 {question_id} 答案爬取完成")
+        logger.info(f"📊 总共获取到 {len(all_answers)} 个答案")
+        logger.info(f"📄 共请求了 {page_count} 页数据")
+
         return all_answers, len(all_answers)
+
+    def _parse_next_url_params(self, next_url: str) -> Dict:
+        """解析下一页URL中的参数"""
+        try:
+            if not next_url:
+                return {}
+
+            from urllib.parse import urlparse, parse_qs
+            parsed_url = urlparse(next_url)
+            params = parse_qs(parsed_url.query)
+
+            # 提取关键参数
+            result = {}
+            for key, values in params.items():
+                if values:
+                    result[key] = values[0] if len(values) == 1 else values
+
+            return result
+        except Exception as e:
+            logger.error(f"解析next URL参数失败: {e}")
+            return {}
     
     def save_answers_to_db(self, answers: List[Answer]) -> bool:
         """保存答案数据到数据库"""
