@@ -12,6 +12,8 @@ import re
 from pathlib import Path
 from loguru import logger
 from typing import Dict, List, Optional
+from zhihu_lazyload_crawler import BrowserFeedsCrawler
+from config import ZhihuConfig
 
 class ZhihuAPIFixer:
     """知乎API修复器"""
@@ -167,9 +169,6 @@ class ZhihuAPIFixer:
                 'ws_qiangzhisafe': '0'
             }
             
-            # 不设置offset，让API自动处理
-            # params['offset'] = ''  # 空字符串
-            
             headers = self.base_headers.copy()
             headers['Referer'] = question_page_url
             headers['X-Requested-With'] = 'fetch'
@@ -187,7 +186,6 @@ class ZhihuAPIFixer:
                 logger.info(f"🔑 Session ID: {session_id or '空'}")
                 
                 if feeds_count > 0 or session_id:
-                    # 保存响应
                     with open('api_feeds_enhanced_success.json', 'w', encoding='utf-8') as f:
                         json.dump(data, f, ensure_ascii=False, indent=2)
                     return data
@@ -195,12 +193,46 @@ class ZhihuAPIFixer:
                     logger.warning("enhanced feeds API返回空数据且无session")
                     return data
             else:
+                # 捕获常见风控提示用于判定回退
+                try:
+                    err_json = response.json()
+                    msg = err_json.get('error', {}).get('message') or err_json.get('message') or ''
+                    if '请求参数异常' in msg:
+                        logger.error(f"Feeds API风控: {msg}")
+                except Exception:
+                    pass
                 logger.error(f"Enhanced Feeds API失败: {response.status_code}")
                 return None
                 
         except Exception as e:
             logger.error(f"Enhanced Feeds API请求失败: {e}")
             return None
+
+    def fallback_via_browser(self, question_id: str, max_scrolls: int = 30, pause: float = 2.0) -> List[Dict]:
+        """当API失败或被风控时，使用浏览器上下文抓取feeds作为回退方案"""
+        try:
+            try:
+                ZhihuConfig.create_directories()
+            except Exception:
+                pass
+            crawler = BrowserFeedsCrawler()  # 使用config中的HEADLESS设置
+            items = crawler.crawl_feeds_via_browser(
+                question_id=question_id,
+                max_scrolls=max_scrolls,
+                pause=pause,
+                stop_when_is_end=True
+            )
+            logger.info(f"Browser回退完成，抓取items={len(items)}")
+            # 保存一份结果
+            try:
+                out_path = f"{ZhihuConfig.OUTPUT_DIR}/feeds_{question_id}_browser.json"
+                BrowserFeedsCrawler.save_feeds_data(items, out_path)
+            except Exception:
+                pass
+            return items
+        except Exception as e:
+            logger.error(f"Browser回退失败: {e}")
+            return []
 
     def comprehensive_test(self, question_ids):
         """综合测试多个问题"""
@@ -221,6 +253,7 @@ class ZhihuAPIFixer:
                 'basic_info': None,
                 'answers_api': None,
                 'feeds_api': None,
+                'browser_fallback': None,
                 'success': False
             }
             
@@ -254,6 +287,17 @@ class ZhihuAPIFixer:
                 logger.info(f"✅ Enhanced Feeds API成功")
                 result['success'] = True
             
+            # 4. 若API均失败或无数据，触发浏览器回退
+            if not result['success']:
+                logger.info("🚨 API失败/受限，启动Browser回退方案A...")
+                items = self.fallback_via_browser(question_id, max_scrolls=30, pause=2.0)
+                result['browser_fallback'] = {
+                    'items_count': len(items)
+                }
+                if len(items) > 0:
+                    logger.info("✅ Browser回退成功获取数据")
+                    result['success'] = True
+            
             results[question_id] = result
             
             # 延时避免请求过快
@@ -281,27 +325,29 @@ class ZhihuAPIFixer:
                     'answer_count': result.get('basic_info', {}).get('answer_count', 0),
                     'working_apis': []
                 })
-                
+                idx = -1
                 # 记录工作的API
                 if result.get('answers_api') and result['answers_api'].get('data'):
-                    report['successful_questions_list'][-1]['working_apis'].append('answers')
+                    report['successful_questions_list'][idx]['working_apis'].append('answers')
                 if result.get('feeds_api') and (result['feeds_api'].get('data') or result['feeds_api'].get('session', {}).get('id')):
-                    report['successful_questions_list'][-1]['working_apis'].append('feeds')
+                    report['successful_questions_list'][idx]['working_apis'].append('feeds')
+                if result.get('browser_fallback') and result['browser_fallback'].get('items_count', 0) > 0:
+                    report['successful_questions_list'][idx]['working_apis'].append('browser')
             else:
                 report['failed_questions'].append({
                     'question_id': question_id,
-                    'reason': 'API调用失败或返回空数据'
+                    'reason': 'API调用失败或返回空数据（且浏览器回退无数据）'
                 })
         
         # 生成建议
         if report['successful_questions'] > 0:
-            report['recommendations'].append("✅ 发现可工作的API端点，建议使用成功的方法")
+            report['recommendations'].append("✅ 发现可工作的抓取路径（answers/feeds或browser回退）")
         else:
             report['recommendations'].extend([
-                "❌ 所有API测试失败，建议：",
+                "❌ 所有抓取路径失败，建议：",
                 "1. 重新获取完整的登录cookies",
                 "2. 检查网络环境和反爬限制",
-                "3. 考虑使用Selenium备选方案"
+                "3. 本地验证浏览器登录状态或调整HEADLESS=False观察页面行为"
             ])
         
         # 保存报告

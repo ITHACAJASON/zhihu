@@ -15,6 +15,7 @@ from datetime import datetime
 from loguru import logger
 from urllib.parse import urljoin, urlparse, parse_qs
 from pathlib import Path
+import argparse
 
 from config import ZhihuConfig
 from postgres_models import PostgreSQLManager, TaskInfo, Question, Answer
@@ -62,7 +63,7 @@ class ZhihuAPIAnswerCrawler:
             'comment_permission,created_time,updated_time,review_info,'
             'relevant_info,question,excerpt,is_labeled,paid_info,'
             'paid_info_content,reaction_instruction,relationship.is_authorized,'
-            'is_author,voting,is_thanked,is_nothelp,content;'
+            'is_author,voting,is_thanked,is_nothelp;'
             'data[*].author.follower_count,vip_info,kvip_info,badge[*].topics;'
             'data[*].settings.table_of_content.enabled'
         )
@@ -312,31 +313,6 @@ class ZhihuAPIAnswerCrawler:
 
         return None
     
-    def fetch_single_answer_content(self, answer_id: str) -> str:
-        """获取单个答案的完整内容"""
-        try:
-            url = f"https://www.zhihu.com/api/v4/answers/{answer_id}"
-
-            # 使用更全面的include参数来获取content
-            params = {
-                'include': 'content,comment_count,voteup_count,created_time,updated_time,author,question'
-            }
-
-            response = self.session.get(url, headers=self.headers, params=params, timeout=30)
-
-            if response.status_code == 200:
-                data = response.json()
-                content = data.get('content', '')
-                logger.debug(f"获取答案 {answer_id} 内容成功，长度: {len(content)}")
-                return content
-            else:
-                logger.warning(f"获取答案 {answer_id} 内容失败: {response.status_code}")
-                return ''
-
-        except Exception as e:
-            logger.error(f"获取答案 {answer_id} 内容异常: {e}")
-            return ''
-
     def parse_answer_data(self, answer_data: Dict, question_id: str, task_id: str) -> Optional[Answer]:
         """解析单个答案数据 - 适配answers端点的数据结构"""
         try:
@@ -346,12 +322,7 @@ class ZhihuAPIAnswerCrawler:
 
             # 提取答案基本信息
             answer_id = str(answer_data.get('id', ''))
-
-            # 如果列表接口没有返回content，尝试获取单个答案的content
             content = answer_data.get('content', '')
-            if not content and answer_id:
-                logger.info(f"答案 {answer_id} 没有content，尝试单独获取")
-                content = self.fetch_single_answer_content(answer_id)
 
             # 提取作者信息
             author_info = answer_data.get('author', {})
@@ -594,30 +565,41 @@ class ZhihuAPIAnswerCrawler:
 
 
 def main():
-    """主函数 - 用于测试"""
+    """主函数 - 支持命令行参数"""
+    parser = argparse.ArgumentParser(description="知乎API答案爬虫")
+    parser.add_argument("--question-url", dest="question_url", type=str, required=False,
+                        help="问题页URL或带answer段的URL，例如 https://www.zhihu.com/question/25038841 或 https://www.zhihu.com/question/25038841/answer/903740226")
+    parser.add_argument("--max-answers", dest="max_answers", type=int, default=-1,
+                        help="最大抓取答案数量，-1表示抓取全部")
+    parser.add_argument("--save-to-db", dest="save_to_db", type=str, choices=["true", "false"], default="true",
+                        help="是否将答案保存到数据库，默认true")
+    args = parser.parse_args()
+
     # 初始化爬虫
     crawler = ZhihuAPIAnswerCrawler()
-    
+
     # 测试API连接
     if not crawler.test_api_connection():
         print("API连接测试失败，请检查网络连接")
         return
-    
-    # 测试爬取答案
-    test_question_url = "https://www.zhihu.com/question/25038841"
+
+    question_url = args.question_url or "https://www.zhihu.com/question/25038841"
+    max_answers = None if args.max_answers is None or args.max_answers < 0 else args.max_answers
+    save_to_db = True if args.save_to_db.lower() == "true" else False
+
     result = crawler.crawl_answers_by_question_url(
-        question_url=test_question_url,
-        max_answers=10,  # 限制测试答案数量
-        save_to_db=True
+        question_url=question_url,
+        max_answers=max_answers,
+        save_to_db=save_to_db
     )
-    
+
     print(f"\n=== 爬取结果 ===")
     print(f"问题URL: {result['question_url']}")
     print(f"任务ID: {result['task_id']}")
     print(f"答案数量: {result['total_answers']}")
     print(f"保存状态: {result['saved_to_db']}")
     print(f"耗时: {result['duration_seconds']} 秒")
-    
+
     # 显示前3个答案的摘要
     if result['answers']:
         print(f"\n=== 答案摘要 (前3个) ===")

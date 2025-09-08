@@ -221,10 +221,6 @@ class SpecificQuestionCrawler:
                     logger.warning(f"⚠️ 已达到最大页数限制，停止爬取")
                     break
 
-            # 填充答案的content字段
-            if all_answers:
-                all_answers = self._fill_answers_content(all_answers)
-
             # 保存答案到数据库
             saved_to_db = False
             if all_answers:
@@ -265,28 +261,6 @@ class SpecificQuestionCrawler:
                 'saved_files_count': len(saved_files),
                 'saved_files': saved_files
             }
-
-    def _fill_answers_content(self, answers: List[Answer]) -> List[Answer]:
-        """为答案列表填充content字段"""
-        logger.info(f"开始为 {len(answers)} 个答案填充content")
-
-        filled_count = 0
-        for i, answer in enumerate(answers):
-            if not answer.content and answer.answer_id:
-                logger.debug(f"获取答案 {answer.answer_id} 的content ({i+1}/{len(answers)})")
-                content = self.api_crawler.fetch_single_answer_content(answer.answer_id)
-
-                if content:
-                    answer.content = content
-                    filled_count += 1
-
-                    # 添加延时避免请求过快
-                    time.sleep(0.5)
-                else:
-                    logger.warning(f"无法获取答案 {answer.answer_id} 的content")
-
-        logger.info(f"成功填充 {filled_count}/{len(answers)} 个答案的content")
-        return answers
 
     def _save_answers_to_db(self, answers: List[Answer]) -> bool:
         """保存答案数据到数据库"""
@@ -349,15 +323,15 @@ class SpecificQuestionCrawler:
 def main():
     """主函数"""
     # 指定的问题链接
-    question_url = "https://www.zhihu.com/question/378706911/answer/1080446596"
+    question_url = "https://www.zhihu.com/question/30215562/answer/1938973838974105593"
 
     try:
         # 初始化爬虫
-        crawler = SpecificQuestionCrawler(question_url, "question_378706911_full_crawl")
+        crawler = SpecificQuestionCrawler(question_url, "question_30215562_full_crawl")
 
         # 开始爬取
         logger.info("开始执行专项问题答案采集任务...")
-        result = crawler.crawl_all_answers(max_answers=4470)
+        result = crawler.crawl_all_answers(max_answers=4383)
 
         # 保存摘要
         summary_file = crawler.save_crawl_summary(result)

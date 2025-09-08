@@ -1,0 +1,33 @@
+{
+  "crawl_info": {
+    "question_id": "30215562",
+    "question_url": "https://www.zhihu.com/question/30215562/answer/1938973838974105593",
+    "task_id": "607cdad6-8a2b-4039-aa18-f9cea8c99b32",
+    "task_name": "question_30215562_full_crawl",
+    "crawl_time": "2025-08-26T16:34:28.070657",
+    "target_answers": 4470
+  },
+  "results": {
+    "question_id": "30215562",
+    "question_url": "https://www.zhihu.com/question/30215562/answer/1938973838974105593",
+    "task_id": "607cdad6-8a2b-4039-aa18-f9cea8c99b32",
+    "total_answers": 0,
+    "total_pages": 1,
+    "total_api_calls": 1,
+    "saved_files_count": 0,
+    "saved_files": [],
+    "saved_to_db": false,
+    "duration_seconds": 13.61,
+    "crawl_time": "2025-08-26T16:34:28.070001",
+    "answers": []
+  },
+  "statistics": {
+    "total_answers_collected": 0,
+    "total_pages": 1,
+    "total_api_calls": 1,
+    "saved_files_count": 0,
+    "saved_to_db": false,
+    "duration_seconds": 13.61,
+    "completion_rate": 0
+  }
+}

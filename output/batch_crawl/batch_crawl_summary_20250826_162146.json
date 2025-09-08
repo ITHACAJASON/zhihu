@@ -1,0 +1,28 @@
+{
+  "total_questions": 1,
+  "total_answers_collected": 20,
+  "total_files_saved": 1,
+  "total_duration_seconds": 17.87,
+  "average_time_per_question": 17.87,
+  "results": [
+    {
+      "question_id": "11259869114",
+      "question_url": "https://www.zhihu.com/question/11259869114",
+      "task_id": "96d3d6a6-4f72-4ab0-96b2-a059570259cc",
+      "title": "未知标题",
+      "expected_answers": 94,
+      "total_answers": 20,
+      "total_pages": 2,
+      "total_api_calls": 2,
+      "saved_files_count": 1,
+      "saved_files": [
+        "page_1_saved"
+      ],
+      "saved_to_db": true,
+      "duration_seconds": 17.87,
+      "crawl_time": "2025-08-26T16:21:46.299078",
+      "completion_rate": 21.28
+    }
+  ],
+  "crawl_time": "2025-08-26T16:21:46.299684"
+}

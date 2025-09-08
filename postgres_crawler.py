@@ -45,15 +45,6 @@ class PostgresZhihuCrawler:
         # 初始化PostgreSQL数据库管理器
         self.db = PostgreSQLManager(postgres_config)
         self.current_task_id = None  # 当前任务ID，用于中断处理
-
-        # 初始化API爬虫（用于获取答案内容）
-        try:
-            from zhihu_api_crawler import ZhihuAPIAnswerCrawler
-            self.api_crawler = ZhihuAPIAnswerCrawler()
-            logger.info("API爬虫初始化成功")
-        except Exception as e:
-            logger.warning(f"API爬虫初始化失败: {e}")
-            self.api_crawler = None
         
         self.cache_dir = Path("cache")
         self.cache_dir.mkdir(exist_ok=True)
