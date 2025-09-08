@@ -88,6 +88,177 @@ class ZhihuLazyLoadCrawler:
         except Exception as e:
             logger.error(f"提取问题ID失败: {e}")
             return None
+        
+    def crawl_feeds_with_browser_headers(self, question_id: str, max_pages: int = 10,
+                                       session_id: str = None, 
+                                       x_zse_96: str = None,
+                                       x_zst_81: str = None) -> List[Dict]:
+        """使用浏览器headers连续获取多页feeds数据
+        
+        模拟浏览器的连续fetch请求，获取完整的问答回答列表
+        
+        Args:
+            question_id: 问题ID
+            max_pages: 最大页数
+            session_id: 会话ID
+            x_zse_96: 知乎反爬虫参数
+            x_zst_81: 知乎反爬虫参数
+            
+        Returns:
+            所有获取到的feeds数据列表
+        """
+        all_feeds = []
+        current_cursor = None
+        current_offset = 1  # 从offset=1开始，如用户示例
+        page_count = 0
+        
+        logger.info(f"🚀 开始使用浏览器headers爬取问题 {question_id} 的feeds数据")
+        
+        while page_count < max_pages:
+            logger.info(f"📖 正在获取第 {page_count + 1} 页数据...")
+            
+            # 获取当前页数据
+            page_data = self.fetch_feeds_with_browser_headers(
+                question_id=question_id,
+                cursor=current_cursor,
+                offset=current_offset if current_cursor is None else None,
+                limit=5,
+                session_id=session_id,
+                x_zse_96=x_zse_96,
+                x_zst_81=x_zst_81
+            )
+            
+            if not page_data:
+                logger.warning(f"⚠️ 第 {page_count + 1} 页数据获取失败，停止爬取")
+                break
+                
+            # 提取feeds数据
+            feeds_data = page_data.get('data', [])
+            if not feeds_data:
+                logger.info(f"📄 第 {page_count + 1} 页没有更多数据，停止爬取")
+                break
+                
+            all_feeds.extend(feeds_data)
+            logger.info(f"✅ 第 {page_count + 1} 页获取到 {len(feeds_data)} 个feed项，累计 {len(all_feeds)} 个")
+            
+            # 检查分页信息
+            paging = page_data.get('paging', {})
+            is_end = paging.get('is_end', True)
+            
+            if is_end:
+                logger.info(f"📄 已到达最后一页，停止爬取")
+                break
+                
+            # 获取下一页的cursor
+            next_url = paging.get('next')
+            if next_url:
+                # 解析next URL获取cursor
+                parsed_next = self.parse_next_url(next_url)
+                current_cursor = parsed_next.get('cursor')
+                current_offset = parsed_next.get('offset')
+                
+                if current_cursor:
+                    logger.info(f"🔗 获取到下一页cursor: {current_cursor[:20]}...")
+                elif current_offset:
+                    logger.info(f"🔗 获取到下一页offset: {current_offset}")
+            else:
+                logger.warning(f"⚠️ 未找到下一页链接，停止爬取")
+                break
+                
+            page_count += 1
+            
+            # 添加延时避免请求过快
+            if page_count < max_pages:
+                time.sleep(2)
+                
+        logger.info(f"🎉 爬取完成！共获取 {len(all_feeds)} 个feed项，{page_count + 1} 页数据")
+        return all_feeds
+        
+    def extract_answer_details_from_feeds(self, feeds_data: List[Dict]) -> List[Dict]:
+        """从feeds数据中提取回答详情
+        
+        Args:
+            feeds_data: feeds数据列表
+            
+        Returns:
+            回答详情列表
+        """
+        answers = []
+        
+        for feed in feeds_data:
+            try:
+                # 检查feed类型
+                feed_type = feed.get('type', '')
+                if feed_type != 'answer':
+                    continue
+                    
+                # 提取回答基本信息
+                answer_id = feed.get('id', '')
+                content = feed.get('content', '')
+                excerpt = feed.get('excerpt', '')
+                
+                # 提取作者信息
+                author = feed.get('author', {})
+                author_name = author.get('name', '')
+                author_url_token = author.get('url_token', '')
+                author_headline = author.get('headline', '')
+                author_follower_count = author.get('follower_count', 0)
+                
+                # 提取VIP信息
+                vip_info = author.get('vip_info', {})
+                is_vip = vip_info.get('is_vip', False)
+                
+                # 提取统计信息
+                voteup_count = feed.get('voteup_count', 0)
+                comment_count = feed.get('comment_count', 0)
+                
+                # 提取时间信息
+                created_time = feed.get('created_time', 0)
+                updated_time = feed.get('updated_time', 0)
+                
+                # 提取问题信息
+                question = feed.get('question', {})
+                question_id = question.get('id', '')
+                question_title = question.get('title', '')
+                
+                # 提取投票信息
+                voting = feed.get('voting', 0)
+                is_thanked = feed.get('is_thanked', False)
+                
+                answer_detail = {
+                    'answer_id': answer_id,
+                    'question_id': question_id,
+                    'question_title': question_title,
+                    'content': content,
+                    'excerpt': excerpt,
+                    'author': {
+                        'name': author_name,
+                        'url_token': author_url_token,
+                        'headline': author_headline,
+                        'follower_count': author_follower_count,
+                        'is_vip': is_vip
+                    },
+                    'stats': {
+                        'voteup_count': voteup_count,
+                        'comment_count': comment_count,
+                        'voting': voting,
+                        'is_thanked': is_thanked
+                    },
+                    'timestamps': {
+                        'created_time': created_time,
+                        'updated_time': updated_time
+                    },
+                    'raw_feed': feed  # 保留原始数据以备需要
+                }
+                
+                answers.append(answer_detail)
+                
+            except Exception as e:
+                logger.error(f"解析feed数据时出错: {e}")
+                continue
+                
+        logger.info(f"📊 从 {len(feeds_data)} 个feed中提取到 {len(answers)} 个回答详情")
+        return answers
 
     def parse_next_url(self, next_url: str) -> Dict:
         """解析下一页URL中的参数"""
@@ -129,6 +300,169 @@ class ZhihuLazyLoadCrawler:
             params['offset'] = str(offset)
 
         # 手动构建URL避免编码问题
+        param_str = '&'.join([f"{k}={v}" for k, v in params.items()])
+        return f"{url}?{param_str}"
+
+    def fetch_feeds_with_browser_headers(self, question_id: str, cursor: str = None, 
+                                       offset: int = None, limit: int = 5, 
+                                       session_id: str = None, 
+                                       x_zse_93: str = "101_3_3.0",
+                                       x_zse_96: str = None,
+                                       x_zst_81: str = None) -> Optional[Dict]:
+        """使用浏览器完整headers获取feeds数据
+        
+        基于浏览器fetch请求的完整实现，包含所有必要的反爬虫headers
+        
+        Args:
+            question_id: 问题ID
+            cursor: 游标参数，用于分页
+            offset: 偏移量参数
+            limit: 每页数量，默认5
+            session_id: 会话ID
+            x_zse_93: 知乎反爬虫参数
+            x_zse_96: 知乎反爬虫参数
+            x_zst_81: 知乎反爬虫参数
+            
+        Returns:
+            API响应数据或None
+        """
+        max_retries = 3
+        
+        for attempt in range(max_retries):
+            try:
+                # 构建完整的URL
+                url = self._build_browser_feeds_url(
+                    question_id, cursor, offset, limit, session_id
+                )
+                
+                logger.info(f"使用浏览器headers请求feeds API (尝试 {attempt + 1}/{max_retries})")
+                logger.debug(f"请求URL: {url}")
+                
+                # 构建完整的浏览器headers
+                headers = {
+                    "accept": "*/*",
+                    "accept-language": "en,zh-CN;q=0.9,zh;q=0.8,de;q=0.7,zh-TW;q=0.6",
+                    "priority": "u=1, i",
+                    "sec-ch-ua": '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": '"macOS"',
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-origin",
+                    "x-requested-with": "fetch",
+                    "x-zse-93": x_zse_93,
+                    "Referer": f"https://www.zhihu.com/question/{question_id}",
+                    "Referrer-Policy": "strict-origin-when-cross-origin"
+                }
+                
+                # 添加可选的反爬虫headers
+                if x_zse_96:
+                    headers["x-zse-96"] = x_zse_96
+                if x_zst_81:
+                    headers["x-zst-81"] = x_zst_81
+                    
+                # 发送请求
+                response = self.session.get(url, headers=headers, timeout=30)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    feeds_data = data.get('data', [])
+                    logger.info(f"✅ 获取到 {len(feeds_data)} 个feed项")
+                    
+                    # 记录分页信息
+                    paging = data.get('paging', {})
+                    if paging:
+                        logger.info(f"📄 分页信息: is_end={paging.get('is_end', False)}, next={paging.get('next', 'N/A')}")
+                    
+                    return data
+                    
+                elif response.status_code == 403:
+                    logger.warning(f"❌ API访问被拒绝: {response.status_code}")
+                    try:
+                        error_data = response.json()
+                        if 'error' in error_data:
+                            logger.warning(f"错误信息: {error_data['error'].get('message', 'Unknown error')}")
+                    except:
+                        logger.warning(f"响应内容: {response.text[:200]}")
+                    return None
+                    
+                else:
+                    logger.warning(f"⚠️ API返回异常状态: {response.status_code}")
+                    logger.debug(f"响应内容: {response.text[:200]}")
+                    if attempt == max_retries - 1:
+                        return None
+                        
+            except requests.exceptions.RequestException as e:
+                logger.error(f"网络请求失败 (尝试 {attempt + 1}): {e}")
+                if attempt == max_retries - 1:
+                    return None
+            except json.JSONDecodeError as e:
+                logger.error(f"JSON解析失败 (尝试 {attempt + 1}): {e}")
+                logger.debug(f"响应内容: {response.text[:200] if 'response' in locals() else 'N/A'}")
+                if attempt == max_retries - 1:
+                    return None
+            except Exception as e:
+                logger.error(f"未知错误 (尝试 {attempt + 1}): {e}")
+                if attempt == max_retries - 1:
+                    return None
+                    
+            # 失败后等待重试
+            if attempt < max_retries - 1:
+                wait_time = (attempt + 1) * 2
+                logger.info(f"等待 {wait_time} 秒后重试...")
+                time.sleep(wait_time)
+                
+        return None
+        
+    def _build_browser_feeds_url(self, question_id: str, cursor: str = None,
+                               offset: int = None, limit: int = 5, 
+                               session_id: str = None) -> str:
+        """构建浏览器风格的feeds API URL
+        
+        Args:
+            question_id: 问题ID
+            cursor: 游标参数
+            offset: 偏移量参数  
+            limit: 每页数量
+            session_id: 会话ID
+            
+        Returns:
+            完整的API URL
+        """
+        url = f"{self.api_base_url}/{question_id}/feeds"
+        
+        # 使用与浏览器fetch相同的include参数
+        include_params = (
+            "data%5B%2A%5D.is_normal%2Cadmin_closed_comment%2Creward_info%2Cis_collapsed%2C"
+            "annotation_action%2Cannotation_detail%2Ccollapse_reason%2Cis_sticky%2C"
+            "collapsed_by%2Csuggest_edit%2Ccomment_count%2Ccan_comment%2Ccontent%2C"
+            "editable_content%2Cattachment%2Cvoteup_count%2Creshipment_settings%2C"
+            "comment_permission%2Ccreated_time%2Cupdated_time%2Creview_info%2C"
+            "relevant_info%2Cquestion%2Cexcerpt%2Cis_labeled%2Cpaid_info%2C"
+            "paid_info_content%2Creaction_instruction%2Crelationship.is_authorized%2C"
+            "is_author%2Cvoting%2Cis_thanked%2Cis_nothelp%3Bdata%5B%2A%5D.author.follower_count%2C"
+            "vip_info%2Ckvip_info%2Cbadge%5B%2A%5D.topics%3Bdata%5B%2A%5D.settings.table_of_content.enabled"
+        )
+        
+        params = {
+            'include': include_params,
+            'limit': str(limit),
+            'order': 'default',
+            'platform': 'desktop',
+            'ws_qiangzhisafe': '0'
+        }
+        
+        # 添加cursor或offset
+        if cursor:
+            params['cursor'] = cursor
+        elif offset is not None:
+            params['offset'] = str(offset)
+            
+        # 添加session_id
+        if session_id:
+            params['session_id'] = session_id
+            
+        # 构建URL
         param_str = '&'.join([f"{k}={v}" for k, v in params.items()])
         return f"{url}?{param_str}"
 
@@ -685,6 +1019,21 @@ class BrowserFeedsCrawler:
                 pass
             time.sleep(pause)
 
+    def _soft_rollback(self, percent: float = 0.08, pause: float = 1.5):
+        """轻量回滚：上滚页面高度的一定比例后再下滚，触发重新懒加载"""
+        try:
+            current_height = self.driver.execute_script("return document.body.scrollHeight")
+            current_scroll_position = self.driver.execute_script("return window.pageYOffset")
+            delta = max(50, current_height * float(percent))
+            new_scroll_position = max(0, current_scroll_position - delta)
+            logger.info(f"↩️ 触发软回滚：上滚 {delta:.0f}px 到 {new_scroll_position:.0f}，随后再次下滑")
+            self.driver.execute_script(f"window.scrollTo(0, {new_scroll_position});")
+            time.sleep(pause)
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(max(1.0, pause - 0.2))
+        except Exception as e:
+            logger.debug(f"软回滚执行失败：{e}")
+
     def _collect_feeds_from_perf_logs(self, question_id: str, seen_ids: set) -> list:
         """从performance日志中收集本轮新出现的feeds响应体"""
         collected = []
@@ -808,7 +1157,7 @@ class BrowserFeedsCrawler:
             logger.error(f"手动登录流程异常: {e}")
             return False
 
-    def crawl_feeds_via_browser(self, question_id: str, max_scrolls: int = 6, pause: float = 2.5, stop_when_is_end: bool = True) -> List[Dict[str, Any]]:
+    def crawl_feeds_via_browser(self, question_id: str, max_scrolls: int = 6, pause: float = 2.5, stop_when_is_end: bool = True, expected_min_per_scroll: int = 8, verify_end_with_rollback: bool = True, rollback_percent: float = 0.1) -> List[Dict[str, Any]]:
         try:
             if not self._load_cookies_to_driver():
                 logger.warning("未成功注入cookies，可能会触发登录/风控")
@@ -850,30 +1199,123 @@ class BrowserFeedsCrawler:
             for i in range(max_scrolls):
                 logger.info(f"下拉触发懒加载， 第 {i+1}/{max_scrolls} 次")
                 self._scroll_to_load(times=1, pause=pause)
+                try:
+                    self._persist_cookies(self.driver)
+                except Exception as e:
+                    logger.debug(f"滚动后持久化cookies失败: {e}")
+                
+                # 初始化本轮统计，避免在无新响应时未定义
+                round_items_count = 0
+                round_detected_is_end = False
+                
                 # 收集本轮新响应
                 newly = self._collect_feeds_from_perf_logs(question_id, seen_request_ids)
                 if newly:
                     logger.info(f"捕获到 {len(newly)} 个feeds响应")
-                for req_id, payload in newly:
-                    seen_request_ids.add(req_id)
-                    # 兼容部分接口直接返回 list 的情况
-                    if isinstance(payload, list):
-                        page_items = payload
-                        paging = {}
-                    elif isinstance(payload, dict):
-                        page_items = payload.get('data', []) or []
-                        paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
-                    else:
-                        page_items, paging = [], {}
-                    all_items.extend(page_items)
-                    if stop_when_is_end and isinstance(paging, dict) and paging.get('is_end'):
-                        is_end_flag = True
-                # 若没有新响应，尝试再次等待一小会
-                if not newly:
-                    time.sleep(1)
-                if is_end_flag:
-                    logger.info("检测到paging.is_end=True，提前结束")
-                    break
+                    
+                    round_items_count = 0
+                    round_detected_is_end = False
+                    for req_id, payload in newly:
+                        seen_request_ids.add(req_id)
+                        # 兼容部分接口直接返回 list 的情况
+                        if isinstance(payload, list):
+                            page_items = payload
+                            paging = {}
+                        elif isinstance(payload, dict):
+                            page_items = payload.get('data', []) or []
+                            paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
+                        else:
+                            page_items, paging = [], {}
+                        all_items.extend(page_items)
+                        round_items_count += len(page_items)
+                        if stop_when_is_end and isinstance(paging, dict) and paging.get('is_end'):
+                            round_detected_is_end = True
+                            is_end_flag = True
+                    
+                    # 若没有新响应，尝试再次等待一小会
+                    if not newly:
+                        time.sleep(1)
+
+                    # 少于预期条数，则触发一次回滚重试
+                    if expected_min_per_scroll and round_items_count < expected_min_per_scroll:
+                        logger.info(f"⚠️ 本轮新增 {round_items_count} 条 < 预期 {expected_min_per_scroll} 条，触发回滚重试一次……")
+                        try:
+                            self._soft_rollback(percent=rollback_percent, pause=max(1.2, pause - 0.3))
+                            try:
+                                self._persist_cookies(self.driver)
+                            except Exception as e:
+                                logger.debug(f"回滚后持久化cookies失败: {e}")
+                            newly_retry = self._collect_feeds_from_perf_logs(question_id, seen_request_ids)
+                            added_retry = 0
+                            for req_id, payload in newly_retry:
+                                seen_request_ids.add(req_id)
+                                if isinstance(payload, list):
+                                    page_items = payload
+                                    paging = {}
+                                elif isinstance(payload, dict):
+                                    page_items = payload.get('data', []) or []
+                                    paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
+                                else:
+                                    page_items, paging = [], {}
+                                all_items.extend(page_items)
+                                added_retry += len(page_items)
+                                if stop_when_is_end and isinstance(paging, dict) and paging.get('is_end'):
+                                    round_detected_is_end = True
+                                    is_end_flag = True
+                            logger.info(f"回滚重试新增 {added_retry} 条")
+                            round_items_count += added_retry
+                        except Exception as e:
+                            logger.debug(f"回滚重试异常: {e}")
+
+                    # 若检测到 is_end，则做一次回滚验证，避免误判
+                    if stop_when_is_end and round_detected_is_end and verify_end_with_rollback:
+                        logger.info("🧪 检测到 paging.is_end=True，执行一次回滚验证……")
+                        prev_len = len(all_items)
+                        try:
+                            self._soft_rollback(percent=max(rollback_percent, 0.12), pause=max(1.2, pause))
+                            try:
+                                self._persist_cookies(self.driver)
+                            except Exception as e:
+                                logger.debug(f"回滚后持久化cookies失败: {e}")
+                            newly_verify = self._collect_feeds_from_perf_logs(question_id, seen_request_ids)
+                            verify_added = 0
+                            verify_is_end_still_true = True
+                            for req_id, payload in newly_verify:
+                                seen_request_ids.add(req_id)
+                                if isinstance(payload, list):
+                                    page_items = payload
+                                    paging = {}
+                                elif isinstance(payload, dict):
+                                    page_items = payload.get('data', []) or []
+                                    paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
+                                else:
+                                    page_items, paging = [], {}
+                                all_items.extend(page_items)
+                                verify_added += len(page_items)
+                                if isinstance(paging, dict) and not paging.get('is_end'):
+                                    verify_is_end_still_true = False
+                            logger.info(f"回滚验证新增 {verify_added} 条，is_end 仍为 {verify_is_end_still_true}")
+                            # 若回滚后仍无新增或仍提示 is_end，则确认结束
+                            if verify_added == 0 and verify_is_end_still_true:
+                                logger.info("✅ 回滚验证后仍为结束状态，停止滚动")
+                                break
+                            else:
+                                # 有新增或 is_end 变为 False，继续后续滚动
+                                is_end_flag = False
+                        except Exception as e:
+                            logger.debug(f"回滚验证异常: {e}")
+                            # 验证失败时保守退出
+                            break
+
+                    if is_end_flag:
+                        logger.info("检测到paging.is_end=True，结束")
+                        break
+
+                    # 若没有新响应，再等待一小会再继续
+                    if not newly and round_items_count == 0:
+                        time.sleep(0.8)
+            
+            # 循环结束后的处理逻辑
             if not all_items:
                 # 回退：直接在页面上下文fetch首页（仅一次）
                 fallback_items = self._fetch_first_page_fallback(question_id)
@@ -894,19 +1336,30 @@ class BrowserFeedsCrawler:
                     except Exception as e:
                         logger.debug(f"登录后重新打开问题页失败: {e}")
 
-            return all_items
+                try:
+                    self._persist_cookies(self.driver)
+                except Exception as e:
+                    logger.debug(f"结束前持久化cookies失败: {e}")
+                return all_items
         except Exception as e:
             logger.error(f"浏览器抓取失败: {e}")
             return []
-            
-            logger.info(f"浏览器懒加载完成 ，汇总items: {len(all_items)}")
-            return all_items
         finally:
+            try:
+                self._persist_cookies(self.driver)
+            except Exception as e:
+                logger.debug(f"结束兜底持久化cookies失败: {e}")
             if not self.headless:
                 try:
-                    input("👀 非无头模式，按回车键关闭浏览器窗口...")
-                except EOFError:
-                    logger.info("标准输入不可用，直接关闭浏览器。")
+                    # 检查是否在交互式环境中
+                    import sys
+                    if sys.stdin.isatty():
+                        input("👀 非无头模式，按回车键关闭浏览器窗口...")
+                    else:
+                        logger.info("非交互式环境，自动关闭浏览器窗口")
+                        time.sleep(2)  # 给用户一点时间看到浏览器内容
+                except (EOFError, KeyboardInterrupt):
+                    logger.info("标准输入不可用或用户中断，直接关闭浏览器。")
             self.close()
 
     @staticmethod
@@ -992,7 +1445,14 @@ def main():
             pause=args.pause,
             stop_when_is_end=True
         )
-        out_path = args.out or f"{ZhihuConfig.OUTPUT_DIR}/feeds_{args.question_id}_browser.json"
+        # 处理输出路径：如果是目录则自动生成文件名
+        if args.out:
+            out_path = Path(args.out)
+            if out_path.is_dir() or str(out_path).endswith('/'):
+                out_path = out_path / f"feeds_{args.question_id}_browser.json"
+            out_path = str(out_path)
+        else:
+            out_path = f"{ZhihuConfig.OUTPUT_DIR}/feeds_{args.question_id}_browser.json"
         try:
             crawler.save_feeds_data(feeds, out_path)
             logger.info(f"🎉 Browser模式完成，items={len(feeds)}，输出: {out_path}")

@@ -16,6 +16,10 @@ from loguru import logger
 from urllib.parse import urljoin, urlparse, parse_qs
 from pathlib import Path
 import argparse
+import hashlib
+import hmac
+import base64
+from urllib.parse import urlencode
 
 from config import ZhihuConfig
 from postgres_models import PostgreSQLManager, TaskInfo, Question, Answer
@@ -44,10 +48,9 @@ class ZhihuAPIAnswerCrawler:
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
-            'X-Requested-With': 'fetch',
-            'X-Zse-93': '101_3_3.0',
-            'X-Zse-96': '2.0_wS8D0lCP6oBAj9x4uDSPyLgAMPC0L2UwfHo/ub+SA2K6shtNgmidqur6=JupIeMJ'
+            'X-Requested-With': 'fetch'
         }
+        # 不在这里静态设置 X-Zse-93/X-Zse-96，改为按请求动态计算
         self.session.headers.update(self.headers)
         
         # 尝试加载cookies
@@ -69,6 +72,99 @@ class ZhihuAPIAnswerCrawler:
         )
         
         logger.info("知乎API答案爬虫初始化完成")
+    
+    def get_x_zse_96(self, url, d_c0=None):
+        """
+        生成知乎API请求所需的x-zse-96参数
+        参考：https://github.com/zkl2333/MR-extension/blob/master/src/utils/zhihu.js
+        
+        :param url: 请求的URL（不含域名）
+        :param d_c0: d_c0 cookie值
+        :return: x-zse-96参数值
+        """
+        try:
+            # 固定的x-zse-93值
+            x_zse_93 = "101_3_2.0"
+            
+            # 获取当前时间戳
+            timestamp = str(int(time.time() * 1000))
+            
+            # 构建加密字符串
+            # 格式：{x_zse_93}+{url}+{d_c0}
+            encrypt_str = f"{x_zse_93}+{url}"
+            if d_c0:
+                encrypt_str += f"+{d_c0}"
+            
+            # MD5加密
+            md5 = hashlib.md5(encrypt_str.encode('utf-8')).hexdigest()
+            
+            # 生成x-zse-96
+            x_zse_96 = f"2.0_{md5}"
+            
+            return x_zse_96
+        except Exception as e:
+            logger.error(f"生成x-zse-96参数失败: {e}")
+            return None
+    
+    def get_api_headers(self, url, d_c0=None, x_zst_81=None):
+        """
+        获取知乎API请求所需的headers
+        
+        :param url: 请求的URL（不含域名）
+        :param d_c0: d_c0 cookie值
+        :param x_zst_81: x-zst-81 cookie值
+        :return: headers字典
+        """
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+            'Accept': '*/*',
+            'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,de;q=0.7,zh-TW;q=0.6',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Connection': 'keep-alive',
+            'Referer': 'https://www.zhihu.com/',
+            'Sec-Ch-Ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"macOS"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'X-Requested-With': 'fetch',
+            'X-Zse-93': '101_3_2.0',
+        }
+        
+        # 添加x-zse-96
+        x_zse_96 = self.get_x_zse_96(url, d_c0)
+        if x_zse_96:
+            headers['X-Zse-96'] = x_zse_96
+        
+        # 添加x-zst-81（如果有）
+        if x_zst_81:
+            headers['X-Zst-81'] = x_zst_81
+        
+        return headers
+    
+    def extract_d_c0_from_cookies(self, cookies_dict):
+        """
+        从cookies字典中提取d_c0值
+        
+        :param cookies_dict: cookies字典
+        :return: d_c0值或None
+        """
+        if not cookies_dict:
+            return None
+        
+        # 尝试直接获取d_c0
+        d_c0 = cookies_dict.get('d_c0')
+        if d_c0:
+            return d_c0
+        
+        # 如果cookies是列表形式，遍历查找
+        if isinstance(cookies_dict, list):
+            for cookie in cookies_dict:
+                if isinstance(cookie, dict) and cookie.get('name') == 'd_c0':
+                    return cookie.get('value')
+        
+        return None
     
     def load_cookies(self):
         """加载保存的cookies"""
@@ -211,6 +307,17 @@ class ZhihuAPIAnswerCrawler:
             logger.error(f"建立会话异常: {e}")
             return False
 
+    def _get_d_c0(self) -> str:
+        """从已加载的cookies中获取 d_c0 值，用于生成签名头。"""
+        try:
+            # requests 的 CookieJar 不支持通过键直接索引，遍历获取
+            for c in self.session.cookies:
+                if c.name == 'd_c0' and c.value:
+                    return c.value
+        except Exception:
+            pass
+        return ''
+
     def fetch_answers_page(self, question_id: str, cursor: str = None, offset: int = 0, limit: int = 20,
                           save_response_callback: callable = None, page_num: int = 0) -> Optional[Dict]:
         """获取指定问题的答案页面数据 - 支持cursor分页"""
@@ -233,9 +340,18 @@ class ZhihuAPIAnswerCrawler:
                 if attempt > 0:
                     time.sleep(2 ** attempt)
 
-                # 更新referer为具体问题页面
+                # 更新referer为具体问题页面，并为本次请求动态生成加密头
                 headers = self.headers.copy()
                 headers['Referer'] = f'https://www.zhihu.com/question/{question_id}'
+
+                # 生成签名头：使用不含域名的路径(包含查询串)
+                parsed = urlparse(url)
+                path_with_query = parsed.path + (('?' + parsed.query) if parsed.query else '')
+                d_c0 = self._get_d_c0()
+                if not d_c0:
+                    logger.warning('未在会话cookies中找到 d_c0，生成签名可能失败，请更新 cookies/zhihu_cookies.json')
+                enc_headers = self.get_api_headers(path_with_query, d_c0)
+                headers.update(enc_headers)
 
                 response = self.session.get(url, headers=headers, timeout=30)
 
@@ -388,6 +504,7 @@ class ZhihuAPIAnswerCrawler:
         offset = 0
         limit = 20  # 每页获取20个答案
         page_count = 0
+        seen_answer_ids: set = set()
 
         while True:
             page_count += 1
@@ -414,6 +531,10 @@ class ZhihuAPIAnswerCrawler:
             for answer_data in answers_data:
                 answer = self.parse_answer_data(answer_data, question_id, task_id)
                 if answer:
+                    if answer.answer_id in seen_answer_ids:
+                        logger.debug(f"跳过重复答案: {answer.answer_id}")
+                        continue
+                    seen_answer_ids.add(answer.answer_id)
                     all_answers.append(answer)
                     page_answers += 1
 
@@ -454,10 +575,9 @@ class ZhihuAPIAnswerCrawler:
             time.sleep(2)
 
             # 安全检查：避免无限循环
-            if page_count > 100:  # 最多100页
-                logger.warning(f"⚠️ 已达到最大页数限制，停止爬取")
-                break
-
+            # 移除默认页数上限，改为仅在达到is_end或max_answers时停止
+            # 如果需要限制页数，可通过命令行参数或配置启用
+            
         logger.info(f"🎉 问题 {question_id} 答案爬取完成")
         logger.info(f"📊 总共获取到 {len(all_answers)} 个答案")
         logger.info(f"📄 共请求了 {page_count} 页数据")
@@ -490,6 +610,14 @@ class ZhihuAPIAnswerCrawler:
         try:
             saved_count = 0
             for answer in answers:
+                # 生成内容哈希用于去重
+                try:
+                    if not getattr(answer, 'content_hash', None):
+                        import hashlib as _hl
+                        answer.content_hash = _hl.md5((answer.content or '').encode('utf-8')).hexdigest()
+                except Exception:
+                    # 容错：即使哈希失败也不中断保存
+                    answer.content_hash = answer.content_hash or ""
                 if self.db.save_answer(answer):
                     saved_count += 1
             
@@ -569,8 +697,10 @@ def main():
     parser = argparse.ArgumentParser(description="知乎API答案爬虫")
     parser.add_argument("--question-url", dest="question_url", type=str, required=False,
                         help="问题页URL或带answer段的URL，例如 https://www.zhihu.com/question/25038841 或 https://www.zhihu.com/question/25038841/answer/903740226")
-    parser.add_argument("--max-answers", dest="max_answers", type=int, default=-1,
-                        help="最大抓取答案数量，-1表示抓取全部")
+    parser.add_argument("--max-answers", dest="max_answers", type=int, default=None,
+                        help="最大抓取答案数量（默认不限）")
+    parser.add_argument("--page-limit", dest="page_limit", type=int, default=None,
+                        help="可选：限制最大翻页数（默认不限）")
     parser.add_argument("--save-to-db", dest="save_to_db", type=str, choices=["true", "false"], default="true",
                         help="是否将答案保存到数据库，默认true")
     args = parser.parse_args()
