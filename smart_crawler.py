@@ -3,7 +3,7 @@
 """
 智能知乎爬虫
 
-整合动态参数获取和API批量请求的智能爬虫系统
+智能知乎爬虫系统
 """
 
 import time
@@ -36,40 +36,28 @@ class SmartCrawler:
     """智能知乎爬虫"""
     
     def __init__(self, 
-                 params_db_path: str = "params_pool.db",
-                 max_pool_size: int = 100,
                  max_concurrent: int = 5,
-                 user_data_dir: Optional[str] = None,
-                 headless: bool = False):
+                 user_data_dir: Optional[str] = None):
         """
-        初始化智能爬虫
+        初始化智能爬虫（仅使用浏览器模拟方式）
         
         Args:
-            params_db_path: 参数池数据库路径
-            max_pool_size: 参数池最大容量
             max_concurrent: 最大并发数
             user_data_dir: Chrome用户数据目录
-            headless: 是否使用无头模式
         """
-        self.params_manager = ParamsPoolManager(params_db_path, max_pool_size)
-        self.params_extractor = None
+        # 初始化爬虫，强制不使用无头浏览器
         self.legacy_crawler = ZhihuLazyLoadCrawler()
-        self.traditional_crawler = ZhihuLazyLoadCrawler()
+        # 初始化浏览器爬虫
+        from zhihu_lazyload_crawler import BrowserFeedsCrawler
+        self.browser_crawler = BrowserFeedsCrawler(headless=False)
         self.max_concurrent = max_concurrent
         self.user_data_dir = user_data_dir
-        self.headless = headless
-        
-        # 请求配置
-        self.base_url = "https://www.zhihu.com/api/v4/questions"
-        self.timeout = aiohttp.ClientTimeout(total=30)
         
         # 统计信息
         self.stats = {
             'total_requests': 0,
             'successful_requests': 0,
-            'failed_requests': 0,
-            'params_extracted': 0,
-            'fallback_used': 0
+            'failed_requests': 0
         }
         
     async def crawl_question_feeds(self, 
@@ -78,12 +66,12 @@ class SmartCrawler:
                                    offset: int = 0,
                                    max_retries: int = 3) -> CrawlResult:
         """
-        爬取问题的feeds数据
+        爬取问题的feeds数据（仅使用selenium方式）
         
         Args:
             question_id: 问题ID
-            limit: 每页数量
-            offset: 偏移量
+            limit: 每页数量（传递给selenium爬虫）
+            offset: 偏移量（传递给selenium爬虫）
             max_retries: 最大重试次数
             
         Returns:
@@ -93,23 +81,9 @@ class SmartCrawler:
         
         for attempt in range(max_retries + 1):
             try:
-                # 获取参数
-                params_record = await self._get_valid_params(question_id)
-                
-                if not params_record:
-                    logger.warning(f"⚠️ 无可用参数，使用传统方法爬取问题 {question_id}")
-                    return await self._fallback_crawl(question_id, start_time)
-                    
-                # 使用API请求
-                result = await self._api_request(question_id, params_record, limit, offset)
-                
-                if result.success:
-                    self.params_manager.mark_params_used(params_record.id, True)
-                    self.stats['successful_requests'] += 1
-                    return result
-                else:
-                    self.params_manager.mark_params_used(params_record.id, False)
-                    logger.warning(f"⚠️ API请求失败 (尝试 {attempt + 1}/{max_retries + 1}): {result.error}")
+                # 直接使用selenium方式爬取
+                logger.info(f"🔍 使用selenium方式爬取问题 {question_id} (尝试 {attempt + 1}/{max_retries + 1})")
+                return await self._selenium_crawl(question_id, start_time, limit)
                     
             except Exception as e:
                 logger.error(f"❌ 爬取过程出错 (尝试 {attempt + 1}/{max_retries + 1}): {e}")
@@ -118,220 +92,50 @@ class SmartCrawler:
             if attempt < max_retries:
                 await asyncio.sleep(random.uniform(1, 3))
                 
-        # 所有重试失败，使用传统方法
-        logger.warning(f"⚠️ API方法失败，使用传统方法爬取问题 {question_id}")
-        return await self._fallback_crawl(question_id, start_time)
+        # 所有重试失败
+        response_time = time.time() - start_time
+        error_msg = f"所有重试都失败，无法爬取问题 {question_id}"
+        logger.error(f"❌ {error_msg}")
+        return CrawlResult(
+            question_id=question_id,
+            success=False,
+            error=error_msg,
+            response_time=response_time
+        )
         
-    async def _get_valid_params(self, question_id: str) -> Optional[ParamsRecord]:
+
+        
+    async def _selenium_crawl(self, question_id: str, start_time: float, limit: int = 20) -> CrawlResult:
         """
-        获取有效的反爬虫参数
-        
-        Args:
-            question_id: 问题ID
-            
-        Returns:
-            有效的参数记录
-        """
-        # 首先尝试从池中获取
-        params_record = self.params_manager.get_best_params()
-        
-        if params_record and not params_record.is_expired:
-            return params_record
-            
-        # 池中无可用参数，动态提取
-        logger.info(f"🔄 为问题 {question_id} 动态提取参数")
-        
-        try:
-            if not self.params_extractor:
-                self.params_extractor = DynamicParamsExtractor(
-                    headless=self.headless, 
-                    user_data_dir=self.user_data_dir
-                )
-            
-            # 使用指定的answer页面URL进行参数提取
-            target_url = "https://www.zhihu.com/question/30215562/answer/1938973838974105593"
-            logger.info(f"🎯 使用指定URL提取参数: {target_url}")
-            params = self.params_extractor.extract_params_from_url(target_url)
-            
-            if params and self.params_extractor.validate_params(params):
-                # 添加到参数池
-                params['question_id'] = question_id
-                if self.params_manager.add_params(params):
-                    self.stats['params_extracted'] += 1
-                    return self.params_manager.get_best_params()
-                    
-        except Exception as e:
-            logger.error(f"❌ 动态提取参数失败: {e}")
-            
-        return None
-        
-    async def _api_request(self, 
-                          question_id: str, 
-                          params_record: ParamsRecord, 
-                          limit: int, 
-                          offset: int) -> CrawlResult:
-        """
-        执行API请求
-        
-        Args:
-            question_id: 问题ID
-            params_record: 参数记录
-            limit: 每页数量
-            offset: 偏移量
-            
-        Returns:
-            爬取结果
-        """
-        start_time = time.time()
-        
-        # 构建URL和参数
-        url = f"{self.base_url}/{question_id}/feeds"
-        
-        query_params = {
-            'limit': limit,
-            'offset': offset,
-            'order': 'default',
-            'include': 'data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,is_sticky,collapsed_by,suggest_edit,comment_count,can_comment,content,editable_content,attachment,voteup_count,reshipment_settings,comment_permission,created_time,updated_time,review_info,relevant_info,question,excerpt,is_labeled,paid_info,paid_info_content,relationship.is_authorized,is_author,voting,is_thanked,is_nothelp,is_recognized;data[*].mark_infos[*].url;data[*].author.follower_count,vip_info,badge[*].topics;data[*].settings.table_of_contents.enabled'
-        }
-        
-        full_url = f"{url}?{urlencode(query_params)}"
-        
-        # 构建请求头
-        headers = {
-            'accept': '*/*',
-            'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'cache-control': 'no-cache',
-            'pragma': 'no-cache',
-            'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'x-requested-with': 'fetch',
-            'x-api-version': '3.0.91',
-            'x-zse-93': '101_3_3.0',  # 更新固定版本号
-            **params_record.to_headers()
-        }
-        
-        # 添加cookie
-        cookies = []
-        if params_record.session_id:
-            cookies.append(f'z_c0={params_record.session_id}')
-        if params_record.x_zst_81:
-            cookies.append(f'd_c0={params_record.x_zst_81}')
-        
-        # 添加更多必要的cookie
-        cookies.append('_xsrf=xsrf_token')
-        cookies.append('KLBRSID=klbrsid_value')
-        
-        if cookies:
-            headers['cookie'] = '; '.join(cookies)
-            
-        try:
-            async with aiohttp.ClientSession(timeout=self.timeout) as session:
-                async with session.get(full_url, headers=headers) as response:
-                    response_time = time.time() - start_time
-                    
-                    if response.status == 200:
-                        data = await response.json()
-                        
-                        # 验证响应数据
-                        if self._validate_response(data):
-                            logger.info(f"✅ API请求成功: {question_id}, 耗时: {response_time:.2f}s")
-                            return CrawlResult(
-                                question_id=question_id,
-                                success=True,
-                                data=data,
-                                params_used=params_record.id,
-                                response_time=response_time
-                            )
-                        else:
-                            error_msg = "响应数据格式无效"
-                            logger.warning(f"⚠️ {error_msg}: {question_id}")
-                            return CrawlResult(
-                                question_id=question_id,
-                                success=False,
-                                error=error_msg,
-                                params_used=params_record.id,
-                                response_time=response_time
-                            )
-                    else:
-                        error_msg = f"HTTP {response.status}: {await response.text()}"
-                        logger.warning(f"⚠️ API请求失败: {error_msg}")
-                        return CrawlResult(
-                            question_id=question_id,
-                            success=False,
-                            error=error_msg,
-                            params_used=params_record.id,
-                            response_time=response_time
-                        )
-                        
-        except Exception as e:
-            response_time = time.time() - start_time
-            error_msg = f"请求异常: {str(e)}"
-            logger.error(f"❌ {error_msg}")
-            return CrawlResult(
-                question_id=question_id,
-                success=False,
-                error=error_msg,
-                params_used=params_record.id,
-                response_time=response_time
-            )
-            
-    def _validate_response(self, data: Dict) -> bool:
-        """
-        验证API响应数据
-        
-        Args:
-            data: 响应数据
-            
-        Returns:
-            数据是否有效
-        """
-        if not isinstance(data, dict):
-            return False
-            
-        # 检查基本结构
-        if 'data' not in data:
-            return False
-            
-        # 检查是否有错误信息
-        if 'error' in data:
-            return False
-            
-        return True
-        
-    async def _fallback_crawl(self, question_id: str, start_time: float) -> CrawlResult:
-        """
-        传统方法爬取（降级策略）
+        使用浏览器模拟方式爬取问题
         
         Args:
             question_id: 问题ID
             start_time: 开始时间
+            limit: 限制获取的回答数量
             
         Returns:
             爬取结果
         """
         try:
-            # 使用传统爬虫方法
-            # 使用正确的方法名
+            # 使用浏览器爬虫方法
+            # 设置较长的暂停时间，确保内容加载完整
             feeds_data = await asyncio.get_event_loop().run_in_executor(
                 None, 
-                lambda: self.traditional_crawler.crawl_feeds_with_browser_headers(question_id), 
+                lambda: self.browser_crawler.crawl_feeds_via_browser(question_id, max_scrolls=limit//2, pause=3.0), 
             )
             
             response_time = time.time() - start_time
-            self.stats['fallback_used'] += 1
+            self.stats['successful_requests'] += 1
             
             if feeds_data:
                 # 转换为标准格式
-                answers = self.traditional_crawler.extract_answers_from_feeds(feeds_data)
+                answers = self.legacy_crawler.extract_answers_from_feeds(feeds_data)
                 data = {
                     'data': answers,
                     'paging': {'is_end': True, 'totals': len(answers)}
                 }
-                logger.info(f"✅ 传统方法爬取成功: {question_id}, 耗时: {response_time:.2f}s")
+                logger.info(f"✅ Selenium爬取成功: {question_id}, 获取到 {len(answers)} 个回答, 耗时: {response_time:.2f}s")
                 return CrawlResult(
                     question_id=question_id,
                     success=True,
@@ -339,7 +143,7 @@ class SmartCrawler:
                     response_time=response_time
                 )
             else:
-                error_msg = "传统方法未获取到数据"
+                error_msg = "Selenium爬取未获取到数据"
                 logger.warning(f"⚠️ {error_msg}: {question_id}")
                 return CrawlResult(
                     question_id=question_id,
@@ -350,7 +154,7 @@ class SmartCrawler:
                 
         except Exception as e:
             response_time = time.time() - start_time
-            error_msg = f"传统方法异常: {str(e)}"
+            error_msg = f"Selenium爬取异常: {str(e)}"
             logger.error(f"❌ {error_msg}")
             return CrawlResult(
                 question_id=question_id,
@@ -364,20 +168,17 @@ class SmartCrawler:
                          limit: int = 20,
                          progress_callback: Optional[callable] = None) -> List[CrawlResult]:
         """
-        批量爬取问题
+        批量爬取问题（仅使用selenium方式）
         
         Args:
             question_ids: 问题ID列表
-            limit: 每页数量
+            limit: 每页数量（传递给selenium爬虫）
             progress_callback: 进度回调函数
             
         Returns:
             爬取结果列表
         """
-        logger.info(f"🚀 开始批量爬取 {len(question_ids)} 个问题")
-        
-        # 清理过期参数
-        self.params_manager.cleanup_expired_params()
+        logger.info(f"🚀 开始批量爬取 {len(question_ids)} 个问题（使用selenium方式）")
         
         # 创建信号量控制并发
         semaphore = asyncio.Semaphore(self.max_concurrent)
@@ -424,25 +225,25 @@ class SmartCrawler:
         
         return final_results
         
-    def get_stats(self) -> Dict:
+    def get_stats(self):
         """
         获取爬虫统计信息
         
         Returns:
             统计信息字典
         """
-        pool_stats = self.params_manager.get_pool_stats()
+        # 在仅Selenium模式下不需要获取参数池统计信息
         
         return {
             **self.stats,
             'success_rate': self.stats['successful_requests'] / max(self.stats['total_requests'], 1),
-            'pool_stats': pool_stats
+            'pool_stats': {}
         }
         
     def close(self):
         """关闭爬虫，释放资源"""
-        if self.params_extractor:
-            self.params_extractor.close()
+        # 在仅Selenium模式下不需要关闭params_extractor
+        pass
             
     async def __aenter__(self):
         return self

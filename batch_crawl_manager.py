@@ -46,22 +46,19 @@ class BatchCrawlManager:
         self._task_stats: Dict[str, Dict[str, int]] = {}
         
     async def initialize_crawler(self, chrome_user_data_dir: str = None, headless: bool = False):
-        """初始化爬虫组件"""
+        """初始化爬虫组件 - 仅使用selenium方式"""
         try:
             # 初始化SmartCrawler，传递必要的参数
             self.smart_crawler = SmartCrawler(
-                params_db_path="params_pool.db",
-                max_pool_size=100,
                 max_concurrent=self.config.concurrent_limit,
                 user_data_dir=chrome_user_data_dir,
                 headless=headless
             )
             
             if self.config.enable_monitoring:
-                # 创建MonitorRecovery时传递params_manager，启用自动参数提取
+                # 创建MonitorRecovery
                 self.monitor = MonitorRecovery(
-                    self.smart_crawler.params_manager,
-                    auto_extract_params=True
+                    auto_extract_params=False
                 )
                 self.monitor.start_monitoring()
             
@@ -300,7 +297,7 @@ class BatchCrawlManager:
             }
     
     async def _crawl_question_url(self, question_url: str) -> Dict[str, Any]:
-        """采集单个问题URL（实际的采集逻辑）"""
+        """采集单个问题URL（使用Selenium方式）"""
         try:
             if not self.smart_crawler:
                 raise RuntimeError("SmartCrawler 未初始化")
@@ -308,11 +305,10 @@ class BatchCrawlManager:
             # 从URL中提取question_id
             question_id = question_url.split('/')[-1]
             
-            # 调用SmartCrawler的实际采集方法
+            # 调用SmartCrawler的实际采集方法 - 现在仅使用selenium方式
             crawl_result = await self.smart_crawler.crawl_question_feeds(
                 question_id=question_id,
-                limit=20,
-                offset=0
+                limit=20  # 每次采集的回答数量
             )
             
             if crawl_result.success:
@@ -321,12 +317,14 @@ class BatchCrawlManager:
                     'data': crawl_result.data
                 }
             else:
+                # 处理selenium采集失败的情况
                 return {
                     'success': False,
-                    'error': crawl_result.error or '采集失败',
+                    'error': crawl_result.error or 'Selenium采集失败',
                     'response_status': 0,
                     'response_content': '',
-                    'response_headers': {}
+                    'response_headers': {},
+                    'is_anti_crawl': 'anti-crawl' in (crawl_result.error or '').lower() or '验证码' in (crawl_result.error or '').lower()
                 }
                 
         except Exception as e:

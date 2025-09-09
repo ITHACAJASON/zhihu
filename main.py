@@ -3,7 +3,7 @@
 """
 智能知乎爬虫系统主入口
 
-整合动态参数获取+API批量请求的完整解决方案
+智能知乎爬虫系统
 """
 
 import asyncio
@@ -33,7 +33,7 @@ logger.add(
 @click.group()
 @click.option('--debug', is_flag=True, help='启用调试模式')
 def cli(debug):
-    """智能知乎爬虫系统 - 动态参数获取+API批量请求"""
+    """智能知乎爬虫系统"""
     if debug:
         logger.remove()
         logger.add(
@@ -72,20 +72,16 @@ async def _crawl_async(question_ids: List[str], limit: int, output: Optional[str
     """异步爬取函数"""
     logger.info(f"🚀 开始爬取 {len(question_ids)} 个问题")
     
-    # 创建智能爬虫
+    # 创建智能爬虫（仅Selenium模式）
     async with SmartCrawler(
-        params_db_path=db_path,
         max_concurrent=concurrent,
         user_data_dir=user_data_dir
     ) as crawler:
         
-        # 启动监控（如果需要）
+        # 在仅Selenium模式下不再使用监控系统
         monitor_system = None
         if monitor:
-            params_manager = ParamsPoolManager(db_path)
-            monitor_system = MonitorRecovery(params_manager)
-            monitor_system.start_monitoring()
-            logger.info("📊 监控系统已启动")
+            logger.info("📊 注意：在仅Selenium模式下不启用参数池监控")
             
         try:
             # 进度回调
@@ -119,10 +115,8 @@ async def _crawl_async(question_ids: List[str], limit: int, output: Optional[str
                 _print_results(results)
                 
         finally:
-            # 停止监控
-            if monitor_system:
-                monitor_system.stop_monitoring()
-                logger.info("📊 监控系统已停止")
+            # 在仅Selenium模式下不需要停止监控系统
+            pass
 
 
 async def _save_results(results, output_path: str):
@@ -383,13 +377,13 @@ def batch(file: Optional[str], limit: int, output: str,
 @click.option('--max-answers', type=int, help='最大回答数')
 @click.option('--keywords', help='关键词过滤（逗号分隔）')
 @click.option('--task-ids', help='指定任务ID（逗号分隔）')
-@click.option('--concurrent', default=5, help='并发数')
+@click.option('--concurrent', default=3, help='并发数')
 @click.option('--batch-size', default=10, help='批处理大小')
 @click.option('--request-delay', default=1.0, type=float, help='请求间隔（秒）')
 @click.option('--max-retries', default=3, help='最大重试次数')
 @click.option('--auto-pause', is_flag=True, default=True, help='检测到反爬虫时自动暂停')
 @click.option('--chrome-user-data-dir', help='Chrome用户数据目录')
-@click.option('--headless/--no-headless', default=False, help='是否使用无头模式')
+@click.option('--headless/--no-headless', default=True, help='是否使用无头模式')
 def batch_crawl_by_rules(name, description, min_answers, max_answers, keywords, task_ids,
                         concurrent, batch_size, request_delay, max_retries, auto_pause, chrome_user_data_dir, headless):
     """基于规则的批量采集
@@ -398,6 +392,8 @@ def batch_crawl_by_rules(name, description, min_answers, max_answers, keywords, 
     python main.py batch-crawl-by-rules --name "高质量问题采集" --min-answers 50 --max-answers 500
     python main.py batch-crawl-by-rules --name "特定关键词采集" --keywords "Python,机器学习"
     python main.py batch-crawl-by-rules --name "低回答数问题采集" --max-answers 4409 --no-headless
+    
+    注意：使用Selenium方式采集
     """
     import asyncio
     from database_query_manager import QueryFilter
@@ -429,8 +425,8 @@ def batch_crawl_by_rules(name, description, min_answers, max_answers, keywords, 
         manager = BatchCrawlManager(config)
         
         try:
-            # 初始化爬虫
-            logger.info("初始化批量采集管理器...")
+            # 初始化爬虫 - 仅使用Selenium方式
+            logger.info("初始化批量采集管理器 (仅Selenium模式)...")
             success = await manager.initialize_crawler(chrome_user_data_dir, headless)
             if not success:
                 logger.error("初始化失败")

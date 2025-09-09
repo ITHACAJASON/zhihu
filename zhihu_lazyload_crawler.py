@@ -730,7 +730,8 @@ class BrowserFeedsCrawler:
 
     def __init__(self, headless: bool = None):
         self.config = ZhihuConfig
-        self.headless = self.config.HEADLESS if headless is None else headless
+        # 强制不使用无头浏览器
+        self.headless = False
         self.driver = None
         self._init_driver()
 
@@ -1119,50 +1120,115 @@ class BrowserFeedsCrawler:
     # 新增：手动登录保障流程
     def _ensure_logged_in_manually(self, driver, timeout_sec: int = 180) -> bool:
         """
-        引导用户在可见的浏览器中完成知乎登录，并等待登录态生效。
+        引导用户在可见的浏览器中完成知乎登录，并等待用户手动确认已完成登录。
         返回是否检测到登录成功（依据 z_c0 cookie 的形态判断）。
         """
         try:
-            logger.info(f"🔐 检测到可能未登录，准备进入手动登录流程（最长等待 {timeout_sec}s）")
+            logger.info("🔐 检测到可能未登录，准备进入手动登录流程")
             # 访问首页，便于用户登录
             try:
                 driver.get("https://www.zhihu.com/")
             except Exception as e:
                 logger.warning(f"打开知乎首页失败: {e}")
-            start = time.time()
-            last_report = -999
-            while time.time() - start < timeout_sec:
+            
+            logger.info("请在已打开的浏览器窗口中完成知乎登录")
+            logger.info("浏览器将保持打开状态，直到您在此控制台输入 'y' 确认已完成登录")
+            
+            # 定期检查登录状态并等待用户输入
+            import sys
+            import select
+            import time
+            
+            def check_login_status():
                 try:
                     cookies = {c.get('name'): c.get('value', '') for c in driver.get_cookies()}
                     z = cookies.get('z_c0', '')
                     # 经验：有效的 z_c0 一般以 '2|' 开头且长度较长（>60）
                     if z and (z.startswith('2|') or len(z) > 60) and 'v10' not in z:
-                        logger.info(f"✅ 检测到登录cookie z_c0，长度={len(z)}，判定已登录")
+                        return True, z
+                except Exception as ie:
+                    logger.debug(f"检查登录cookie异常: {ie}")
+                return False, ''
+            
+            # 每5秒检查一次登录状态
+            last_check_time = 0
+            while True:
+                # 检查是否有用户输入
+                if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                    user_input = sys.stdin.readline().strip().lower()
+                    if user_input == 'y':
+                        # 用户确认已登录，检查登录状态
+                        is_logged_in, z_value = check_login_status()
+                        if is_logged_in:
+                            logger.info(f"✅ 检测到登录cookie z_c0，长度={len(z_value)}，判定已登录")
+                            try:
+                                self._persist_cookies(driver)
+                            except Exception as se:
+                                logger.debug(f"登录成功但保存cookies时出现问题: {se}")
+                            return True
+                        else:
+                            logger.warning("未检测到有效的登录状态，但用户已确认继续")
+                            return False
+                
+                # 定期自动检查登录状态
+                current_time = time.time()
+                if current_time - last_check_time >= 5:
+                    is_logged_in, z_value = check_login_status()
+                    if is_logged_in:
+                        logger.info(f"✅ 自动检测到登录cookie z_c0，长度={len(z_value)}，判定已登录")
                         try:
                             self._persist_cookies(driver)
                         except Exception as se:
                             logger.debug(f"登录成功但保存cookies时出现问题: {se}")
                         return True
-                except Exception as ie:
-                    logger.debug(f"检查登录cookie异常: {ie}")
-                # 每5秒输出一次剩余时间提示
-                remain = int(timeout_sec - (time.time() - start))
-                if remain // 5 != last_report // 5:
-                    logger.info(f"请在已打开的浏览器窗口中完成登录（剩余约 {remain}s）……")
-                    last_report = remain
-                time.sleep(1.5)
-            logger.warning("手动登录等待超时，未检测到有效的 z_c0 cookie")
-            return False
+                    else:
+                        logger.info("尚未检测到登录状态，请在浏览器中完成登录后在控制台输入 'y' 确认")
+                    last_check_time = current_time
+                
+                time.sleep(0.5)  # 短暂休眠以减少CPU使用
         except Exception as e:
             logger.error(f"手动登录流程异常: {e}")
             return False
 
-    def crawl_feeds_via_browser(self, question_id: str, max_scrolls: int = 6, pause: float = 2.5, stop_when_is_end: bool = True, expected_min_per_scroll: int = 8, verify_end_with_rollback: bool = True, rollback_percent: float = 0.1) -> List[Dict[str, Any]]:
+    def crawl_feeds_via_browser(self, question_id: str, task_id: str = None, max_scrolls: int = 30, pause: float = 2.5, stop_when_is_end: bool = True, expected_min_per_scroll: int = 8, verify_end_with_rollback: bool = True, rollback_percent: float = 0.1, batch_size: int = 50) -> List[Dict[str, Any]]:
+        """使用浏览器爬取问题的回答
+        
+        Args:
+            question_id: 问题ID
+            task_id: 任务ID，用于从数据库获取和更新信息
+            max_scrolls: 最大滚动次数
+            pause: 每次滚动后的暂停时间
+            stop_when_is_end: 是否在检测到is_end时停止
+            expected_min_per_scroll: 每次滚动期望的最小新增条数
+            verify_end_with_rollback: 是否在检测到is_end时进行回滚验证
+            rollback_percent: 回滚百分比
+            batch_size: 每批处理的回答数量，达到后清理DOM
+        
+        Returns:
+            回答数据列表
+        """
         try:
+            # 从postgres获取问题的answer_count
+            answer_count = 0
+            collected_answer_ids = set()  # 用于存储已采集的回答ID
+            
+            # 尝试从数据库获取answer_count
+            if task_id:
+                try:
+                    from postgres_models import PostgresManager
+                    db = PostgresManager()
+                    # 获取问题信息，包括answer_count
+                    question_info = db.get_question_by_id(question_id, task_id)
+                    if question_info and question_info.answer_count > 0:
+                        answer_count = question_info.answer_count
+                        logger.info(f"从数据库获取到问题 {question_id} 的回答数量: {answer_count}")
+                except Exception as e:
+                    logger.warning(f"从数据库获取answer_count失败: {e}")
+            
             if not self._load_cookies_to_driver():
                 logger.warning("未成功注入cookies，可能会触发登录/风控")
             
-            # 新增：在正式访问问题页前，主动检测登录态，不足则引导手动登录
+            # 在正式访问问题页前，主动检测登录态，不足则引导手动登录
             try:
                 self.driver.get(self.config.BASE_URL)
                 time.sleep(1.5)
@@ -1170,7 +1236,7 @@ class BrowserFeedsCrawler:
                 z = cookies_map.get('z_c0', '')
                 logged_in = bool(z and (z.startswith('2|') or len(z) > 60) and 'v10' not in z)
                 if logged_in:
-                    # 若检测到已登录（例如复用系统Chrome登录态），也立即保存一次cookies，便于API/后续流程使用
+                    # 若检测到已登录，也立即保存一次cookies，便于API/后续流程使用
                     try:
                         self._persist_cookies(self.driver)
                     except Exception as se:
@@ -1191,10 +1257,24 @@ class BrowserFeedsCrawler:
             logger.info(f"打开问题页: {q_url}")
             self.driver.get(q_url)
             time.sleep(2)
+            
+            # 如果数据库中没有answer_count，尝试从页面获取
+            if answer_count <= 0:
+                try:
+                    # 尝试从页面获取回答数量
+                    answer_count_text = self.driver.find_element_by_css_selector(".List-headerText span").text
+                    answer_count_text = answer_count_text.replace(',', '').replace('个回答', '').strip()
+                    if answer_count_text.isdigit():
+                        answer_count = int(answer_count_text)
+                        logger.info(f"从页面获取到问题 {question_id} 的回答数量: {answer_count}")
+                except Exception as e:
+                    logger.warning(f"从页面获取answer_count失败: {e}")
 
             seen_request_ids = set()
             all_items = []
             is_end_flag = False
+            batch_count = 0  # 当前批次计数
+            total_batches = 0  # 总批次计数
 
             for i in range(max_scrolls):
                 logger.info(f"下拉触发懒加载， 第 {i+1}/{max_scrolls} 次")
@@ -1226,8 +1306,20 @@ class BrowserFeedsCrawler:
                             paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
                         else:
                             page_items, paging = [], {}
-                        all_items.extend(page_items)
-                        round_items_count += len(page_items)
+                            
+                        # 处理回答数据，提取唯一ID并去重
+                        new_items = []
+                        for item in page_items:
+                            # 提取回答ID
+                            answer_id = item.get('id', '')
+                            if answer_id and answer_id not in collected_answer_ids:
+                                collected_answer_ids.add(answer_id)
+                                new_items.append(item)
+                                
+                        all_items.extend(new_items)
+                        round_items_count += len(new_items)
+                        batch_count += len(new_items)
+                        
                         if stop_when_is_end and isinstance(paging, dict) and paging.get('is_end'):
                             round_detected_is_end = True
                             is_end_flag = True
@@ -1257,8 +1349,19 @@ class BrowserFeedsCrawler:
                                     paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
                                 else:
                                     page_items, paging = [], {}
-                                all_items.extend(page_items)
-                                added_retry += len(page_items)
+                                    
+                                # 处理回答数据，提取唯一ID并去重
+                                new_items = []
+                                for item in page_items:
+                                    answer_id = item.get('id', '')
+                                    if answer_id and answer_id not in collected_answer_ids:
+                                        collected_answer_ids.add(answer_id)
+                                        new_items.append(item)
+                                        
+                                all_items.extend(new_items)
+                                added_retry += len(new_items)
+                                batch_count += len(new_items)
+                                
                                 if stop_when_is_end and isinstance(paging, dict) and paging.get('is_end'):
                                     round_detected_is_end = True
                                     is_end_flag = True
@@ -1290,8 +1393,19 @@ class BrowserFeedsCrawler:
                                     paging = (payload.get('paging') or {}) if isinstance(payload.get('paging'), dict) else {}
                                 else:
                                     page_items, paging = [], {}
-                                all_items.extend(page_items)
-                                verify_added += len(page_items)
+                                    
+                                # 处理回答数据，提取唯一ID并去重
+                                new_items = []
+                                for item in page_items:
+                                    answer_id = item.get('id', '')
+                                    if answer_id and answer_id not in collected_answer_ids:
+                                        collected_answer_ids.add(answer_id)
+                                        new_items.append(item)
+                                        
+                                all_items.extend(new_items)
+                                verify_added += len(new_items)
+                                batch_count += len(new_items)
+                                
                                 if isinstance(paging, dict) and not paging.get('is_end'):
                                     verify_is_end_still_true = False
                             logger.info(f"回滚验证新增 {verify_added} 条，is_end 仍为 {verify_is_end_still_true}")
@@ -1307,6 +1421,36 @@ class BrowserFeedsCrawler:
                             # 验证失败时保守退出
                             break
 
+                    # 定期清理DOM，减少内存占用
+                    if batch_size > 0 and batch_count >= batch_size:
+                        total_batches += 1
+                        logger.info(f"已采集 {batch_count} 条回答，达到批次大小 {batch_size}，清理DOM...")
+                        try:
+                            # 清理DOM，保留页面结构但删除大部分内容
+                            self.driver.execute_script("""
+                            (function() {
+                                // 保留页面结构，但清空内容区域
+                                var contentNodes = document.querySelectorAll('.List-item, .AnswerItem');
+                                for (var i = 0; i < contentNodes.length; i++) {
+                                    contentNodes[i].innerHTML = '<div class="cleared-item">已清理</div>';
+                                }
+                                // 清理其他可能的大型DOM节点
+                                var comments = document.querySelectorAll('.Comments-container');
+                                for (var i = 0; i < comments.length; i++) {
+                                    comments[i].innerHTML = '';
+                                }
+                            })();
+                            """)
+                            logger.info(f"DOM清理完成，当前批次 {total_batches}")
+                            batch_count = 0  # 重置批次计数
+                        except Exception as e:
+                            logger.warning(f"清理DOM时出错: {e}")
+                    
+                    # 如果已采集的非重复回答数量与answer_count相等，视为采集完成
+                    if answer_count > 0 and len(collected_answer_ids) >= answer_count:
+                        logger.info(f"已采集到 {len(collected_answer_ids)} 条非重复回答，达到问题回答总数 {answer_count}，提前结束滚动")
+                        break
+                        
                     if is_end_flag:
                         logger.info("检测到paging.is_end=True，结束")
                         break

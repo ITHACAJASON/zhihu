@@ -87,11 +87,11 @@ class MonitorRecovery:
     """监控与自动恢复系统"""
     
     def __init__(self, 
-                 params_manager: ParamsPoolManager,
+                 params_manager: Optional[ParamsPoolManager] = None,
                  monitor_interval: int = 60,
                  recovery_enabled: bool = True,
                  metrics_history_size: int = 100,
-                 auto_extract_params: bool = True):
+                 auto_extract_params: bool = False):
         """
         初始化监控系统
         
@@ -223,7 +223,16 @@ class MonitorRecovery:
     def _collect_metrics(self) -> HealthMetrics:
         """收集健康度指标"""
         # 获取参数池统计
-        pool_stats = self.params_manager.get_pool_stats()
+        if self.params_manager:
+            pool_stats = self.params_manager.get_pool_stats()
+            pool_size = pool_stats['active_count']
+            fresh_params_count = pool_stats['fresh_count']
+            avg_success_rate = pool_stats['avg_success_rate']
+        else:
+            # 在params_manager为None时，使用默认值
+            pool_size = 0
+            fresh_params_count = 0
+            avg_success_rate = 0.0
         
         # 计算近期成功率
         recent_success_rate = self._calculate_recent_success_rate()
@@ -238,9 +247,9 @@ class MonitorRecovery:
         extraction_success_rate = self._calculate_extraction_success_rate()
         
         return HealthMetrics(
-            pool_size=pool_stats['active_count'],
-            fresh_params_count=pool_stats['fresh_count'],
-            avg_success_rate=pool_stats['avg_success_rate'],
+            pool_size=pool_size,
+            fresh_params_count=fresh_params_count,
+            avg_success_rate=avg_success_rate,
             recent_success_rate=recent_success_rate,
             extraction_success_rate=extraction_success_rate,
             avg_response_time=avg_response_time,
@@ -320,6 +329,11 @@ class MonitorRecovery:
         """恢复参数池容量不足"""
         logger.info("🔧 执行恢复策略: 补充参数池")
         
+        # 检查参数池管理器是否存在
+        if not self.params_manager:
+            logger.info("ℹ️ 参数池管理器未初始化，跳过恢复操作")
+            return
+            
         try:
             # 清理过期参数
             cleaned = self.params_manager.cleanup_expired_params()
@@ -351,6 +365,11 @@ class MonitorRecovery:
         """恢复无新鲜参数"""
         logger.info("🔧 执行恢复策略: 获取新鲜参数")
         
+        # 检查参数池管理器是否存在
+        if not self.params_manager:
+            logger.info("ℹ️ 参数池管理器未初始化，跳过恢复操作")
+            return
+            
         try:
             # 立即提取新参数
             threading.Thread(
