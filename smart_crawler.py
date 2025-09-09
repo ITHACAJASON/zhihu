@@ -39,7 +39,8 @@ class SmartCrawler:
                  params_db_path: str = "params_pool.db",
                  max_pool_size: int = 100,
                  max_concurrent: int = 5,
-                 user_data_dir: Optional[str] = None):
+                 user_data_dir: Optional[str] = None,
+                 headless: bool = False):
         """
         初始化智能爬虫
         
@@ -48,6 +49,7 @@ class SmartCrawler:
             max_pool_size: 参数池最大容量
             max_concurrent: 最大并发数
             user_data_dir: Chrome用户数据目录
+            headless: 是否使用无头模式
         """
         self.params_manager = ParamsPoolManager(params_db_path, max_pool_size)
         self.params_extractor = None
@@ -55,6 +57,7 @@ class SmartCrawler:
         self.traditional_crawler = ZhihuLazyLoadCrawler()
         self.max_concurrent = max_concurrent
         self.user_data_dir = user_data_dir
+        self.headless = headless
         
         # 请求配置
         self.base_url = "https://www.zhihu.com/api/v4/questions"
@@ -141,11 +144,14 @@ class SmartCrawler:
         try:
             if not self.params_extractor:
                 self.params_extractor = DynamicParamsExtractor(
-                    headless=True, 
+                    headless=self.headless, 
                     user_data_dir=self.user_data_dir
                 )
-                
-            params = self.params_extractor.extract_params_from_question(question_id)
+            
+            # 使用指定的answer页面URL进行参数提取
+            target_url = "https://www.zhihu.com/question/30215562/answer/1938973838974105593"
+            logger.info(f"🎯 使用指定URL提取参数: {target_url}")
+            params = self.params_extractor.extract_params_from_url(target_url)
             
             if params and self.params_extractor.validate_params(params):
                 # 添加到参数池
@@ -202,12 +208,25 @@ class SmartCrawler:
             'sec-fetch-dest': 'empty',
             'sec-fetch-mode': 'cors',
             'sec-fetch-site': 'same-origin',
+            'x-requested-with': 'fetch',
+            'x-api-version': '3.0.91',
+            'x-zse-93': '101_3_3.0',  # 更新固定版本号
             **params_record.to_headers()
         }
         
         # 添加cookie
+        cookies = []
         if params_record.session_id:
-            headers['cookie'] = f'z_c0={params_record.session_id}'
+            cookies.append(f'z_c0={params_record.session_id}')
+        if params_record.x_zst_81:
+            cookies.append(f'd_c0={params_record.x_zst_81}')
+        
+        # 添加更多必要的cookie
+        cookies.append('_xsrf=xsrf_token')
+        cookies.append('KLBRSID=klbrsid_value')
+        
+        if cookies:
+            headers['cookie'] = '; '.join(cookies)
             
         try:
             async with aiohttp.ClientSession(timeout=self.timeout) as session:

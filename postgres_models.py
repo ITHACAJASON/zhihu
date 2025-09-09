@@ -158,6 +158,58 @@ class PostgreSQLManager:
                 )
             ''')
             
+            # 创建批量采集任务表
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS batch_crawl_tasks (
+                    task_id VARCHAR(50) PRIMARY KEY,
+                    name VARCHAR(200) NOT NULL,
+                    description TEXT,
+                    query_filter JSONB NOT NULL,
+                    status VARCHAR(20) DEFAULT 'pending',
+                    total_urls INTEGER DEFAULT 0,
+                    processed_urls INTEGER DEFAULT 0,
+                    completed_urls INTEGER DEFAULT 0,
+                    failed_urls INTEGER DEFAULT 0,
+                    last_processed_url TEXT,
+                    error_message TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            # 创建批量采集进度表
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS batch_crawl_progress (
+                    id SERIAL PRIMARY KEY,
+                    batch_task_id VARCHAR(50) NOT NULL,
+                    question_id VARCHAR(50) NOT NULL,
+                    question_url TEXT NOT NULL,
+                    status VARCHAR(20) DEFAULT 'pending',
+                    error_message TEXT,
+                    retry_count INTEGER DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(batch_task_id, question_id),
+                    FOREIGN KEY (batch_task_id) REFERENCES batch_crawl_tasks(task_id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # 创建反爬虫检测日志表
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS anti_crawl_logs (
+                    id SERIAL PRIMARY KEY,
+                    batch_task_id VARCHAR(50),
+                    detection_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    detection_type VARCHAR(50) NOT NULL,
+                    error_details TEXT,
+                    response_status INTEGER,
+                    response_headers JSONB,
+                    recovery_action VARCHAR(100),
+                    recovery_time TIMESTAMP,
+                    FOREIGN KEY (batch_task_id) REFERENCES batch_crawl_tasks(task_id) ON DELETE SET NULL
+                )
+            ''')
+            
             # 创建搜索结果表
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS search_results (

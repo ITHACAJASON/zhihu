@@ -24,6 +24,10 @@ class ParamsRecord:
     id: Optional[int] = None
     x_zse_96: str = ""
     x_zst_81: str = ""
+    x_zse_93: str = ""
+    x_xsrftoken: str = ""
+    x_zse_83: str = ""
+    x_du_bid: str = ""
     session_id: str = ""
     user_agent: str = ""
     referer: str = ""
@@ -60,12 +64,24 @@ class ParamsRecord:
         
     def to_headers(self) -> Dict[str, str]:
         """转换为请求头格式"""
-        return {
+        headers = {
             'x-zse-96': self.x_zse_96,
             'x-zst-81': self.x_zst_81,
             'user-agent': self.user_agent,
             'referer': self.referer
         }
+        
+        # 添加可选的请求头（如果存在）
+        if self.x_zse_93:
+            headers['x-zse-93'] = self.x_zse_93
+        if self.x_xsrftoken:
+            headers['x-xsrftoken'] = self.x_xsrftoken
+        if self.x_zse_83:
+            headers['x-zse-83'] = self.x_zse_83
+        if self.x_du_bid:
+            headers['x-du-bid'] = self.x_du_bid
+            
+        return headers
 
 
 class ParamsPoolManager:
@@ -92,6 +108,10 @@ class ParamsPoolManager:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     x_zse_96 TEXT NOT NULL,
                     x_zst_81 TEXT NOT NULL,
+                    x_zse_93 TEXT DEFAULT '',
+                    x_xsrftoken TEXT DEFAULT '',
+                    x_zse_83 TEXT DEFAULT '',
+                    x_du_bid TEXT DEFAULT '',
                     session_id TEXT NOT NULL,
                     user_agent TEXT NOT NULL,
                     referer TEXT NOT NULL,
@@ -105,6 +125,24 @@ class ParamsPoolManager:
                     UNIQUE(x_zse_96, x_zst_81, session_id)
                 )
             """)
+            
+            # 添加新字段（如果表已存在）
+            try:
+                conn.execute("ALTER TABLE params_pool ADD COLUMN x_zse_93 TEXT DEFAULT ''")
+            except:
+                pass
+            try:
+                conn.execute("ALTER TABLE params_pool ADD COLUMN x_xsrftoken TEXT DEFAULT ''")
+            except:
+                pass
+            try:
+                conn.execute("ALTER TABLE params_pool ADD COLUMN x_zse_83 TEXT DEFAULT ''")
+            except:
+                pass
+            try:
+                conn.execute("ALTER TABLE params_pool ADD COLUMN x_du_bid TEXT DEFAULT ''")
+            except:
+                pass
             
             # 创建索引
             conn.execute("CREATE INDEX IF NOT EXISTS idx_created_at ON params_pool(created_at)")
@@ -137,6 +175,10 @@ class ParamsPoolManager:
             record = ParamsRecord(
                 x_zse_96=params.get('x_zse_96', ''),
                 x_zst_81=params.get('x_zst_81', ''),
+                x_zse_93=params.get('x_zse_93', ''),
+                x_xsrftoken=params.get('x_xsrftoken', ''),
+                x_zse_83=params.get('x_zse_83', ''),
+                x_du_bid=params.get('x_du_bid', ''),
                 session_id=params.get('session_id', ''),
                 user_agent=params.get('user_agent', ''),
                 referer=params.get('referer', ''),
@@ -168,13 +210,13 @@ class ParamsPoolManager:
                     # 插入新参数
                     conn.execute("""
                         INSERT INTO params_pool (
-                            x_zse_96, x_zst_81, session_id, user_agent, referer, 
-                            question_id, created_at, last_used_at
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            x_zse_96, x_zst_81, x_zse_93, x_xsrftoken, x_zse_83, x_du_bid,
+                            session_id, user_agent, referer, question_id, created_at, last_used_at
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
-                        record.x_zse_96, record.x_zst_81, record.session_id,
-                        record.user_agent, record.referer, record.question_id,
-                        record.created_at, record.last_used_at
+                        record.x_zse_96, record.x_zst_81, record.x_zse_93, record.x_xsrftoken,
+                        record.x_zse_83, record.x_du_bid, record.session_id, record.user_agent,
+                        record.referer, record.question_id, record.created_at, record.last_used_at
                     ))
                     
                     conn.commit()
@@ -343,10 +385,35 @@ class ParamsPoolManager:
             
     def _row_to_record(self, row) -> ParamsRecord:
         """将数据库行转换为参数记录"""
+        # 获取新字段，如果不存在则使用默认值
+        try:
+            x_zse_93 = row['x_zse_93'] if 'x_zse_93' in row.keys() else ''
+        except (KeyError, IndexError):
+            x_zse_93 = ''
+            
+        try:
+            x_xsrftoken = row['x_xsrftoken'] if 'x_xsrftoken' in row.keys() else ''
+        except (KeyError, IndexError):
+            x_xsrftoken = ''
+            
+        try:
+            x_zse_83 = row['x_zse_83'] if 'x_zse_83' in row.keys() else ''
+        except (KeyError, IndexError):
+            x_zse_83 = ''
+            
+        try:
+            x_du_bid = row['x_du_bid'] if 'x_du_bid' in row.keys() else ''
+        except (KeyError, IndexError):
+            x_du_bid = ''
+        
         return ParamsRecord(
             id=row['id'],
             x_zse_96=row['x_zse_96'],
             x_zst_81=row['x_zst_81'],
+            x_zse_93=x_zse_93,
+            x_xsrftoken=x_xsrftoken,
+            x_zse_83=x_zse_83,
+            x_du_bid=x_du_bid,
             session_id=row['session_id'],
             user_agent=row['user_agent'],
             referer=row['referer'],

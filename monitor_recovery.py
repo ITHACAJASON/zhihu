@@ -90,7 +90,8 @@ class MonitorRecovery:
                  params_manager: ParamsPoolManager,
                  monitor_interval: int = 60,
                  recovery_enabled: bool = True,
-                 metrics_history_size: int = 100):
+                 metrics_history_size: int = 100,
+                 auto_extract_params: bool = True):
         """
         初始化监控系统
         
@@ -99,11 +100,13 @@ class MonitorRecovery:
             monitor_interval: 监控间隔（秒）
             recovery_enabled: 是否启用自动恢复
             metrics_history_size: 指标历史记录大小
+            auto_extract_params: 是否启用自动参数提取
         """
         self.params_manager = params_manager
         self.monitor_interval = monitor_interval
         self.recovery_enabled = recovery_enabled
         self.metrics_history_size = metrics_history_size
+        self.auto_extract_params = auto_extract_params
         
         # 监控状态
         self.is_monitoring = False
@@ -373,25 +376,30 @@ class MonitorRecovery:
             
     def _extract_params_async(self, question_type: str):
         """异步提取参数"""
+        if not self.auto_extract_params:
+            logger.info("🚫 自动参数提取已禁用，跳过参数提取")
+            return
+            
         try:
             # 延迟导入避免循环依赖
             from dynamic_params_extractor import DynamicParamsExtractor
             
-            # 这里可以根据question_type选择不同的问题
-            question_ids = ["123456789", "987654321"]  # 示例问题ID
+            # 使用指定的answer页面URL进行参数提取
+            target_url = "https://www.zhihu.com/question/30215562/answer/1938973838974105593"
             
             with DynamicParamsExtractor(headless=True) as extractor:
-                for question_id in question_ids:
-                    self.request_stats['extraction_attempts'] += 1
-                    
-                    params = extractor.extract_params_from_question(question_id)
-                    if params:
-                        params['question_id'] = question_id
-                        if self.params_manager.add_params(params):
-                            self.request_stats['extraction_successes'] += 1
-                            logger.info(f"✅ 成功提取并添加参数: {question_id}")
-                            
-                    time.sleep(2)  # 避免过于频繁
+                self.request_stats['extraction_attempts'] += 1
+                logger.info(f"🎯 自动提取参数: {target_url}")
+                
+                params = extractor.extract_params_from_url(target_url)
+                if params and extractor.validate_params(params):
+                    params['question_id'] = "auto_extracted"
+                    if self.params_manager.add_params(params):
+                        self.request_stats['extraction_successes'] += 1
+                        logger.info(f"✅ 自动提取并添加参数成功")
+                        return
+                        
+                logger.warning("⚠️ 自动参数提取失败")
                     
         except Exception as e:
             logger.error(f"❌ 异步参数提取失败: {e}")

@@ -169,7 +169,7 @@ def _print_results(results):
 @click.argument('question_ids', nargs=-1, required=True)
 @click.option('--db-path', default='params_pool.db', help='参数池数据库路径')
 @click.option('--user-data-dir', help='Chrome用户数据目录')
-@click.option('--headless/--no-headless', default=True, help='是否使用无头模式')
+@click.option('--headless/--no-headless', default=False, help='是否使用无头模式')
 def extract_params(question_ids: tuple, db_path: str, user_data_dir: Optional[str], headless: bool):
     """提取反爬虫参数到参数池
     
@@ -374,6 +374,299 @@ def batch(file: Optional[str], limit: int, output: str,
         question_ids, limit, str(output_file), concurrent, 
         db_path, user_data_dir, True  # 启用监控
     ))
+
+
+@cli.command()
+@click.option('--name', required=True, help='批量任务名称')
+@click.option('--description', default='', help='任务描述')
+@click.option('--min-answers', type=int, help='最小回答数')
+@click.option('--max-answers', type=int, help='最大回答数')
+@click.option('--keywords', help='关键词过滤（逗号分隔）')
+@click.option('--task-ids', help='指定任务ID（逗号分隔）')
+@click.option('--concurrent', default=5, help='并发数')
+@click.option('--batch-size', default=10, help='批处理大小')
+@click.option('--request-delay', default=1.0, type=float, help='请求间隔（秒）')
+@click.option('--max-retries', default=3, help='最大重试次数')
+@click.option('--auto-pause', is_flag=True, default=True, help='检测到反爬虫时自动暂停')
+@click.option('--chrome-user-data-dir', help='Chrome用户数据目录')
+@click.option('--headless/--no-headless', default=False, help='是否使用无头模式')
+def batch_crawl_by_rules(name, description, min_answers, max_answers, keywords, task_ids,
+                        concurrent, batch_size, request_delay, max_retries, auto_pause, chrome_user_data_dir, headless):
+    """基于规则的批量采集
+    
+    示例:
+    python main.py batch-crawl-by-rules --name "高质量问题采集" --min-answers 50 --max-answers 500
+    python main.py batch-crawl-by-rules --name "特定关键词采集" --keywords "Python,机器学习"
+    python main.py batch-crawl-by-rules --name "低回答数问题采集" --max-answers 4409 --no-headless
+    """
+    import asyncio
+    from database_query_manager import QueryFilter
+    from batch_crawl_manager import BatchCrawlManager, BatchCrawlConfig
+    
+    async def _batch_crawl():
+        # 构建查询过滤器
+        query_filter = QueryFilter()
+        
+        if min_answers is not None:
+            query_filter.answer_count_min = min_answers
+        if max_answers is not None:
+            query_filter.answer_count_max = max_answers
+        if keywords:
+            query_filter.title_keywords = [k.strip() for k in keywords.split(',')]
+        if task_ids:
+            query_filter.task_ids = [t.strip() for t in task_ids.split(',')]
+        
+        # 创建批量采集配置
+        config = BatchCrawlConfig(
+            concurrent_limit=concurrent,
+            batch_size=batch_size,
+            request_delay=request_delay,
+            max_retries=max_retries,
+            auto_pause_on_anti_crawl=auto_pause
+        )
+        
+        # 创建批量采集管理器
+        manager = BatchCrawlManager(config)
+        
+        try:
+            # 初始化爬虫
+            logger.info("初始化批量采集管理器...")
+            success = await manager.initialize_crawler(chrome_user_data_dir, headless)
+            if not success:
+                logger.error("初始化失败")
+                return
+            
+            # 创建批量任务
+            logger.info(f"创建批量任务: {name}")
+            task_id = manager.create_batch_task(name, description, query_filter)
+            logger.info(f"任务ID: {task_id}")
+            
+            # 开始采集
+            logger.info("开始批量采集...")
+            result = await manager.start_batch_crawl(task_id)
+            
+            # 输出结果
+            logger.info("批量采集完成!")
+            logger.info(f"总计: {result['total']}, 成功: {result['completed']}, 失败: {result['failed']}")
+            logger.info(f"成功率: {result['success_rate']:.2f}%")
+            
+        except Exception as e:
+            logger.error(f"批量采集失败: {e}")
+        finally:
+            await manager.cleanup()
+    
+    asyncio.run(_batch_crawl())
+
+
+@cli.command()
+@click.argument('task_id')
+@click.option('--concurrent', default=5, help='并发数')
+@click.option('--batch-size', default=10, help='批处理大小')
+@click.option('--request-delay', default=1.0, type=float, help='请求间隔（秒）')
+@click.option('--chrome-user-data-dir', help='Chrome用户数据目录')
+def resume_batch_crawl(task_id, concurrent, batch_size, request_delay, chrome_user_data_dir):
+    """从断点恢复批量采集
+    
+    示例:
+    python main.py resume-batch-crawl TASK_20240101_123456
+    """
+    import asyncio
+    from batch_crawl_manager import BatchCrawlManager, BatchCrawlConfig
+    
+    async def _resume_crawl():
+        # 创建批量采集配置
+        config = BatchCrawlConfig(
+            concurrent_limit=concurrent,
+            batch_size=batch_size,
+            request_delay=request_delay
+        )
+        
+        # 创建批量采集管理器
+        manager = BatchCrawlManager(config)
+        
+        try:
+            # 初始化爬虫
+            logger.info("初始化批量采集管理器...")
+            success = await manager.initialize_crawler(chrome_user_data_dir)
+            if not success:
+                logger.error("初始化失败")
+                return
+            
+            # 获取任务状态
+            task_status = manager.get_task_status(task_id)
+            if 'error' in task_status:
+                logger.error(f"任务不存在: {task_id}")
+                return
+            
+            logger.info(f"任务状态: {task_status['task'].status}")
+            logger.info(f"进度: {task_status['resume_info']['progress_percentage']:.2f}%")
+            
+            if not task_status['resume_info']['can_resume']:
+                logger.warning("任务无法恢复，可能已经完成或没有待处理的URL")
+                return
+            
+            # 从断点恢复
+            logger.info("从断点恢复采集...")
+            result = await manager.start_batch_crawl(task_id, resume_from_checkpoint=True)
+            
+            # 输出结果
+            logger.info("批量采集完成!")
+            logger.info(f"总计: {result['total']}, 成功: {result['completed']}, 失败: {result['failed']}")
+            logger.info(f"成功率: {result['success_rate']:.2f}%")
+            
+        except Exception as e:
+            logger.error(f"恢复采集失败: {e}")
+        finally:
+            await manager.cleanup()
+    
+    asyncio.run(_resume_crawl())
+
+
+@cli.command()
+@click.option('--status', help='按状态过滤 (pending/running/completed/failed)')
+def list_batch_tasks(status):
+    """列出批量采集任务
+    
+    示例:
+    python main.py list-batch-tasks
+    python main.py list-batch-tasks --status running
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    tasks = manager.list_tasks(status)
+    
+    if not tasks:
+        logger.info("没有找到任务")
+        return
+    
+    logger.info(f"找到 {len(tasks)} 个任务:")
+    for task in tasks:
+        logger.info(f"  {task.task_id}: {task.name} [{task.status}]")
+        logger.info(f"    描述: {task.description}")
+        logger.info(f"    进度: {task.completed_urls}/{task.total_urls} ({task.completed_urls/max(task.total_urls,1)*100:.1f}%)")
+        logger.info(f"    创建时间: {task.created_at}")
+        logger.info("")
+
+
+@cli.command()
+@click.argument('task_id')
+def batch_task_status(task_id):
+    """查看批量任务详细状态
+    
+    示例:
+    python main.py batch-task-status TASK_20240101_123456
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    status = manager.get_task_status(task_id)
+    
+    if 'error' in status:
+        logger.error(f"任务不存在: {task_id}")
+        return
+    
+    task = status['task']
+    resume_info = status['resume_info']
+    
+    logger.info(f"任务ID: {task.task_id}")
+    logger.info(f"名称: {task.name}")
+    logger.info(f"描述: {task.description}")
+    logger.info(f"状态: {task.status}")
+    logger.info(f"总URL数: {task.total_urls}")
+    logger.info(f"已完成: {task.completed_urls}")
+    logger.info(f"失败: {task.failed_urls}")
+    logger.info(f"进度: {resume_info['progress_percentage']:.2f}%")
+    logger.info(f"可恢复: {'是' if resume_info['can_resume'] else '否'}")
+    logger.info(f"创建时间: {task.created_at}")
+    logger.info(f"更新时间: {task.updated_at}")
+    
+    if resume_info['status_counts']:
+        logger.info("\n状态统计:")
+        for status_name, count in resume_info['status_counts'].items():
+            logger.info(f"  {status_name}: {count}")
+    
+    if resume_info['recent_detections']:
+        logger.info("\n最近的反爬虫检测:")
+        for detection in resume_info['recent_detections'][:3]:
+            logger.info(f"  {detection['time']}: {detection['type']} - {detection['details']}")
+
+
+@cli.command()
+@click.argument('task_id')
+@click.option('--reason', default='', help='暂停原因')
+def pause_batch_task(task_id, reason):
+    """暂停批量任务
+    
+    示例:
+    python main.py pause-batch-task TASK_20240101_123456 --reason "检测到反爬虫"
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    manager.pause_task(task_id, reason)
+    logger.info(f"任务 {task_id} 已暂停")
+
+
+@cli.command()
+@click.argument('task_id')
+def resume_batch_task(task_id):
+    """恢复批量任务
+    
+    示例:
+    python main.py resume-batch-task TASK_20240101_123456
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    manager.resume_task(task_id)
+    logger.info(f"任务 {task_id} 已恢复")
+
+
+@cli.command()
+@click.argument('task_id')
+@click.option('--max-retry-count', type=int, help='最大重试次数限制')
+def retry_failed_urls(task_id, max_retry_count):
+    """重试失败的URL
+    
+    示例:
+    python main.py retry-failed-urls TASK_20240101_123456
+    python main.py retry-failed-urls TASK_20240101_123456 --max-retry-count 2
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    affected_rows = manager.retry_failed_urls(task_id, max_retry_count)
+    logger.info(f"重置了 {affected_rows} 个失败URL为待重试状态")
+
+
+@cli.command()
+def batch_statistics():
+    """查看批量采集统计信息
+    
+    示例:
+    python main.py batch-statistics
+    """
+    from batch_crawl_manager import BatchCrawlManager
+    
+    manager = BatchCrawlManager()
+    stats = manager.get_statistics()
+    
+    logger.info("批量采集统计信息:")
+    logger.info(f"\n任务统计:")
+    logger.info(f"  总任务数: {stats['tasks']['total']}")
+    logger.info(f"  运行中: {stats['tasks']['running']}")
+    logger.info(f"  已完成: {stats['tasks']['completed']}")
+    logger.info(f"  失败: {stats['tasks']['failed']}")
+    
+    logger.info(f"\nURL统计:")
+    logger.info(f"  总URL数: {stats['urls']['total']}")
+    logger.info(f"  已完成: {stats['urls']['completed']}")
+    logger.info(f"  失败: {stats['urls']['failed']}")
+    logger.info(f"  成功率: {stats['urls']['success_rate']:.2f}%")
+    
+    if stats['current_running_tasks']:
+        logger.info(f"\n当前运行的任务: {', '.join(stats['current_running_tasks'])}")
 
 
 if __name__ == '__main__':
