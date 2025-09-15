@@ -94,25 +94,492 @@ CRAWLER_CONFIG = {
 
 ## 使用方法
 
-### 1. 启动爬虫
+### 1. 环境初始化
 
+#### 安装依赖
 ```bash
-python3 main.py
+# 进入项目目录
+cd /path/to/zhihu
+
+# 安装 Python 依赖
+pip3 install -r requirements.txt
 ```
 
-### 2. 登录知乎
+#### 数据库初始化
+```bash
+# 连接 PostgreSQL 数据库
+psql -U postgres
 
-- 程序启动后会自动打开 Chrome 浏览器
-- 浏览器会导航到知乎登录页面
-- 手动完成登录操作（包括验证码等）
-- 登录成功后在控制台输入 `done` 继续
+# 创建数据库
+CREATE DATABASE zhihu_crawl;
 
-### 3. 自动爬取
+# 切换到新数据库
+\c zhihu_crawl;
 
-- 程序会自动从数据库读取待爬取的问题
-- 逐个访问问题页面并采集回答
-- 实时显示爬取进度
-- 自动保存回答数据到数据库
+# 创建 questions 表
+CREATE TABLE questions (
+    id SERIAL PRIMARY KEY,
+    url TEXT NOT NULL,
+    answer_count INTEGER NOT NULL,
+    crawl_status VARCHAR(20) DEFAULT 'pending',
+    crawled_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+# 创建 answers 表
+CREATE TABLE answers (
+    id SERIAL PRIMARY KEY,
+    question_id TEXT NOT NULL,
+    answer_id TEXT UNIQUE NOT NULL,
+    author TEXT,
+    content TEXT,
+    vote_count INTEGER DEFAULT 0,
+    create_time TIMESTAMP,
+    task_id TEXT,
+    url TEXT,
+    crawl_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+# 退出 psql
+\q
+```
+
+#### 配置文件设置
+```bash
+# 编辑配置文件
+vim config.py
+
+# 或使用其他编辑器
+nano config.py
+```
+
+### 2. 数据准备
+
+#### 添加待爬取问题
+```bash
+# 方法1: 直接使用 SQL 插入
+psql -U postgres -d zhihu_crawl -c "
+INSERT INTO questions (url, answer_count) VALUES 
+('https://www.zhihu.com/question/123456789', 100),
+('https://www.zhihu.com/question/987654321', 50);"
+
+# 方法2: 从 CSV 文件批量导入
+# 准备 questions.csv 文件，格式：url,answer_count
+# https://www.zhihu.com/question/123456789,100
+# https://www.zhihu.com/question/987654321,50
+
+psql -U postgres -d zhihu_crawl -c "
+\COPY questions(url, answer_count) FROM 'questions.csv' DELIMITER ',' CSV HEADER;"
+```
+
+#### 查看待爬取问题
+```bash
+# 查看所有问题
+psql -U postgres -d zhihu_crawl -c "SELECT * FROM questions;"
+
+# 查看待爬取问题统计
+psql -U postgres -d zhihu_crawl -c "
+SELECT 
+    crawl_status,
+    COUNT(*) as count,
+    SUM(answer_count) as total_answers,
+    SUM(crawled_count) as crawled_answers
+FROM questions 
+GROUP BY crawl_status;"
+```
+
+### 3. 全量采集
+
+#### 启动完整爬虫流程
+```bash
+# 启动爬虫（交互模式）
+python3 main.py
+
+# 程序启动后的操作步骤：
+# 1. 等待 Chrome 浏览器自动打开
+# 2. 手动登录知乎账号（包括验证码）
+# 3. 登录成功后在控制台输入 'done' 继续
+# 4. 程序自动开始爬取所有待处理问题
+```
+
+#### 后台运行模式
+```bash
+# 使用 nohup 后台运行
+nohup python3 main.py > crawler.log 2>&1 &
+
+# 查看运行状态
+tail -f crawler.log
+
+# 查看进程
+ps aux | grep main.py
+
+# 停止后台进程
+kill -TERM <进程ID>
+```
+
+### 4. 断点续传
+
+#### 查看爬取进度
+```bash
+# 查看整体进度
+psql -U postgres -d zhihu_crawl -c "
+SELECT 
+    url,
+    answer_count as target_count,
+    crawled_count,
+    ROUND(crawled_count::float / answer_count * 100, 2) as progress_percent,
+    crawl_status
+FROM questions 
+ORDER BY id;"
+
+# 查看未完成的问题
+psql -U postgres -d zhihu_crawl -c "
+SELECT * FROM questions 
+WHERE crawl_status != 'completed' 
+OR crawled_count < answer_count;"
+```
+
+#### 重新启动爬虫
+```bash
+# 直接重新启动，程序会自动从中断处继续
+python3 main.py
+
+# 程序会自动：
+# 1. 检查数据库中的爬取状态
+# 2. 跳过已完成的问题
+# 3. 从未完成的问题继续爬取
+```
+
+#### 重置特定问题状态
+```bash
+# 重置某个问题的爬取状态
+psql -U postgres -d zhihu_crawl -c "
+UPDATE questions 
+SET crawl_status = 'pending', crawled_count = 0 
+WHERE url = 'https://www.zhihu.com/question/123456789';"
+
+# 重置所有问题状态
+psql -U postgres -d zhihu_crawl -c "
+UPDATE questions 
+SET crawl_status = 'pending', crawled_count = 0;"
+```
+
+### 5. 数据导出
+
+#### 导出回答数据
+```bash
+# 导出所有回答为 CSV
+psql -U postgres -d zhihu_crawl -c "
+\COPY (SELECT * FROM answers) TO 'answers_export.csv' DELIMITER ',' CSV HEADER;"
+
+# 导出特定问题的回答
+psql -U postgres -d zhihu_crawl -c "
+\COPY (
+    SELECT * FROM answers 
+    WHERE question_id = '123456789'
+) TO 'question_123456789_answers.csv' DELIMITER ',' CSV HEADER;"
+
+# 导出回答统计信息
+psql -U postgres -d zhihu_crawl -c "
+\COPY (
+    SELECT 
+        question_id,
+        COUNT(*) as answer_count,
+        AVG(vote_count) as avg_votes,
+        MAX(vote_count) as max_votes,
+        MIN(create_time) as earliest_answer,
+        MAX(create_time) as latest_answer
+    FROM answers 
+    GROUP BY question_id
+) TO 'questions_summary.csv' DELIMITER ',' CSV HEADER;"
+```
+
+#### 导出为 JSON 格式
+```bash
+# 导出为 JSON（需要 PostgreSQL 9.2+）
+psql -U postgres -d zhihu_crawl -c "
+\COPY (
+    SELECT row_to_json(answers) FROM answers
+) TO 'answers_export.json';"
+
+# 导出结构化 JSON
+psql -U postgres -d zhihu_crawl -c "
+\COPY (
+    SELECT json_build_object(
+        'question_id', question_id,
+        'answers', json_agg(
+            json_build_object(
+                'answer_id', answer_id,
+                'author', author,
+                'content', content,
+                'vote_count', vote_count,
+                'create_time', create_time
+            )
+        )
+    )
+    FROM answers 
+    GROUP BY question_id
+) TO 'questions_with_answers.json';"
+```
+
+#### 数据备份
+```bash
+# 备份整个数据库
+pg_dump -U postgres zhihu_crawl > zhihu_crawl_backup.sql
+
+# 仅备份数据（不包括表结构）
+pg_dump -U postgres --data-only zhihu_crawl > zhihu_crawl_data.sql
+
+# 恢复数据库
+psql -U postgres -d zhihu_crawl < zhihu_crawl_backup.sql
+```
+
+### 6. 监控和管理
+
+#### 实时监控爬取进度
+```bash
+# 监控脚本（每10秒刷新一次）
+watch -n 10 "psql -U postgres -d zhihu_crawl -c '
+SELECT 
+    COUNT(*) as total_questions,
+    SUM(CASE WHEN crawl_status = \"completed\" THEN 1 ELSE 0 END) as completed,
+    SUM(answer_count) as total_target_answers,
+    SUM(crawled_count) as total_crawled_answers,
+    ROUND(SUM(crawled_count)::float / SUM(answer_count) * 100, 2) as overall_progress
+FROM questions;'"
+```
+
+#### 查看日志
+```bash
+# 查看实时日志
+tail -f zhihu_crawler.log
+
+# 查看错误日志
+grep -i error zhihu_crawler.log
+
+# 查看特定时间段的日志
+grep "2024-01-01" zhihu_crawler.log
+```
+
+#### 性能优化
+```bash
+# 查看数据库性能
+psql -U postgres -d zhihu_crawl -c "
+SELECT 
+    schemaname,
+    tablename,
+    attname,
+    n_distinct,
+    correlation
+FROM pg_stats 
+WHERE tablename IN ('questions', 'answers');"
+
+# 创建索引优化查询性能
+psql -U postgres -d zhihu_crawl -c "
+CREATE INDEX IF NOT EXISTS idx_answers_question_id ON answers(question_id);
+CREATE INDEX IF NOT EXISTS idx_answers_create_time ON answers(create_time);
+CREATE INDEX IF NOT EXISTS idx_questions_crawl_status ON questions(crawl_status);"
+```
+
+### 7. 快速命令参考
+
+#### 常用命令速查表
+
+| 操作类型 | 命令 | 说明 |
+|---------|------|------|
+| **环境初始化** | `pip3 install -r requirements.txt` | 安装依赖 |
+| | `psql -U postgres` | 连接数据库 |
+| | `CREATE DATABASE zhihu_crawl;` | 创建数据库 |
+| **数据准备** | `psql -U postgres -d zhihu_crawl -c "INSERT INTO questions..."` | 添加问题 |
+| | `psql -U postgres -d zhihu_crawl -c "SELECT * FROM questions;"` | 查看问题 |
+| **爬虫运行** | `python3 main.py` | 启动爬虫 |
+| | `nohup python3 main.py > crawler.log 2>&1 &` | 后台运行 |
+| | `tail -f crawler.log` | 查看日志 |
+| **进度监控** | `psql -U postgres -d zhihu_crawl -c "SELECT crawl_status, COUNT(*) FROM questions GROUP BY crawl_status;"` | 查看状态统计 |
+| | `watch -n 10 "psql -U postgres -d zhihu_crawl -c 'SELECT COUNT(*) FROM answers;'"` | 实时监控 |
+| **数据导出** | `psql -U postgres -d zhihu_crawl -c "\COPY (SELECT * FROM answers) TO 'answers.csv' CSV HEADER;"` | 导出CSV |
+| | `pg_dump -U postgres zhihu_crawl > backup.sql` | 数据库备份 |
+| **故障处理** | `ps aux | grep main.py` | 查看进程 |
+| | `kill -TERM <PID>` | 停止进程 |
+| | `UPDATE questions SET crawl_status = 'pending';` | 重置状态 |
+
+#### 一键脚本示例
+
+**完整初始化脚本** (`init.sh`):
+```bash
+#!/bin/bash
+echo "=== 知乎爬虫初始化 ==="
+
+# 1. 安装依赖
+echo "安装 Python 依赖..."
+pip3 install -r requirements.txt
+
+# 2. 创建数据库和表
+echo "初始化数据库..."
+psql -U postgres -c "CREATE DATABASE zhihu_crawl;"
+psql -U postgres -d zhihu_crawl -c "
+CREATE TABLE questions (
+    id SERIAL PRIMARY KEY,
+    url TEXT NOT NULL,
+    answer_count INTEGER NOT NULL,
+    crawl_status VARCHAR(20) DEFAULT 'pending',
+    crawled_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE answers (
+    id SERIAL PRIMARY KEY,
+    question_id TEXT NOT NULL,
+    answer_id TEXT UNIQUE NOT NULL,
+    author TEXT,
+    content TEXT,
+    vote_count INTEGER DEFAULT 0,
+    create_time TIMESTAMP,
+    task_id TEXT,
+    url TEXT,
+    crawl_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_answers_question_id ON answers(question_id);
+CREATE INDEX idx_answers_create_time ON answers(create_time);
+CREATE INDEX idx_questions_crawl_status ON questions(crawl_status);
+"
+
+echo "初始化完成！"
+```
+
+**批量添加问题脚本** (`add_questions.sh`):
+```bash
+#!/bin/bash
+# 使用方法: ./add_questions.sh questions.txt
+# questions.txt 格式: 每行一个URL，用空格分隔URL和目标回答数
+# 例如: https://www.zhihu.com/question/123456789 100
+
+if [ $# -eq 0 ]; then
+    echo "使用方法: $0 <questions_file>"
+    echo "文件格式: URL 目标回答数"
+    exit 1
+fi
+
+while read -r url count; do
+    if [ -n "$url" ] && [ -n "$count" ]; then
+        psql -U postgres -d zhihu_crawl -c "
+        INSERT INTO questions (url, answer_count) VALUES ('$url', $count);"
+        echo "已添加: $url (目标: $count 个回答)"
+    fi
+done < "$1"
+
+echo "批量添加完成！"
+```
+
+**监控脚本** (`monitor.sh`):
+```bash
+#!/bin/bash
+# 实时监控爬取进度
+
+while true; do
+    clear
+    echo "=== 知乎爬虫监控面板 ==="
+    echo "更新时间: $(date)"
+    echo ""
+    
+    # 总体统计
+    psql -U postgres -d zhihu_crawl -t -c "
+    SELECT 
+        '总问题数: ' || COUNT(*) || ' 个' as total,
+        '已完成: ' || SUM(CASE WHEN crawl_status = 'completed' THEN 1 ELSE 0 END) || ' 个' as completed,
+        '进行中: ' || SUM(CASE WHEN crawl_status = 'in_progress' THEN 1 ELSE 0 END) || ' 个' as in_progress,
+        '待处理: ' || SUM(CASE WHEN crawl_status = 'pending' THEN 1 ELSE 0 END) || ' 个' as pending
+    FROM questions;
+    "
+    
+    echo ""
+    echo "=== 回答采集统计 ==="
+    psql -U postgres -d zhihu_crawl -t -c "
+    SELECT 
+        '目标回答总数: ' || SUM(answer_count) || ' 个' as target_total,
+        '已采集回答: ' || SUM(crawled_count) || ' 个' as crawled_total,
+        '完成度: ' || ROUND(SUM(crawled_count)::float / SUM(answer_count) * 100, 2) || '%' as progress
+    FROM questions;
+    "
+    
+    echo ""
+    echo "=== 最近采集的回答 ==="
+    psql -U postgres -d zhihu_crawl -c "
+    SELECT 
+        question_id,
+        author,
+        vote_count,
+        crawl_time
+    FROM answers 
+    ORDER BY crawl_time DESC 
+    LIMIT 5;
+    "
+    
+    sleep 10
+done
+```
+
+**数据导出脚本** (`export_data.sh`):
+```bash
+#!/bin/bash
+# 一键导出所有数据
+
+EXPORT_DIR="exports_$(date +%Y%m%d_%H%M%S)"
+mkdir -p "$EXPORT_DIR"
+
+echo "=== 开始导出数据到 $EXPORT_DIR ==="
+
+# 导出问题列表
+psql -U postgres -d zhihu_crawl -c "
+\COPY (SELECT * FROM questions) TO '$EXPORT_DIR/questions.csv' DELIMITER ',' CSV HEADER;"
+echo "✓ 问题列表已导出"
+
+# 导出所有回答
+psql -U postgres -d zhihu_crawl -c "
+\COPY (SELECT * FROM answers) TO '$EXPORT_DIR/answers.csv' DELIMITER ',' CSV HEADER;"
+echo "✓ 回答数据已导出"
+
+# 导出统计信息
+psql -U postgres -d zhihu_crawl -c "
+\COPY (
+    SELECT 
+        question_id,
+        COUNT(*) as answer_count,
+        AVG(vote_count) as avg_votes,
+        MAX(vote_count) as max_votes,
+        MIN(create_time) as earliest_answer,
+        MAX(create_time) as latest_answer
+    FROM answers 
+    GROUP BY question_id
+) TO '$EXPORT_DIR/statistics.csv' DELIMITER ',' CSV HEADER;"
+echo "✓ 统计信息已导出"
+
+# 数据库备份
+pg_dump -U postgres zhihu_crawl > "$EXPORT_DIR/database_backup.sql"
+echo "✓ 数据库备份已创建"
+
+echo "=== 导出完成！文件保存在 $EXPORT_DIR 目录 ==="
+ls -la "$EXPORT_DIR"
+```
+
+使用这些脚本:
+```bash
+# 给脚本添加执行权限
+chmod +x init.sh add_questions.sh monitor.sh export_data.sh
+
+# 运行初始化
+./init.sh
+
+# 批量添加问题
+./add_questions.sh my_questions.txt
+
+# 启动监控
+./monitor.sh
+
+# 导出数据
+./export_data.sh
+```
 
 ## 项目结构
 

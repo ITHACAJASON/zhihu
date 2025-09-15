@@ -121,13 +121,15 @@ class ZhihuCrawler:
             # 点击"查看全部回答"按钮
             self.click_view_all_answers()
             
-            crawled_answers = []
+            crawled_answer_ids = []  # 只保存ID用于去重判断
+            pending_answers = []     # 待批量保存的回答数据
             self.current_answer_count = 0
             no_new_data_count = 0  # 连续无新数据的次数
+            batch_size = 50          # 批量保存大小
             
-            while len(crawled_answers) < target_count:
+            while len(crawled_answer_ids) < target_count:
                 # 记录滚动前的回答数量
-                previous_count = len(crawled_answers)
+                previous_count = len(crawled_answer_ids)
                 
                 # 滚动加载更多回答
                 self.scroll_to_load_more()
@@ -135,22 +137,30 @@ class ZhihuCrawler:
                 # 获取当前页面的回答
                 new_answers = self.extract_answers_from_page()
                 
-                # 过滤重复回答
+                # 过滤重复回答并记录新增数据
+                new_answer_ids = []
                 for answer in new_answers:
-                    if answer['answer_id'] not in [a['answer_id'] for a in crawled_answers]:
-                        crawled_answers.append(answer)
-                        # 只有保存成功才计数
-                        if self.db_manager.save_answer(question_url, answer):
-                            # 更新计数
-                            self.current_answer_count += 1
-                        
-                        # 每200个回答清空DOM
-                        if self.current_answer_count % self.answers_per_cleanup == 0:
-                            self.cleanup_dom()
-                            logging.info(f"已采集 {self.current_answer_count} 个回答，执行DOM清理")
+                    if answer['answer_id'] not in crawled_answer_ids:
+                        crawled_answer_ids.append(answer['answer_id'])
+                        new_answer_ids.append(answer['answer_id'])
+                        pending_answers.append(answer)
+                
+                # 只打印新增的回答ID
+                if new_answer_ids:
+                    logging.info(f"新增回答ID: {new_answer_ids}")
+                
+                # 批量保存到数据库
+                if len(pending_answers) >= batch_size or len(crawled_answer_ids) >= target_count:
+                    saved_count = self.db_manager.save_answers_batch(question_url, pending_answers)
+                    self.current_answer_count += saved_count
+                    pending_answers.clear()  # 清空待保存列表
+                    
+                    # 执行优化的DOM清理
+                    self.cleanup_dom_optimized()
+                    logging.info(f"已批量保存 {saved_count} 个回答，当前总计 {self.current_answer_count} 个")
                 
                 # 检查是否有新数据
-                if len(crawled_answers) == previous_count:
+                if len(crawled_answer_ids) == previous_count:
                     no_new_data_count += 1
                     logging.info(f"本次滚动无新数据，连续无新数据次数: {no_new_data_count}")
                     
@@ -162,7 +172,7 @@ class ZhihuCrawler:
                 else:
                     no_new_data_count = 0  # 有新数据时重置计数器
                 
-                logging.info(f"当前已采集 {len(crawled_answers)} 个回答")
+                logging.info(f"当前已采集 {len(crawled_answer_ids)} 个回答")
                 
                 # 检查是否还有更多回答可加载
                 if not self.has_more_answers():
@@ -172,12 +182,18 @@ class ZhihuCrawler:
                 # 滚动间隔延时
                 time.sleep(random.uniform(*self.scroll_delay))
             
-            # 更新数据库中的爬取状态
-            status = "completed" if len(crawled_answers) >= target_count else "partial"
-            self.db_manager.update_crawl_status(question_url, status, len(crawled_answers))
+            # 保存剩余的回答数据
+            if pending_answers:
+                saved_count = self.db_manager.save_answers_batch(question_url, pending_answers)
+                self.current_answer_count += saved_count
+                logging.info(f"保存剩余 {saved_count} 个回答")
             
-            logging.info(f"问题爬取完成，共采集 {len(crawled_answers)} 个回答")
-            return len(crawled_answers)
+            # 更新数据库中的爬取状态
+            status = "completed" if len(crawled_answer_ids) >= target_count else "partial"
+            self.db_manager.update_crawl_status(question_url, status, len(crawled_answer_ids))
+            
+            logging.info(f"问题爬取完成，共采集 {len(crawled_answer_ids)} 个回答")
+            return len(crawled_answer_ids)
             
         except Exception as e:
             logging.error(f"爬取问题回答失败: {e}")
@@ -296,7 +312,6 @@ class ZhihuCrawler:
                     answer_data = self.extract_single_answer(element, i)
                     if answer_data:
                         answers.append(answer_data)
-                        logging.info(f"成功提取第 {i+1} 个回答，ID: {answer_data['answer_id']}")
                     else:
                         logging.warning(f"第 {i+1} 个元素未能提取到有效数据")
                 except Exception as e:
@@ -517,6 +532,65 @@ class ZhihuCrawler:
         except Exception as e:
             logging.warning(f"DOM清理失败: {e}")
     
+    def cleanup_dom_optimized(self):
+        """优化的DOM清理，更彻底地清理已采集的回答节点"""
+        try:
+            self.driver.execute_script("""
+                // 获取所有回答元素
+                var listItems = document.querySelectorAll('.List-item');
+                var totalItems = listItems.length;
+                
+                // 保留最后20个回答元素，移除其他已采集的回答
+                var keepCount = Math.min(20, totalItems);
+                var removeCount = Math.max(0, totalItems - keepCount);
+                
+                for (var i = 0; i < removeCount; i++) {
+                    if (listItems[i]) {
+                        // 移除整个回答节点
+                        listItems[i].remove();
+                    }
+                }
+                
+                // 清理其他大内容元素
+                var images = document.querySelectorAll('img');
+                var videos = document.querySelectorAll('video');
+                var iframes = document.querySelectorAll('iframe');
+                
+                // 移除多余的媒体内容
+                for (var i = 0; i < Math.max(0, images.length - 30); i++) {
+                    if (images[i]) {
+                        images[i].remove();
+                    }
+                }
+                
+                for (var i = 0; i < Math.max(0, videos.length - 5); i++) {
+                    if (videos[i]) {
+                        videos[i].remove();
+                    }
+                }
+                
+                for (var i = 0; i < Math.max(0, iframes.length - 5); i++) {
+                    if (iframes[i]) {
+                        iframes[i].remove();
+                    }
+                }
+                
+                // 强制垃圾回收
+                if (window.gc) {
+                    window.gc();
+                }
+                
+                return {
+                    removed: removeCount,
+                    remaining: keepCount
+                };
+            """)
+            
+            logging.info("优化DOM清理完成，移除已采集的回答节点")
+            
+        except Exception as e:
+            logging.warning(f"优化DOM清理失败: {e}")
+    
     def scroll_retry_mechanism(self):
         """智能滚动重试机制：小幅向上滚动再向下滚动"""
         try:
@@ -537,6 +611,15 @@ class ZhihuCrawler:
     def has_more_answers(self) -> bool:
         """检查是否还有更多回答可加载"""
         try:
+            # 首先检查是否出现"写回答"按钮，如果出现则表示已到达页面底部，没有更多回答
+            write_answer_buttons = self.driver.find_elements(
+                By.XPATH, 
+                "//button[contains(@class, 'QuestionAnswers-answerButton') and contains(text(), '写回答')]"
+            )
+            if write_answer_buttons:
+                logging.info("检测到'写回答'按钮，回答采集完毕")
+                return False
+            
             # 检查是否有"加载更多"按钮
             load_more_buttons = self.driver.find_elements(By.CSS_SELECTOR, '.Button--primary, .QuestionAnswers-more button')
             if load_more_buttons:

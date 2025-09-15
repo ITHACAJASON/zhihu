@@ -127,6 +127,58 @@ class DatabaseManager:
             self.connection.rollback()
             return False
     
+    def save_answers_batch(self, question_url: str, answers_data: List[dict]) -> int:
+        """批量保存回答数据到answers表"""
+        if not answers_data:
+            return 0
+            
+        try:
+            # 从URL中提取question_id
+            import re
+            question_id_match = re.search(r'/question/(\d+)', question_url)
+            if not question_id_match:
+                logging.error(f"无法从URL中提取question_id: {question_url}")
+                return 0
+            
+            question_id = question_id_match.group(1)
+            
+            # 批量插入回答数据
+            insert_query = """
+            INSERT INTO answers (question_id, answer_id, author, content, vote_count, create_time, task_id, url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (answer_id) DO NOTHING
+            """
+            
+            import uuid
+            batch_data = []
+            for answer_data in answers_data:
+                created_time = self._parse_time_string(answer_data.get('created_time'))
+                task_id = str(uuid.uuid4())
+                
+                batch_data.append((
+                    question_id,
+                    answer_data.get('answer_id'),
+                    answer_data.get('author'),
+                    answer_data.get('content'),
+                    answer_data.get('vote_count', 0),
+                    created_time,
+                    task_id,
+                    question_url
+                ))
+            
+            # 执行批量插入
+            self.cursor.executemany(insert_query, batch_data)
+            self.connection.commit()
+            
+            saved_count = len(batch_data)
+            logging.info(f"批量保存 {saved_count} 个回答成功")
+            return saved_count
+            
+        except Exception as e:
+            logging.error(f"批量保存回答失败: {e}")
+            self.connection.rollback()
+            return 0
+    
     def _parse_time_string(self, time_str: str) -> Optional[str]:
         """解析中文时间字符串为数据库可接受的格式"""
         if not time_str:
