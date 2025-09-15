@@ -121,7 +121,7 @@ class ZhihuCrawler:
             # 点击"查看全部回答"按钮
             self.click_view_all_answers()
             
-            crawled_answer_ids = []  # 只保存ID用于去重判断
+            crawled_answer_ids = set()  # 只保存ID用于去重判断，使用集合提升查找性能
             pending_answers = []     # 待批量保存的回答数据
             self.current_answer_count = 0
             no_new_data_count = 0  # 连续无新数据的次数
@@ -141,7 +141,7 @@ class ZhihuCrawler:
                 new_answer_ids = []
                 for answer in new_answers:
                     if answer['answer_id'] not in crawled_answer_ids:
-                        crawled_answer_ids.append(answer['answer_id'])
+                        crawled_answer_ids.add(answer['answer_id'])
                         new_answer_ids.append(answer['answer_id'])
                         pending_answers.append(answer)
                 
