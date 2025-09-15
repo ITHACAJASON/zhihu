@@ -255,23 +255,15 @@ class ZhihuCrawler:
             return False
     
     def scroll_to_load_more(self):
-        """使用Page Down键滚动页面加载更多回答"""
+        """直接跳转到页面底部加载更多回答"""
         try:
-            from selenium.webdriver.common.keys import Keys
-            from selenium.webdriver.common.action_chains import ActionChains
+            # 直接跳转到页面底部
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             
-            # 确保页面body元素获得焦点
-            body = self.driver.find_element(By.TAG_NAME, "body")
-            body.click()
-            
-            # 使用ActionChains模拟按下Page Down键
-            actions = ActionChains(self.driver)
-            actions.send_keys(Keys.PAGE_DOWN).perform()
-            
-            logging.info("使用Page Down键滚动页面")
+            logging.info("直接跳转到页面底部")
             
             # 等待页面加载
-            time.sleep(0.33)
+            time.sleep(0.5)
             
             # 尝试查找并点击"加载更多"按钮（如果存在）
             load_more_selectors = [
@@ -592,21 +584,24 @@ class ZhihuCrawler:
             logging.warning(f"优化DOM清理失败: {e}")
     
     def scroll_retry_mechanism(self):
-        """智能滚动重试机制：小幅向上滚动再向下滚动"""
+        """页面回滚机制：执行两次向上滚动操作"""
         try:
-            logging.info("触发滚动重试机制")
-            # 小幅向上滚动，避免触发页面链接
-            self.driver.execute_script("window.scrollBy(0, -200);")
-            time.sleep(random.uniform(*self.scroll_delay))
-            logging.info("小幅向上滚动")
+            logging.info("触发页面回滚机制：连续3次到达底部且无新内容")
             
-            # 再向下滚动更多距离
-            self.driver.execute_script("window.scrollBy(0, 800);")
+            # 第一次向上滚动
+            self.driver.execute_script("window.scrollBy(0, -800);")
             time.sleep(random.uniform(*self.scroll_delay))
-            logging.info("重试机制完成，继续向下滚动")
+            logging.info("执行第一次向上滚动")
+            
+            # 第二次向上滚动
+            self.driver.execute_script("window.scrollBy(0, -800);")
+            time.sleep(random.uniform(*self.scroll_delay))
+            logging.info("执行第二次向上滚动")
+            
+            logging.info("页面回滚机制完成，恢复向下滚动功能")
             
         except Exception as e:
-            logging.warning(f"滚动重试机制失败: {e}")
+            logging.warning(f"页面回滚机制失败: {e}")
     
     def has_more_answers(self) -> bool:
         """检查是否还有更多回答可加载"""
