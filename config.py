@@ -1,124 +1,97 @@
-"""
-知乎爬虫配置文件
-"""
-
 import os
-from datetime import datetime
+import logging
 
-class ZhihuConfig:
-    """知乎爬虫配置类"""
-    
-    # 基础配置
-    BASE_URL = "https://www.zhihu.com"
-    SEARCH_URL = "https://www.zhihu.com/search"
-    
-    # 时间范围配置
-    DEFAULT_START_DATE = "2015-01-01"
-    DEFAULT_END_DATE = "2025-12-31"
-    DATE_FORMAT = "%Y-%m-%d"
-    
-    # 搜索配置
-    SEARCH_TYPE = "content"  # content, question, answer
-    SEARCH_RANGE = "all"     # all, week, month, year
-    
-    # 爬虫行为配置
-    SCROLL_PAUSE_TIME = 2      # 滚动等待时间（秒）
-    PAGE_LOAD_TIMEOUT = 30     # 页面加载超时时间（秒）
-    ELEMENT_WAIT_TIMEOUT = 10  # 元素等待超时时间（秒）
-    
-    # 反爬虫策略配置
-    MIN_DELAY = 1              # 最小延时（秒）
-    MAX_DELAY = 3              # 最大延时（秒）
-    MAX_RETRIES = 3            # 最大重试次数
-    
-    # 浏览器配置
-    HEADLESS = False           # 是否无头模式 - 设置为False以便调试
-    WINDOW_SIZE = (1920, 1080) # 窗口大小
-    
-    # User-Agent 池
-    USER_AGENTS = [
+# 数据库配置
+DATABASE_CONFIG = {
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'port': int(os.getenv('DB_PORT', 5432)),
+    'database': os.getenv('DB_NAME', 'zhihu_crawler'),
+    'user': os.getenv('DB_USER', 'postgres'),
+    'password': os.getenv('DB_PASSWORD', 'password')
+}
+
+# 爬虫配置
+CRAWLER_CONFIG = {
+    'headless': False,  # 是否无头模式运行
+    'answers_per_cleanup': 200,  # 每采集多少个回答清空DOM
+    'scroll_delay': (0.67, 1.33),  # 滚动延时范围（秒）- 缩短为原来的1/3
+    'page_load_delay': (0.67, 1.33),  # 页面加载延时范围（秒）- 缩短为原来的1/3
+    'max_retries': 3,  # 最大重试次数
+    'timeout': 10,  # 元素等待超时时间（秒）
+}
+
+# 日志配置
+LOGGING_CONFIG = {
+    'level': logging.INFO,
+    'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    'filename': 'zhihu_crawler.log',
+    'filemode': 'a',
+    'encoding': 'utf-8'
+}
+
+# 反爬虫配置
+ANTI_DETECTION_CONFIG = {
+    'user_agents': [
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0'
-    ]
-    
-    # 数据库配置
-    DATABASE_PATH = "./zhihu_data.db"  # SQLite数据库路径（向后兼容）
-    
-    # PostgreSQL数据库配置
-    POSTGRES_CONFIG = {
-        'host': 'localhost',
-        'port': 5432,
-        'database': 'zhihu_crawler',
-        'user': 'postgres',
-        'password': 'password'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15'
+    ],
+    'chrome_options': [
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-blink-features=AutomationControlled',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-images',  # 禁用图片加载以提高速度
+    ],
+    'exclude_switches': ['enable-automation'],
+    'experimental_options': {
+        'useAutomationExtension': False,
+        'excludeSwitches': ['enable-automation']
     }
-    
-    # 数据库类型选择
-    DATABASE_TYPE = 'postgresql'  # 'sqlite' 或 'postgresql'
-    
-    # Cookie配置
-    COOKIES_FILE = "./cookies/zhihu_cookies.json"
-    ENABLE_COOKIE_LOGIN = True
-    COOKIE_DOMAIN = ".zhihu.com"
-    
-    # 日志配置
-    LOG_LEVEL = "INFO"
-    LOG_FILE = "./logs/zhihu_crawler.log"
-    
-    # 输出配置
-    OUTPUT_DIR = "./output"
-    EXPORT_FORMATS = ["json", "csv", "excel"]
-    
-    # CSS选择器配置
-    SELECTORS = {
-        # 搜索页面
-        "search_results": ".List-item",
-        "search_question_title": ".ContentItem-title a",
-        "search_question_url": ".ContentItem-title a",
-        "search_answer_preview": ".RichContent-inner",
-        
-        # 问题页面
-        "question_title": "#root > div > main > div > div > div:nth-child(10) > div:nth-child(2) > div > div.QuestionHeader-content > div.QuestionHeader-main > h1",
-        "question_detail": ".QuestionRichText .RichContent-inner",
-        "question_stats": ".QuestionHeaderActions",
-        "question_author": ".QuestionHeader-detail .UserLink-link",
-        "question_follow_count": "#root > div > main > div > div > div:nth-child(10) > div:nth-child(2) > div > div.QuestionHeader-content > div.QuestionHeader-side > div > div > div > button > div > strong",
-        "question_view_count": "#root > div > main > div > div > div:nth-child(10) > div:nth-child(2) > div > div.QuestionHeader-content > div.QuestionHeader-side > div > div > div > div > div > strong",
-        "question_answer_count": ".List-headerText span",
-        "question_tags": ".QuestionHeader-topics .Popover div",
-        
-        # 答案相关
-        "answers_list": ".List-item, .Card.AnswerCard, .Card.MoreAnswers > div > div, .AnswerItem, .List .List-item",
-        "answer_content": ".RichContent-inner",
-        "answer_author": ".AuthorInfo-name a",
-        "answer_time": ".ContentItem-time",
-        "answer_publish_time": ".ContentItem-time span",
-        "answer_vote_count": ".VoteButton--up .VoteButton-label, .ContentItem-actions span > span > button",
-        "answer_url": ".ContentItem-title a",
-        
+}
 
-        
-        # 加载更多
-        "load_more_answers": ".QuestionAnswers-answerAdd button, .AnswerListV2-answerAdd button, button.QuestionMainAction, .css-1kxql2v, button.css-1kxql2v, button[class*='css-1kxql2v']",
-
-        "scroll_loading": ".ContentItem-arrowIcon, .QuestionAnswers-answerAdd, .AnswerListV2-answerAdd"
+# 知乎相关配置
+ZHIHU_CONFIG = {
+    'base_url': 'https://www.zhihu.com',
+    'login_url': 'https://www.zhihu.com/signin',
+    'selectors': {
+        'answer_item': '.List-item, .AnswerItem',
+        'author_name': '.AuthorInfo-name, .UserLink-link',
+        'answer_content': '.RichContent-inner, .CopyrightRichText-richText',
+        'vote_button': '.VoteButton--up .Button-label, .VoteButton .Voters',
+        'answer_time': '.ContentItem-time, .AnswerItem-time',
+        'load_more_btn': '.Button--primary, .QuestionAnswers-more button',
+        'user_avatar': '.Avatar, .Menu-item, [data-za-detail-view-element_name="Profile"]'
     }
+}
+
+def setup_logging():
+    """设置日志配置"""
+    logging.basicConfig(**LOGGING_CONFIG)
     
-    @classmethod
-    def create_directories(cls):
-        """创建必要的目录"""
-        os.makedirs(os.path.dirname(cls.LOG_FILE), exist_ok=True)
-        os.makedirs(cls.OUTPUT_DIR, exist_ok=True)
+    # 同时输出到控制台
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter(LOGGING_CONFIG['format'])
+    console_handler.setFormatter(formatter)
     
-    @classmethod
-    def validate_date_range(cls, start_date: str, end_date: str) -> bool:
-        """验证日期范围是否有效"""
-        try:
-            start = datetime.strptime(start_date, cls.DATE_FORMAT)
-            end = datetime.strptime(end_date, cls.DATE_FORMAT)
-            return start <= end
-        except ValueError:
-            return False
+    # 获取根日志记录器并添加控制台处理器
+    root_logger = logging.getLogger()
+    root_logger.addHandler(console_handler)
+
+def get_database_config():
+    """获取数据库配置"""
+    return DATABASE_CONFIG.copy()
+
+def get_crawler_config():
+    """获取爬虫配置"""
+    return CRAWLER_CONFIG.copy()
+
+def get_zhihu_config():
+    """获取知乎相关配置"""
+    return ZHIHU_CONFIG.copy()
+
+def get_anti_detection_config():
+    """获取反检测配置"""
+    return ANTI_DETECTION_CONFIG.copy()

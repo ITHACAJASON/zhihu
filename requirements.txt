@@ -1,16 +1,5 @@
 selenium==4.15.2
-requests==2.31.0
-beautifulsoup4==4.12.2
-lxml==4.9.3
-pandas==2.1.4
-fake-useragent==1.4.0
+psycopg2-binary==2.9.7
 webdriver-manager==4.0.1
-loguru==0.7.2
-click==8.1.7
-tqdm==4.66.1
-psycopg2-binary==2.9.9
-sqlalchemy==2.0.23
-# 智能爬虫系统新增依赖
-aiohttp==3.9.1
-aiofiles==23.2.0
-dataclasses-json==0.6.3
+beautifulsoup4==4.12.2
+requests==2.31.0

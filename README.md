@@ -1,180 +1,232 @@
-# 智能知乎爬虫系统
+# 知乎问答爬虫
 
-一个集成动态参数获取、监控恢复等功能的智能知乎爬虫系统。
+一个基于 Selenium 的知乎问答爬虫，能够从 PostgreSQL 数据库读取问题 URL，自动采集问题页面的所有回答。
 
-## 🚀 系统特性
+## 功能特点
 
-### 核心功能
-- **动态参数提取** - 自动获取知乎反爬虫参数（x-zse-96, x-zst-81等）
-- **参数池管理** - 智能管理和复用反爬虫参数，提高爬取效率
-- **监控恢复系统** - 实时监控系统状态，自动故障恢复
-- **智能爬取** - 基于浏览器模拟的高效爬取方法
-- **统一接口** - 命令行工具，便于使用和集成
+- 🚀 **智能爬取**: 从数据库读取问题 URL 和目标回答数，自动判断爬取完成条件
+- 🔐 **用户登录**: 支持手动登录知乎账号，避免登录验证问题
+- 🛡️ **反反爬**: 使用多种反检测技术，模拟真实用户行为
+- 💾 **内存优化**: 每采集 200 个回答自动清理 DOM，避免内存溢出
+- 📊 **进度跟踪**: 实时显示爬取进度和完成度统计
+- 🔄 **断点续爬**: 支持中断后继续爬取，避免重复采集
 
-### 技术架构
-- **异步编程** - 基于asyncio和aiohttp的高性能异步架构
-- **模块化设计** - 各功能模块独立，便于维护和扩展
-- **数据持久化** - SQLite数据库存储参数池和统计信息
-- **智能重试** - 多层重试机制，提高成功率
-- **日志监控** - 完整的日志记录和监控体系
+## 系统要求
 
-## 📦 安装依赖
+- Python 3.7+
+- PostgreSQL 数据库
+- Chrome 浏览器
+- macOS/Linux/Windows
+
+## 安装依赖
 
 ```bash
+# 安装 Python 依赖
 pip3 install -r requirements.txt
+
+# 确保 Chrome 浏览器已安装
+# ChromeDriver 会自动下载管理
 ```
 
-## 🛠️ 使用方法
+## 数据库准备
 
-### 命令行接口
+### 1. 创建数据库
+
+```sql
+CREATE DATABASE zhihu_crawl;
+```
+
+### 2. 创建 questions 表
+
+```sql
+CREATE TABLE questions (
+    id SERIAL PRIMARY KEY,
+    url TEXT NOT NULL,
+    answer_count INTEGER NOT NULL,
+    crawl_status VARCHAR(20) DEFAULT 'pending',
+    crawled_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 3. 插入测试数据
+
+```sql
+INSERT INTO questions (url, answer_count) VALUES 
+('https://www.zhihu.com/question/123456789', 100),
+('https://www.zhihu.com/question/987654321', 50);
+```
+
+## 配置设置
+
+### 环境变量配置（可选）
 
 ```bash
-# 查看帮助
-python3 main.py --help
-
-# 爬取单个问题
-python3 main.py crawl 19550225
-
-# 批量爬取多个问题
-python3 main.py batch 19550225,20000000,30000000
-
-# 提取新的反爬虫参数
-python3 main.py extract_params https://www.zhihu.com/question/19550225
-
-# 查看参数池状态
-python3 main.py pool_status
-
-# 启动监控系统
-python3 main.py monitor
-
-# 清理过期参数
-python3 main.py cleanup
-
-# 运行系统测试
-python3 main.py test
+export DB_HOST=localhost
+export DB_PORT=5432
+export DB_NAME=zhihu_crawl
+export DB_USER=postgres
+export DB_PASSWORD=your_password
 ```
 
-### 编程接口
+### 修改配置文件
+
+编辑 `config.py` 文件，根据需要调整以下配置：
 
 ```python
-import asyncio
-from smart_crawler import SmartCrawler
+# 数据库配置
+DATABASE_CONFIG = {
+    'host': 'localhost',
+    'port': 5432,
+    'database': 'zhihu_crawl',
+    'user': 'postgres',
+    'password': 'your_password'
+}
 
-async def example():
-    # 初始化爬虫
-    crawler = SmartCrawler()
-    
-    # 爬取单个问题
-    result = await crawler.crawl_question_feeds("19550225")
-    
-    if result.success:
-        print(f"爬取成功: {len(result.data['data'])} 条答案")
-    else:
-        print(f"爬取失败: {result.error}")
-    
-    # 批量爬取
-    results = await crawler.batch_crawl(["19550225", "20000000"])
-    
-    for result in results:
-        if result.success:
-            print(f"问题 {result.question_id}: {len(result.data['data'])} 条答案")
-
-# 运行示例
-asyncio.run(example())
+# 爬虫配置
+CRAWLER_CONFIG = {
+    'headless': False,  # 设置为 True 启用无头模式
+    'answers_per_cleanup': 200,  # DOM 清理频率
+    'scroll_delay': (1, 3),  # 滚动延时
+    'page_load_delay': (2, 4),  # 页面加载延时
+}
 ```
 
-## 📁 项目结构
+## 使用方法
 
-```
-.
-├── main.py                     # 主入口脚本
-├── smart_crawler.py            # 智能爬虫核心
-├── dynamic_params_extractor.py # 动态参数提取器
-├── params_pool_manager.py      # 参数池管理器
-├── monitor_recovery.py         # 监控恢复系统
-├── zhihu_lazyload_crawler.py   # 传统爬虫（降级方案）
-├── config.py                   # 配置文件
-├── requirements.txt            # 依赖包列表
-├── demo.py                     # 系统演示脚本
-└── README.md                   # 项目文档
+### 1. 启动爬虫
+
+```bash
+python3 main.py
 ```
 
-## 🔧 核心模块
+### 2. 登录知乎
 
-### SmartCrawler (智能爬虫)
-- 整合所有功能的主要接口
-- 支持异步并发爬取
-- 智能参数管理和重试机制
-- 自动降级到传统方法
+- 程序启动后会自动打开 Chrome 浏览器
+- 浏览器会导航到知乎登录页面
+- 手动完成登录操作（包括验证码等）
+- 登录成功后在控制台输入 `done` 继续
 
-### DynamicParamsExtractor (动态参数提取器)
-- 使用Selenium自动化浏览器
-- 监听网络请求获取反爬虫参数
-- 支持多种参数提取策略
+### 3. 自动爬取
 
-### ParamsPoolManager (参数池管理器)
-- SQLite数据库存储参数
-- 智能参数选择和复用
-- 参数有效性跟踪
-- 自动清理过期参数
+- 程序会自动从数据库读取待爬取的问题
+- 逐个访问问题页面并采集回答
+- 实时显示爬取进度
+- 自动保存回答数据到数据库
 
-### MonitorRecovery (监控恢复系统)
-- 实时系统健康监控
-- 自动故障检测和恢复
-- 性能统计和报告
+## 项目结构
 
-## 📊 系统监控
+```
+zhihu/
+├── main.py              # 主程序入口
+├── zhihu_crawler.py     # 爬虫核心模块
+├── database.py          # 数据库操作模块
+├── config.py            # 配置文件
+├── requirements.txt     # 依赖列表
+├── README.md           # 说明文档
+└── zhihu_crawler.log   # 日志文件（运行时生成）
+```
 
-### 健康状态指标
-- 参数池状态（总数、活跃数、成功率）
-- 请求统计（总数、成功数、失败数）
-- 系统性能（响应时间、并发数）
-- 错误率和恢复情况
+## 数据表结构
 
-### 日志系统
-- 结构化日志记录
-- 多级别日志输出
-- 错误追踪和调试信息
+### questions 表
 
-## ⚙️ 配置说明
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | SERIAL | 主键 |
+| url | TEXT | 问题 URL |
+| answer_count | INTEGER | 目标回答数 |
+| crawl_status | VARCHAR(20) | 爬取状态 |
+| crawled_count | INTEGER | 已爬取数量 |
+| created_at | TIMESTAMP | 创建时间 |
 
-### 主要配置项
-- `max_pool_size`: 参数池最大容量（默认100）
-- `max_concurrent`: 最大并发数（默认5）
-- `timeout`: 请求超时时间（默认30秒）
-- `retry_times`: 重试次数（默认3）
+### answers 表（自动创建）
 
-### 环境要求
-- Python 3.7+
-- Chrome浏览器（用于参数提取）
-- 稳定的网络连接
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | SERIAL | 主键 |
+| question_url | TEXT | 问题 URL |
+| answer_id | TEXT | 回答 ID |
+| author | TEXT | 作者 |
+| content | TEXT | 回答内容 |
+| vote_count | INTEGER | 点赞数 |
+| created_time | TIMESTAMP | 回答时间 |
+| crawl_time | TIMESTAMP | 爬取时间 |
 
-## 🚨 注意事项
+## 反反爬机制
 
-1. **合规使用**: 请遵守知乎的robots.txt和使用条款
-2. **频率控制**: 建议设置合理的请求间隔，避免过于频繁的请求
-3. **参数时效**: 反爬虫参数有时效性，需要定期更新
-4. **错误处理**: 系统具有自动重试和降级机制，但仍需关注错误日志
-5. **资源管理**: 长时间运行时注意内存和数据库文件大小
+本爬虫采用多种技术规避知乎的反爬检测：
 
-## 🔄 更新日志
+1. **浏览器伪装**: 使用真实的 Chrome 浏览器和用户代理
+2. **行为模拟**: 随机延时、滚动加载、人工登录
+3. **DOM 清理**: 定期清理页面元素，减少内存占用
+4. **请求控制**: 合理的请求频率和重试机制
 
-### v1.0.0 (2025-09-08)
-- ✅ 完成智能爬虫系统核心功能
-- ✅ 集成动态参数提取器
-- ✅ 实现参数池管理系统
-- ✅ 添加监控恢复机制
-- ✅ 提供统一命令行接口
-- ✅ 完善文档和演示
+## 注意事项
 
-## 📝 许可证
+⚠️ **重要提醒**
+
+1. **遵守法律法规**: 请确保爬取行为符合相关法律法规
+2. **尊重网站规则**: 遵守知乎的 robots.txt 和服务条款
+3. **合理使用**: 控制爬取频率，避免对服务器造成压力
+4. **数据安全**: 妥善保管爬取的数据，不要泄露用户隐私
+
+## 常见问题
+
+### Q: 登录时遇到验证码怎么办？
+A: 手动完成验证码验证，程序会等待您完成所有登录步骤。
+
+### Q: 爬取过程中程序崩溃怎么办？
+A: 重新启动程序，会自动从上次中断的地方继续爬取。
+
+### Q: 如何调整爬取速度？
+A: 修改 `config.py` 中的延时参数，增大延时可以降低被检测的风险。
+
+### Q: 数据库连接失败怎么办？
+A: 检查数据库配置和网络连接，确保 PostgreSQL 服务正常运行。
+
+## 故障排除
+
+### 1. Chrome 浏览器问题
+
+```bash
+# 检查 Chrome 版本
+google-chrome --version
+
+# 手动更新 ChromeDriver
+pip3 install --upgrade webdriver-manager
+```
+
+### 2. 数据库连接问题
+
+```bash
+# 测试数据库连接
+psql -h localhost -U postgres -d zhihu_crawl
+```
+
+### 3. 依赖问题
+
+```bash
+# 重新安装依赖
+pip3 install --upgrade -r requirements.txt
+```
+
+## 日志文件
+
+程序运行时会生成 `zhihu_crawler.log` 日志文件，包含详细的运行信息：
+
+- 数据库连接状态
+- 爬取进度和结果
+- 错误信息和异常
+- 性能统计
+
+## 许可证
 
 本项目仅供学习和研究使用，请勿用于商业用途。使用时请遵守相关法律法规和网站服务条款。
 
-## 🤝 贡献
+## 更新日志
 
-欢迎提交Issue和Pull Request来改进这个项目。
-
-## 📞 联系
-
-如有问题或建议，请通过Issue联系。
+- v1.0.0: 初始版本，支持基本的问答爬取功能
+- 支持用户登录和反反爬机制
+- 支持 DOM 清理和内存优化
+- 支持断点续爬和进度跟踪
